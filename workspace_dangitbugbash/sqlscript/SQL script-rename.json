@@ -1,6 +1,9 @@
 {
 	"name": "SQL script-rename",
 	"properties": {
+		"folder": {
+			"name": "folder1"
+		},
 		"content": {
 			"query": "",
 			"metadata": {
