@@ -4,15 +4,6 @@
 	"parameters": {
 		"workspaceName": {
 			"value": "dangitbugbash"
-		},
-		"AzureBlobStorage1_connectionString": {
-			"value": ""
-		},
-		"dangitbugbash-WorkspaceDefaultSqlServer_connectionString": {
-			"value": ""
-		},
-		"dangitbugbash-WorkspaceDefaultStorage_properties_typeProperties_url": {
-			"value": "https://dansynapsestroage.dfs.core.windows.net"
 		}
 	}
 }
