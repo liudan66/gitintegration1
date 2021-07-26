@@ -1,0 +1,17 @@
+{
+	"name": "table",
+	"properties": {
+		"content": {
+			"query": "CREATE EXTERNAL DATA SOURCE [ExternalDataSource] WITH\n(\n\tTYPE = HADOOP,\n\tLOCATION = 'hdfs://NameNode_URI[:port]'\n)\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "sqlpool",
+				"databaseName": "sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

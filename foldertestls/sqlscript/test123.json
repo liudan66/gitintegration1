@@ -1,0 +1,16 @@
+{
+	"name": "test123",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

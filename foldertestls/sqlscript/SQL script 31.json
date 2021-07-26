@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 31",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://accessibilitytest.dfs.core.windows.net/data4/CSVISDWeather/CSVISDWeather.csv/part-00001-f2fa8745-61d4-4172-902b-218c696838e5-c000.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION='2.0'\n    ) AS [result]\n\nSelect 1+1",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

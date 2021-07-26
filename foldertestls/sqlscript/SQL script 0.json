@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 0",
+	"properties": {
+		"content": {
+			"query": "Begin\nwhile 1=1\nselect 'ZADADDAA123 -- testtesttesttesttesttesttest'\nend",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"name": "input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "accessibilitytest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "jsonISDWeather",
+				"fileSystem": "data4"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"_c0": {
+					"type": "string"
+				},
+				"_c1": {
+					"type": "string"
+				},
+				"_c2": {
+					"type": "string"
+				},
+				"_c3": {
+					"type": "string"
+				},
+				"_c4": {
+					"type": "string"
+				},
+				"_c5": {
+					"type": "string"
+				},
+				"_c6": {
+					"type": "string"
+				},
+				"_c7": {
+					"type": "string"
+				},
+				"_c8": {
+					"type": "string"
+				},
+				"_c9": {
+					"type": "string"
+				},
+				"_c10": {
+					"type": "string"
+				},
+				"_c11": {
+					"type": "string"
+				},
+				"_c12": {
+					"type": "string"
+				},
+				"_c13": {
+					"type": "string"
+				},
+				"_c14": {
+					"type": "string"
+				},
+				"_c15": {
+					"type": "string"
+				},
+				"_c16": {
+					"type": "string"
+				},
+				"_c17": {
+					"type": "string"
+				},
+				"_c18": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

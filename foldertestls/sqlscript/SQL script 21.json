@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 21",
+	"properties": {
+		"content": {
+			"query": "CREATE SCHEMA [Schema1]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "TesterDB",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "accessibilitytest3-WorkspaceDefaultSqlServer",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "Data Source=tcp:accessibilitytest3.database.windows.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"parameters": {
+			"DBName": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}

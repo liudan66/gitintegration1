@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 16",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [dbo].[Table8]\nGO\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "sqlpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

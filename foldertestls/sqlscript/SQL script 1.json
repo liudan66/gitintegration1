@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "CREATE LOGIN [v-sumtri@microsoft.com] FROM EXTERNAL PROVIDER\n\nalter role db_owner Add member [v-sumtri@microsoft.com]\n\nSELECT * FROM sys.database_principals\n\nCREATE User [v-sumtri@microsoft.com] FROM EXTERNAL PROVIDER\n\n--CREATE USER sumtri FROM LOGIN [v-sumtri@microsoft.com];\n\nalter role db_owner Add member [v-sumtri@microsoft.com]\n\nCREATE User [v-atagr@microsoft.com] FROM EXTERNAL PROVIDER\nEXEC sp_addrolemember 'db_owner', 'v-atagr@microsoft.com'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "default"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

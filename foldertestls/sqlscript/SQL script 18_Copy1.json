@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 18_Copy1",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "sqlpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
