@@ -1,6 +1,9 @@
 {
-	"name": "Notebook 1",
+	"name": "Notebook 3",
 	"properties": {
+		"folder": {
+			"name": "test1/test2"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {
@@ -32,7 +35,9 @@
 			{
 				"cell_type": "code",
 				"source": [
-					""
+					"test in folder\r\n",
+					"\r\n",
+					"edit"
 				],
 				"attachments": null,
 				"execution_count": null
