@@ -1,0 +1,111 @@
+{
+	"name": "StdM2_Item_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "StdM2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SalesDeltaSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TargetItem"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "ItemSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Deduplicated1SalesDeltaSource"
+				},
+				{
+					"name": "Sales"
+				},
+				{
+					"name": "SelectSales"
+				},
+				{
+					"name": "PreSKSelectItem"
+				},
+				{
+					"name": "Deduplicated1PreSKSelectItem"
+				},
+				{
+					"name": "Deduplicated1TargetItem"
+				},
+				{
+					"name": "SelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "SelectTarSelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "JoinSelectTarSelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "FilterInsertItem"
+				},
+				{
+					"name": "InsertItem"
+				},
+				{
+					"name": "SkItem"
+				},
+				{
+					"name": "AggregatedSelectTarSelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "MaxSelectTarSelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "JoinMaxSelectTarSelectDeduplicated1TargetItem"
+				},
+				{
+					"name": "DerivedItem"
+				},
+				{
+					"name": "PostSkItem"
+				},
+				{
+					"name": "FilterUpdateDeduplicated1PreSKSelectItem"
+				},
+				{
+					"name": "UpdateDeduplicated1PreSKSelectItem"
+				},
+				{
+					"name": "Item"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tSalesId as integer,\n\t\tSalesPersonId as integer,\n\t\tCustomerId as integer,\n\t\tProductName as string,\n\t\tSku as string,\n\t\tPrice as decimal(10,0),\n\t\tOrderDate as timestamp,\n\t\tQuantity as integer,\n\t\tDiscountPct as decimal(10,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'Sales.cdm.json/Sales',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Sales',\n\tcorpusPath: 'sm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\tfolderPath: 'sm2-exported/Sales',\n\tfileSystem: 'demoinsights') ~> SalesDeltaSource\nsource(output(\n\t\tItemId as long,\n\t\tItemSku as string,\n\t\tItemName as string,\n\t\tListPrice as decimal(10,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'Item.cdm.json/Item',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Item',\n\tcorpusPath: 'stdm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\tfolderPath: 'stdm2-exported/Item',\n\tfileSystem: 'demoinsights') ~> TargetItem\nSalesDeltaSource aggregate(groupBy(SalesId),\n\tSalesPersonId = last(SalesPersonId),\n\t\tCustomerId = last(CustomerId),\n\t\tProductName = last(ProductName),\n\t\tSku = last(Sku),\n\t\tPrice = last(Price),\n\t\tOrderDate = last(OrderDate),\n\t\tQuantity = last(Quantity),\n\t\tDiscountPct = last(DiscountPct)) ~> Deduplicated1SalesDeltaSource\nDeduplicated1SalesDeltaSource select(mapColumn(\n\t\tSalesId,\n\t\tSalesPersonId,\n\t\tCustomerId,\n\t\tProductName,\n\t\tSku,\n\t\tPrice,\n\t\tOrderDate,\n\t\tQuantity,\n\t\tDiscountPct\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Sales\nSales select(mapColumn(\n\t\tSku,\n\t\tProductName,\n\t\tPrice\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectSales\nSelectSales select(mapColumn(\n\t\tItemSku = Sku,\n\t\tItemName = ProductName,\n\t\tListPrice = Price\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> PreSKSelectItem\nPreSKSelectItem aggregate(groupBy(ItemSku),\n\tItemName = last(ItemName),\n\t\tListPrice = last(ListPrice)) ~> Deduplicated1PreSKSelectItem\nTargetItem aggregate(groupBy(ItemId),\n\tItemSku = last(ItemSku),\n\t\tItemName = last(ItemName),\n\t\tListPrice = last(ListPrice)) ~> Deduplicated1TargetItem\nDeduplicated1TargetItem select(mapColumn(\n\t\tItemSku,\n\t\tItemId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectDeduplicated1TargetItem\nSelectDeduplicated1TargetItem select(mapColumn(\n\t\tTarItemSku = ItemSku,\n\t\tTarItemId = ItemId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectTarSelectDeduplicated1TargetItem\nDeduplicated1PreSKSelectItem, SelectTarSelectDeduplicated1TargetItem join(ItemSku === TarItemSku,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinSelectTarSelectDeduplicated1TargetItem\nJoinSelectTarSelectDeduplicated1TargetItem filter(isNull(TarItemId)) ~> FilterInsertItem\nFilterInsertItem select(mapColumn(\n\t\tItemSku,\n\t\tItemName,\n\t\tListPrice\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> InsertItem\nInsertItem keyGenerate(output(Sk_ItemId as long),\n\tstartAt: 1L) ~> SkItem\nSelectTarSelectDeduplicated1TargetItem aggregate(Max_TarItemId = max(toInteger(TarItemId)) + 0) ~> AggregatedSelectTarSelectDeduplicated1TargetItem\nAggregatedSelectTarSelectDeduplicated1TargetItem derive(Max_TarItemId = iif(isNull(Max_TarItemId),0,Max_TarItemId)) ~> MaxSelectTarSelectDeduplicated1TargetItem\nSkItem, MaxSelectTarSelectDeduplicated1TargetItem join(true() === true(),\n\tjoinType:'cross',\n\tbroadcast: 'auto')~> JoinMaxSelectTarSelectDeduplicated1TargetItem\nJoinMaxSelectTarSelectDeduplicated1TargetItem derive(ItemId = Sk_ItemId + Max_TarItemId) ~> DerivedItem\nDerivedItem select(mapColumn(\n\t\tItemSku,\n\t\tItemName,\n\t\tListPrice,\n\t\tItemId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> PostSkItem\nJoinSelectTarSelectDeduplicated1TargetItem filter(!isNull(TarItemId)) ~> FilterUpdateDeduplicated1PreSKSelectItem\nFilterUpdateDeduplicated1PreSKSelectItem select(mapColumn(\n\t\tItemSku,\n\t\tItemName,\n\t\tListPrice,\n\t\tItemId = TarItemId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> UpdateDeduplicated1PreSKSelectItem\nPostSkItem, UpdateDeduplicated1PreSKSelectItem union(byName: true)~> Item\nItem sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'Item.cdm.json/Item',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Item',\n\tfolderPath: 'stdm2-exported/Item',\n\tfileSystem: 'demoinsights',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'stdm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\ttruncate: false,\n\tpartitionBy('hash', 1)) ~> ItemSink"
+		}
+	}
+}

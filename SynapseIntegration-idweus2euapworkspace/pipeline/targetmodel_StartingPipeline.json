@@ -1,0 +1,46 @@
+{
+	"name": "targetmodel_StartingPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "L0_targetmodel_CustomerTransactionInsight",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "L0_targetmodel_CustomerTransactionInsight",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "L0_targetmodel_CustomerProductInsight",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "L0_targetmodel_CustomerTransactionInsight",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "L0_targetmodel_CustomerProductInsight",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "targetmodel"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-02T19:05:00Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

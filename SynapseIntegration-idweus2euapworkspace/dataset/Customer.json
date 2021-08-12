@@ -1,0 +1,62 @@
+{
+	"name": "Customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AdlsLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Customer.csv",
+				"folderPath": "Data",
+				"fileSystem": "sourcedata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CustomerId",
+				"type": "String"
+			},
+			{
+				"name": "CustomerEstablishedDate",
+				"type": "String"
+			},
+			{
+				"name": "CustomerTypeId",
+				"type": "String"
+			},
+			{
+				"name": "ResponsibilityCenterId",
+				"type": "String"
+			},
+			{
+				"name": "LedgerId",
+				"type": "String"
+			},
+			{
+				"name": "LedgerAccountNumber",
+				"type": "String"
+			},
+			{
+				"name": "CustomerNote",
+				"type": "String"
+			},
+			{
+				"name": "PartyId",
+				"type": "String"
+			},
+			{
+				"name": "GlobalLocationNumber",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

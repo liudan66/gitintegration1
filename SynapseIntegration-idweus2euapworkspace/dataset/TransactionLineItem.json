@@ -1,0 +1,330 @@
+{
+	"name": "TransactionLineItem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AdlsLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "TransactionLineItem.csv",
+				"folderPath": "Data",
+				"fileSystem": "sourcedata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "TransactionId",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemId",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemStartTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemCompletedTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ProductId",
+				"type": "String"
+			},
+			{
+				"name": "ItemSku",
+				"type": "String"
+			},
+			{
+				"name": "UniversalProductCode",
+				"type": "String"
+			},
+			{
+				"name": "Quantity",
+				"type": "String"
+			},
+			{
+				"name": "UnitOfMeasureId",
+				"type": "String"
+			},
+			{
+				"name": "PreorderIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ProductListPriceAmount",
+				"type": "String"
+			},
+			{
+				"name": "TransactionProductPriceAmount",
+				"type": "String"
+			},
+			{
+				"name": "IsoCurrencyCode",
+				"type": "String"
+			},
+			{
+				"name": "FreeSampleIndicator",
+				"type": "String"
+			},
+			{
+				"name": "TotalTransactionLineItemAmount",
+				"type": "String"
+			},
+			{
+				"name": "TotalTransactionSalesPriceAmount",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineEntryMethodId",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemScanTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "PosDeviceId",
+				"type": "String"
+			},
+			{
+				"name": "ScaleUsedIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ScaleMeasuredItemWeight",
+				"type": "String"
+			},
+			{
+				"name": "WeightUomId",
+				"type": "String"
+			},
+			{
+				"name": "ScaleQuantity",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineVolume",
+				"type": "String"
+			},
+			{
+				"name": "VolumeUomId",
+				"type": "String"
+			},
+			{
+				"name": "ProductPriceOverrideIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ProductPriceAdjustmentAmount",
+				"type": "String"
+			},
+			{
+				"name": "ProductPriceAdjustmentPercentage",
+				"type": "String"
+			},
+			{
+				"name": "TotalLineItemAdjustmentAmount",
+				"type": "String"
+			},
+			{
+				"name": "LineItemNote",
+				"type": "String"
+			},
+			{
+				"name": "QuantityBooked",
+				"type": "String"
+			},
+			{
+				"name": "QuantityBilled",
+				"type": "String"
+			},
+			{
+				"name": "QuantityBacklog",
+				"type": "String"
+			},
+			{
+				"name": "AcceptedQuantity",
+				"type": "String"
+			},
+			{
+				"name": "QuantityCancelled",
+				"type": "String"
+			},
+			{
+				"name": "QuantityReturned",
+				"type": "String"
+			},
+			{
+				"name": "BookedTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "BilledTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "CancelledTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ReturnedTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "CommittedShipmentTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "RequestedDeliveryTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "CommittedDeliveryTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "CommittedAvailalbeForPickupTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "PlannedPickTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ActualPickTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "PlannedShipmentTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ActualShipmentTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "PlannedDeliveryTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ActualDeliveryTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "DeliveryConfirmationTimestamp",
+				"type": "String"
+			},
+			{
+				"name": "ShipmentChargeAmount",
+				"type": "String"
+			},
+			{
+				"name": "ShipmentCostAmount",
+				"type": "String"
+			},
+			{
+				"name": "PickPackageCostAmount",
+				"type": "String"
+			},
+			{
+				"name": "ShippingLocationId",
+				"type": "String"
+			},
+			{
+				"name": "ShipmentMethodId",
+				"type": "String"
+			},
+			{
+				"name": "DropShipLineItemIndicator",
+				"type": "String"
+			},
+			{
+				"name": "WaybillNumber",
+				"type": "String"
+			},
+			{
+				"name": "TareWeight",
+				"type": "String"
+			},
+			{
+				"name": "NetWeight",
+				"type": "String"
+			},
+			{
+				"name": "ShipCompleteIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ReturnTransactionId",
+				"type": "String"
+			},
+			{
+				"name": "ReturnTransactionLineItemId",
+				"type": "String"
+			},
+			{
+				"name": "ReturnToStockIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ReturnToStoreIndicator",
+				"type": "String"
+			},
+			{
+				"name": "ApprovedByEmployeeId",
+				"type": "String"
+			},
+			{
+				"name": "SalesChannelId",
+				"type": "String"
+			},
+			{
+				"name": "DistributionChannelId",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemTypeId",
+				"type": "String"
+			},
+			{
+				"name": "TransactionLineItemStatusId",
+				"type": "String"
+			},
+			{
+				"name": "FuelPumpId",
+				"type": "String"
+			},
+			{
+				"name": "BuyClassId",
+				"type": "String"
+			},
+			{
+				"name": "PromotionId",
+				"type": "String"
+			},
+			{
+				"name": "PharmacyId",
+				"type": "String"
+			},
+			{
+				"name": "PharmacyTransactionId",
+				"type": "String"
+			},
+			{
+				"name": "PromotionOfferId",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

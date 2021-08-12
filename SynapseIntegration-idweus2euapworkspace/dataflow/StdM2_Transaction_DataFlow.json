@@ -1,0 +1,52 @@
+{
+	"name": "StdM2_Transaction_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "StdM2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SalesDeltaSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Deduplicated1SalesDeltaSource"
+				},
+				{
+					"name": "Sales"
+				},
+				{
+					"name": "SelectSales"
+				},
+				{
+					"name": "Transaction"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tSalesId as integer,\n\t\tSalesPersonId as integer,\n\t\tCustomerId as integer,\n\t\tProductName as string,\n\t\tSku as string,\n\t\tPrice as decimal(10,0),\n\t\tOrderDate as timestamp,\n\t\tQuantity as integer,\n\t\tDiscountPct as decimal(10,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'Sales.cdm.json/Sales',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Sales',\n\tcorpusPath: 'sm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\tfolderPath: 'sm2-exported/Sales',\n\tfileSystem: 'demoinsights') ~> SalesDeltaSource\nSalesDeltaSource aggregate(groupBy(SalesId),\n\tSalesPersonId = last(SalesPersonId),\n\t\tCustomerId = last(CustomerId),\n\t\tProductName = last(ProductName),\n\t\tSku = last(Sku),\n\t\tPrice = last(Price),\n\t\tOrderDate = last(OrderDate),\n\t\tQuantity = last(Quantity),\n\t\tDiscountPct = last(DiscountPct)) ~> Deduplicated1SalesDeltaSource\nDeduplicated1SalesDeltaSource select(mapColumn(\n\t\tSalesId,\n\t\tSalesPersonId,\n\t\tCustomerId,\n\t\tProductName,\n\t\tSku,\n\t\tPrice,\n\t\tOrderDate,\n\t\tQuantity,\n\t\tDiscountPct\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Sales\nSales select(mapColumn(\n\t\tSalesId,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectSales\nSelectSales select(mapColumn(\n\t\tTransactionId = SalesId,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Transaction\nTransaction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'Transaction.cdm.json/Transaction',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Transaction',\n\tfolderPath: 'stdm2-exported/Transaction',\n\tfileSystem: 'demoinsights',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'stdm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\ttruncate: false,\n\tpartitionBy('hash', 1)) ~> TransactionSink"
+		}
+	}
+}

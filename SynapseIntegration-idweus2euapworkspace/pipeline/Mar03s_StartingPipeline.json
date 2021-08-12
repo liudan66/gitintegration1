@@ -1,0 +1,26 @@
+{
+	"name": "Mar03s_StartingPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "L0_Mar03s_CustomerSales",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "L0_Mar03s_CustomerSales",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "AM2"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-03-02T19:11:54Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

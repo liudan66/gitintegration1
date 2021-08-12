@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "CREATE EXTERNAL DATA SOURCE [ExternalDataSource] WITH\n(\n\tLOCATION = 'https://<STORAGEACCOUNT>.blob.core.windows.net/<CONTAINER>'\n)\nadd entity\nadd attribute\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "demodb",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

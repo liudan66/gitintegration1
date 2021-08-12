@@ -1,0 +1,1980 @@
+{
+  "apiVersion": "2020-01-12-preview",
+  "properties": {
+    "baseModel": {
+      "name": "Retail",
+      "version": "0.1.0",
+      "format": "CDM"
+    },
+    "entityDefinitions": {
+      "existingEntities": [
+        {
+          "name": "Return",
+          "description": "The components of an Transaction broken down by Product and Quantity, one per line item.",
+          "baseEntityReference": {
+            "name": "TransactionLineItem",
+            "path": "/TransactionLineItem.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+                {
+                    "ToEntity": "/TransactionLineItemReturnReason.cdm.json/TransactionLineItemReturnReason",
+                    "JoinPairs": [
+                        {
+                            "ToAttribute": "TransactionId",
+                            "FromAttribute": {
+                                "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                                "Name": "TransactionId"
+                            }
+                        },
+                        {
+                          "ToAttribute": "TransactionLineItemId",
+                          "FromAttribute": {
+                              "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                              "Name": "TransactionLineItemId"
+                          }
+                        }
+                    ]
+                },
+                {
+                  "ToEntity": "/ReturnReasonType.cdm.json/ReturnReasonType",
+                  "JoinPairs": [
+                      {
+                          "ToAttribute": "ReturnReasonTypeId",
+                          "FromAttribute": {
+                              "Entity": "/TransactionLineItemReturnReason.cdm.json/TransactionLineItemReturnReason",
+                              "Name": "ReturnReasonTypeId"
+                          }
+                      }
+                  ]
+              },
+              {
+                "ToEntity": "/Transaction.cdm.json/Transaction",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TransactionId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "TransactionId"
+                        }
+                    }
+                ]
+            },
+              {
+                "ToEntity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "UnitOfMeasureId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "UnitOfMeasureId"
+                        }
+                    }
+                ]
+            }, 
+              {
+                "ToEntity": "/Channel.cdm.json/Channel",
+                "EntityAlias": "Channel1",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ChannelId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "SalesChannelId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/Channel.cdm.json/Channel",
+              "EntityAlias": "Channel2",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ChannelId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "PurchasingChannelId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Location.cdm.json/Location",
+              "JoinPairs": [
+                  {
+                      "ToAttribute": "LocationId",
+                      "FromAttribute": {
+                          "Entity": "/Channel.cdm.json/Channel",
+                          "EntityAlias": "Channel1",
+                          "Name": "LocationId"
+                      }
+                  }
+              ]
+          },
+          {
+            "ToEntity": "/ChannelType.cdm.json/ChannelType",
+            "JoinPairs": [
+                {
+                    "ToAttribute": "ChannelTypeId",
+                    "FromAttribute": {
+                        "Entity": "/Channel.cdm.json/Channel",
+                        "EntityAlias": "Channel1",
+                        "Name": "ChannelTypeId"
+                    }
+                }
+            ]
+        }
+
+            ]
+        },
+            "primaryKey": [
+            "TransactionId",
+            "TransactionLineItemId"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                "name": "TransactionId",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "TransactionId"
+                }
+              },
+              {
+                "name": "TransactionLineItemId",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "TransactionLineItemId"
+                }
+              },
+              {
+                "name": "original_transaction_number",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ReturnTransactionId"
+                }
+              },
+              {
+                "name": "channel",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Channel.cdm.json/Channel",
+                  "EntityAlias": "Channel2",
+                  "name": "ChannelName"
+                }
+              },
+              {
+                "name": "Unit_price",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ProductListPriceAmount"
+                }
+              },
+              {
+                "name": "return_transaction_number",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ReturnTransactionLineItemId"
+                }
+              },
+              {
+                "name": "Product_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ProductId"
+                }
+              },
+              {
+                "name": "Unit_of_Measure",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                  "name": "UnitOfMeasureName"
+                }
+              },
+              {
+                "name": "return_reason_internal",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ReturnReasonType.cdm.json/ReturnReasonType",
+                  "name": "ReturnReasonTypeName"
+                }
+              },
+              {
+                "name": "return_reason_display",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ReturnReasonType.cdm.json/ReturnReasonType",
+                  "name": "ReturnReasonTypeDescription"
+                }
+              },
+              {
+                "name": "seller",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Channel.cdm.json/Channel",
+                  "EntityAlias": "Channel1",
+                  "name": "ChannelName"
+                }
+              },
+              {
+                "name": "Returned_quantity",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "QuantityReturned"
+                }
+              },
+              {
+                "name": "return_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ReturnedTimestamp"
+                }
+              },
+              {
+                "name": "returned_to_stock",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ReturnToStockIndicator"
+                }
+              },
+              {
+                "name": "currency_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "IsoCurrencyCode"
+                }
+              },
+              {
+                "name": "return_shipping_cost",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ShipmentCostAmount"
+                }
+              },
+              {
+                "name": "returned_to_store",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ReturnToStoreIndicator"
+                }
+              },
+              {
+                "name": "refund_amount",
+                "type": "New",
+                "description": "The amount refunded to the customer as a result of the return. May be different from the original ordered value.",
+                "dataType": "float"
+              },
+              {
+                "name": "site_cat1",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationName"
+                }
+              },
+              {
+                "name": "site_cat2",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ChannelType.cdm.json/ChannelType",
+                  "name": "ChannelTypeName"
+                }
+              }
+
+            ]
+          }
+        },
+        {
+          "name": "SalesItem",
+          "description": "This table contains Item level information for the transaction including Items bought, quantity in which they are purchased along with sales exluding tax and including tax. This also captures unit of meaesure for all the products bought. Promotions applicable at the item level as captured in this table.",
+          "baseEntityReference": {
+            "name": "TransactionLineItem",
+            "path": "/TransactionLineItem.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+                {
+                    "ToEntity": "/Transaction.cdm.json/Transaction",
+                    "JoinPairs": [
+                        {
+                            "ToAttribute": "TransactionId",
+                            "FromAttribute": {
+                                "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                                "Name": "TransactionId"
+                            }
+                        }
+                    ]
+                },
+                {
+                  "ToEntity": "/TransactionLineItemPromotion.cdm.json/TransactionLineItemPromotion",
+                  "JoinPairs": [
+                      {
+                          "ToAttribute": "TransactionId",
+                          "FromAttribute": {
+                              "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                              "Name": "TransactionId"
+                          }
+                      },
+                      {
+                        "ToAttribute": "TransactionLineItemId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "TransactionLineItemId"
+                        }
+                    }
+                  ]
+               },
+               {
+                "ToEntity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "UnitOfMeasureId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "UnitOfMeasureId"
+                        }
+                    }               
+                ]
+            },
+            {
+                "ToEntity": "/Product.cdm.json/Product",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ProductId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "ProductId"
+                        }
+                    }      
+                ]
+            },
+            {
+              "ToEntity": "/ProductManufacturer.cdm.json/ProductManufacturer",
+              "JoinPairs": [
+                  {
+                      "ToAttribute": "ProductId",
+                      "FromAttribute": {
+                          "Entity": "/Product.cdm.json/Product",
+                          "Name": "ProductId"
+                      }
+                  }    
+              ]
+          },
+          {
+            "ToEntity": "/Manufacturer.cdm.json/Manufacturer",
+            "JoinPairs": [
+                {
+                    "ToAttribute": "ManufacturerId",
+                    "FromAttribute": {
+                        "Entity": "/ProductManufacturer.cdm.json/ProductManufacturer",
+                        "Name": "ManufacturerId"
+                    }
+                }      
+            ]
+        },
+            {
+              "ToEntity": "/ProductPriceList.cdm.json/ProductPriceList",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ProductId",
+                        "FromAttribute": {
+                            "Entity": "/Product.cdm.json/Product",
+                            "Name": "ProductId"
+                        }
+                    }        
+                ]
+            },
+              {
+                "ToEntity": "/Promotion.cdm.json/Promotion",
+                "EntityAlias": "Promotion1",
+                "JoinPairs": [
+                  {
+                    "ToAttribute": "PromotionId",
+                    "FromAttribute": {
+                      "Entity": "/Transaction.cdm.json/Transaction",
+                      "Name": "PromotionId"
+                    }
+                  }
+                ]
+              },    
+              {
+                "ToEntity": "/Promotion.cdm.json/Promotion",
+                "EntityAlias": "Promotion2",
+                "JoinPairs": [
+                  {
+                    "ToAttribute": "PromotionId",
+                    "FromAttribute": {
+                      "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                      "Name": "PromotionId"
+                    }
+                  }
+                ]
+              },
+            {
+              "ToEntity": "/PromotionType.cdm.json/PromotionType",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "PromotionTypeId",
+                      "FromAttribute": {
+                        "Entity": "/Promotion.cdm.json/Promotion",
+                        "EntityAlias": "Promotion2",
+                        "Name": "PromotionTypeId"
+                      }
+                      }              
+                ]
+            },
+            {
+              "ToEntity": "/Location.cdm.json/Location",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "LocationId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "ShippingLocationId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Item.cdm.json/Item",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ItemSku",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "ItemSku"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Vendor.cdm.json/Vendor",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "VendorId",
+                        "FromAttribute": {
+                            "Entity": "/Item.cdm.json/Item",
+                            "Name": "VendorId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/VendorShipmentMethod.cdm.json/VendorShipmentMethod",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "VendorId",
+                        "FromAttribute": {
+                            "Entity": "/Vendor.cdm.json/Vendor",
+                            "Name": "VendorId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Country.cdm.json/Country",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CountryId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "CountryId"
+                        }
+                    }              
+                ]
+            },
+            {
+              "ToEntity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "SubdivisionId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "SubdivisionId"
+                        }
+                    }              
+                ]
+            },
+            {
+              "ToEntity": "/State.cdm.json/State",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "StateId",
+                        "FromAttribute": {
+                            "Entity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                            "Name": "StateId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/TransactionLineItemNote.cdm.json/TransactionLineItemNote",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TransactionId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                            "Name": "TransactionId"
+                        }
+                    },
+                    {
+                      "ToAttribute": "TransactionLineItemId",
+                      "FromAttribute": {
+                          "Entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                          "Name": "TransactionLineItemId"
+                      }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/ShipmentMethod.cdm.json/ShipmentMethod",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ShipmentMethodId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "ShipmentMethodId"
+                        }
+                    }         
+                ]
+            }
+           ]
+        },
+            "primaryKey": [
+            "Transaction_Number"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                "name": "Transaction_Number",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "TransactionLineItemId"
+                }
+              },
+           {
+                "name": "Transaction_placed_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TransactionCompletedTimestamp"
+                }
+              },
+              {
+                "name": "Product_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ProductId"
+                }
+              },
+              {
+                "name": "Unit_of_Measure",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                  "name": "UnitOfMeasureName"
+                }
+              },
+              {
+                "name": "currency_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "IsoCurrencyCode"
+                }
+              },
+              {
+                "name": "Unit_price",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ProductListPriceAmount"
+                }
+              },
+              {
+                "name": "Purchase_quantity",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "Quantity"
+                }
+              },
+              {
+                "name": "full_price",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ProductPriceList.cdm.json/ProductPriceList",
+                  "name": "SuggestedRetailPrice"
+                }
+              },
+              {
+                "name": "Unit_cost",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ProductPriceList.cdm.json/ProductPriceList",
+                  "name": "StandardCost"
+                }
+              },
+              {
+                "name": "Total_Sales_Price",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "TotalTransactionSalesPriceAmount"
+                }
+              },
+              {
+                "name": "promo_info",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Promotion.cdm.json/Promotion",
+                  "EntityAlias": "Promotion1",
+                  "name": "PromotionName"
+                }
+              },
+              {
+                "name": "other_promo_cost",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItemPromotion.cdm.json/TransactionLineItemPromotion",
+                  "name": "TotalPromotionCost"
+                }
+              },
+              {
+                "name": "estimated_shipping_ex_tax",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ShipmentChargeAmount"
+                }
+              },
+              {
+                "name": "estimated_shipping_cost",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "ShipmentCostAmount"
+                }
+              },
+              {
+                "name": "seller",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Manufacturer.cdm.json/Manufacturer",
+                  "name": "ManufacturerBusinessName"
+                }
+              },
+              {
+                "name": "shipping_country",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Country.cdm.json/Country",
+                  "name": "IsoCountryName"
+                }
+              },
+              {
+                "name": "shipping_region",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/State.cdm.json/State",
+                  "name": "StateName"
+                }
+              },
+              {
+                "name": "shipping_postal_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationZipCode"
+                }
+              },
+              {
+                  "name": "shipping_method",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/ShipmentMethod.cdm.json/ShipmentMethod",
+                    "name": "ShipmentMethodName"
+                  }
+              },
+              {
+                "name": "is_ship_from_vendor",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/VendorShipmentMethod.cdm.json/VendorShipmentMethod",
+                  "name": "ShipmentMethodId"
+                }
+            },
+              {
+                "name": "shipment_promise_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "CommittedShipmentTimestamp"
+                }
+              },
+              {
+                "name": "delivery_promise_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "CommittedDeliveryTimestamp"
+                }
+              },
+              {
+                "name": "pick_up_in_store_promise_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "CommittedAvailableForPickupTimestamp"
+                }
+              },
+              {
+                "name": "is_free_shipping",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Promotion.cdm.json/Promotion",
+                  "EntityAlias": "Promotion1",
+                  "name": "FreeShippingIndicator"
+                }
+              },
+              {
+                "name": "is_express_shipping",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ShipmentMethod.cdm.json/ShipmentMethod",
+                  "name": "ExpressShipmentMethodIndicator"
+                }
+              },
+              {
+                "name": "pick_pack_cost",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "PickPackageCostAmount"
+                }
+              },
+              {
+                "name": "is_backorder",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "QuantityBacklog"
+                }
+              },
+              {
+                "name": "is_preorder",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "PreorderIndicator"
+                }
+              },
+              {
+                "name": "is_free_sample",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "FreeSampleIndicator"
+                }
+              },
+              {
+                "name": "price_currency_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/ProductPriceList.cdm.json/ProductPriceList",
+                  "name": "IsoCurrencyCode"
+                }
+              },
+              {
+                "name": "Sales_line_attribute1",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItem.cdm.json/TransactionLineItem",
+                  "name": "LineItemNote"
+                }
+              },
+              {
+                "name": "Sales_line_attribute2",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLineItemNote.cdm.json/TransactionLineItemNote",
+                  "name": "TransactionLineItemNote"
+                }
+              },
+              {
+                "name": "item_level_discount_amount_retailer",
+                "type": "New",
+                "description": "Manufacturer's Discounts applied for the product purchased within this line Item. Essentially this could be difference between Full_Price and Total_Sales_Price_ex_tax",
+                "dataType": "float"
+              },
+              {
+                "name": "item_level_discount_amount_loyalty",
+                "type": "New",
+                "description": "Loyal customers may get Discounts applied for the product purchased within this line Item. Essentially this could be difference between Full_Price and Total_Sales_Price_ex_tax",
+                "dataType": "float"
+              },
+              {
+                "name": "additional_item_level_discount",
+                "type": "New",
+                "description": "Any adhoc discounts offered by Store manager or any on the fly discounts",
+                "dataType": "float"
+              }
+            ]
+           }
+        },
+        {
+          "name": "CustomerMaster",
+          "baseEntityReference": {
+            "name": "Customer",
+            "path": "/Customer.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+            {
+              "ToEntity": "/IndividualCustomer.cdm.json/IndividualCustomer",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }    
+                ]
+            },
+            {
+              "ToEntity": "/CustomerMaritalStatus.cdm.json/CustomerMaritalStatus",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/IndividualCustomer.cdm.json/IndividualCustomer",
+                            "Name": "CustomerId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/MaritalStatus.cdm.json/MaritalStatus",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "MaritalStatusId",
+                        "FromAttribute": {
+                            "Entity": "/CustomerMaritalStatus.cdm.json/CustomerMaritalStatus",
+                            "Name": "MaritalStatusId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/CustomerGender.cdm.json/CustomerGender",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/IndividualCustomer.cdm.json/IndividualCustomer",
+                            "Name": "CustomerId"
+                        }
+                    }           
+                ]
+            },
+            {
+              "ToEntity": "/Gender.cdm.json/Gender",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "GenderId",
+                        "FromAttribute": {
+                            "Entity": "/CustomerGender.cdm.json/CustomerGender",
+                            "Name": "GenderId"
+                        }
+                    }           
+                ]
+            },
+            {
+              "ToEntity": "/CustomerLocation.cdm.json/CustomerLocation",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }       
+                ]
+            },
+            {
+              "ToEntity": "/Location.cdm.json/Location",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "LocationId",
+                        "FromAttribute": {
+                            "Entity": "/CustomerLocation.cdm.json/CustomerLocation",
+                            "Name": "LocationId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/Country.cdm.json/Country",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CountryId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "CountryId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "SubdivisionId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "SubdivisionId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/State.cdm.json/State",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "StateId",
+                        "FromAttribute": {
+                            "Entity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                            "Name": "StateId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/CustomerEmail.cdm.json/CustomerEmail",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }
+                    
+                ]
+            },
+            {
+              "ToEntity": "/CustomerOccupationGroup.cdm.json/CustomerOccupationGroup",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/IndividualCustomer.cdm.json/IndividualCustomer",
+                            "Name": "CustomerId"
+                        }
+                    }
+                    
+                ]
+            },
+            {
+              "ToEntity": "/OccupationGroup.cdm.json/OccupationGroup",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "OccupationGroupId",
+                        "FromAttribute": {
+                            "Entity": "/CustomerOccupationGroup.cdm.json/CustomerOccupationGroup",
+                            "Name": "OccupationGroupId"
+                        }
+                    }
+                    
+                ]
+            },
+            {
+              "ToEntity": "/CustomerRelatedChannel.cdm.json/CustomerRelatedChannel",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }        
+                ]
+            },
+            {
+              "ToEntity": "/CustomerTelephoneNumber.cdm.json/CustomerTelephoneNumber",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }
+                    
+                ]
+            },  
+            {
+              "ToEntity": "/Channel.cdm.json/Channel",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ChannelId",
+                        "FromAttribute": {
+                            "Entity": "/CustomerRelatedChannel.cdm.json/CustomerRelatedChannel",
+                            "Name": "ChannelId"
+                        }
+                    }         
+                ]
+            },
+            {
+              "ToEntity": "/LoyaltyAccount.cdm.json/LoyaltyAccount",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }         
+                ]
+            },
+            {
+              "ToEntity": "/LoyaltyCard.cdm.json/LoyaltyCard",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "LoyaltyProgramId",
+                        "FromAttribute": {
+                            "Entity": "/LoyaltyAccount.cdm.json/LoyaltyAccount",
+                            "Name": "LoyaltyProgramId"
+                        }
+                    },
+                    {
+                      "ToAttribute": "LoyaltyAccountId",
+                      "FromAttribute": {
+                          "Entity": "/LoyaltyAccount.cdm.json/LoyaltyAccount",
+                          "Name": "LoyaltyAccountId"
+                      }
+                  }       
+                ]
+            }
+            ]
+        },
+            "primaryKey": [
+            "customer_id"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                  "name": "customer_id",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Customer.cdm.json/Customer",
+                    "name": "CustomerId"
+                  }
+                },
+                {
+                    "name": "cust_dob",
+                    "type": "Existing",
+                    "attributeReference": {
+                      "entity": "/IndividualCustomer.cdm.json/IndividualCustomer",
+                      "name": "DateOfBirth"
+                    }
+                },
+                {
+                  "name": "cust_marital_status",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/MaritalStatus.cdm.json/MaritalStatus",
+                    "name": "MaritalStatusName"
+                  }
+                },
+                {
+                  "name": "gender",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Gender.cdm.json/Gender",
+                    "name": "GenderName"
+                  }
+                },
+                {
+                  "name": "cust_joining_date",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Customer.cdm.json/Customer",
+                    "name": "CustomerEstablishedDate"
+                  }
+                },
+                {
+                  "name": "cust_address_1",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Location.cdm.json/Location",
+                    "name": "LocationAddressLine1"
+                  }
+                },
+                {
+                  "name": "cust_address_2",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Location.cdm.json/Location",
+                    "name": "LocationAddressLine2"
+                  }
+                },
+                {
+                  "name": "cust_address_3",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Location.cdm.json/Location",
+                    "name": "LocationCity"
+                  }
+                },
+                {
+                  "name": "cust_address_4",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/State.cdm.json/State",
+                    "name": "StateName"
+                  }
+                },
+                {
+                  "name": "cust_address_5",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Country.cdm.json/Country",
+                    "name": "IsoCountryName"
+                  }
+                },
+                { 
+                  "name": "cust_zipcode",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Location.cdm.json/Location",
+                    "name": "LocationZipCode"
+                  }
+                },
+                { 
+                  "name": "cust_email_id",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/CustomerEmail.cdm.json/CustomerEmail",
+                    "name": "EmailAddress"
+                  }
+                },
+                {
+                  "name": "cust_occupation",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/OccupationGroup.cdm.json/OccupationGroup",
+                    "name": "OccupationGroupName"
+                  }
+                },
+                {
+                  "name": "channel_customer_number",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Channel.cdm.json/Channel",
+                    "name": "ChannelName"
+                  }
+                },
+                {
+                  "name": "Customer_Telephone_number",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/CustomerTelephoneNumber.cdm.json/CustomerTelephoneNumber",
+                    "name": "TelephoneNumber"
+                  }
+                },
+                {
+                  "name": "cust_loyalty_card_number",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/LoyaltyCard.cdm.json/LoyaltyCard",
+                    "name": "LoyaltyCardNumber"
+                  }
+                }                  
+            ]
+           }           
+        },
+        {
+          "name": "SitesMaster",
+          "description": "Details of stores and distribution center (such as address, city,state,country).",
+          "baseEntityReference": {
+            "name": "Store",
+            "path": "/Store.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+                {
+                    "ToEntity": "/StoreType.cdm.json/StoreType",
+                    "JoinPairs": [
+                        {
+                            "ToAttribute": "StoreTypeId",
+                            "FromAttribute": {
+                                "Entity": "/Store.cdm.json/Store",
+                                "Name": "StoreTypeId"
+                            }
+                        }
+                    ]
+                },
+             {
+              "ToEntity": "/Location.cdm.json/Location",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "LocationId",
+                        "FromAttribute": {
+                            "Entity": "/Store.cdm.json/Store",
+                            "Name": "LocationId"
+                        }
+                    }       
+                ]
+            },
+            {
+              "ToEntity": "/Country.cdm.json/Country",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CountryId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "CountryId"
+                        }
+                    }
+                ]
+            },
+            {
+              "ToEntity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "SubdivisionId",
+                        "FromAttribute": {
+                            "Entity": "/Location.cdm.json/Location",
+                            "Name": "SubdivisionId"
+                        }
+                    }    
+                ]
+            },
+            {
+              "ToEntity": "/State.cdm.json/State",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "StateId",
+                        "FromAttribute": {
+                            "Entity": "/CountrySubdivision.cdm.json/CountrySubdivision",
+                            "Name": "StateId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/StoreGroupStore.cdm.json/StoreGroupStore",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "StoreId",
+                        "FromAttribute": {
+                            "Entity": "/Store.cdm.json/Store",
+                            "Name": "StoreId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/StoreGroup.cdm.json/StoreGroup",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "StoreGroupId",
+                        "FromAttribute": {
+                            "Entity": "/StoreGroupStore.cdm.json/StoreGroupStore",
+                            "Name": "StoreGroupId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/Territory.cdm.json/Territory",
+              "EntityAlias": "TerritoryArea",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TerritoryId",
+                        "FromAttribute": {
+                            "Entity": "/Store.cdm.json/Store",
+                            "Name": "AreaId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/Territory.cdm.json/Territory",
+              "EntityAlias": "TerritoryRegion",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TerritoryId",
+                        "FromAttribute": {
+                            "Entity": "/Store.cdm.json/Store",
+                            "Name": "RegionId"
+                        }
+                    }     
+                ]
+            },
+            {
+              "ToEntity": "/Territory.cdm.json/Territory",
+              "EntityAlias": "TerritoryDistrict",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TerritoryId",
+                        "FromAttribute": {
+                            "Entity": "/Store.cdm.json/Store",
+                            "Name": "DistrictId"
+                        }
+                    }     
+                ]
+            }
+          ]
+        },
+            "primaryKey": [
+            "site_number"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                "name": "site_number",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "StoreShortName"
+                }
+              },
+              {
+                "name": "site_type",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/StoreType.cdm.json/StoreType",
+                  "name": "StoreTypeName"
+                }
+              },
+              {
+                  "name": "site_name",
+                  "type": "Existing",
+                  "attributeReference": {
+                    "entity": "/Store.cdm.json/Store",
+                    "name": "StoreName"
+                  }
+              },
+              {
+                "name": "site_address",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationAddressLine1"
+                }
+              },
+              {
+                "name": "site_area_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "AreaId"
+                }
+              },
+              {
+                "name": "site_region_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "RegionId"
+                }
+              },
+              {
+                "name": "site_area_nm",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Territory.cdm.json/Territory",
+                  "EntityAlias": "TerritoryArea",
+                  "name": "TerritoryName"
+                }
+              },
+              {
+                "name": "site_region_nm",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Territory.cdm.json/Territory",
+                  "EntityAlias": "TerritoryRegion",
+                  "name": "TerritoryName"
+                }
+              },
+              {
+                "name": "site_city",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationCity"
+                }
+              },
+              {
+                "name": "site_zip",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationZipCode"
+                }
+              },
+              { 
+                "name": "cust_zipcode",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationZipCode"
+                }
+              },
+              { 
+                "name": "site_district_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "DistrictId"
+                }
+              },
+              {
+                "name": "site_district_nm",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Territory.cdm.json/Territory",
+                  "EntityAlias": "TerritoryDistrict",
+                  "name": "TerritoryName"
+                }
+              },
+              { 
+                "name": "site_state",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/State.cdm.json/State",
+                  "name": "StateName"
+                }
+              },
+              {
+                "name": "site_country",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Country.cdm.json/Country",
+                  "name": "IsoCountryName"
+                }
+              },
+              {
+                "name": "site_opendate",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "StoreOpenDate"
+                }
+              },
+              {
+                "name": "site_closedate",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Store.cdm.json/Store",
+                  "name": "StoreCloseDate"
+                }
+              },
+              {
+                "name": "site_store_format_cd",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/StoreGroup.cdm.json/StoreGroup",
+                  "name": "StoreGroupId"
+                }
+              },
+              {
+                "name": "site_store_format_nm",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/StoreGroup.cdm.json/StoreGroup",
+                  "name": "StoreGroupName"
+                }
+              }            
+            ]
+           } 
+        },
+        {
+          "name": "SalesHeader",
+          "description": "This table contains header level information of Sales Transaction having date, customer, store, payment information, sales information along with transaction level discount if applicable.",
+          "baseEntityReference": {
+            "name": "Transaction",
+            "path": "/Transaction.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+                {
+                    "ToEntity": "/TransactionLocation.cdm.json/TransactionLocation",
+                    "JoinPairs": [
+                        {
+                            "ToAttribute": "TransactionId",
+                            "FromAttribute": {
+                                "Entity": "/Transaction.cdm.json/Transaction",
+                                "Name": "TransactionId"
+                            }
+                        }
+                    ]
+                },
+                {
+                  "ToEntity": "/Location.cdm.json/Location",
+                  "JoinPairs": [
+                      {
+                          "ToAttribute": "LocationId",
+                          "FromAttribute": {
+                              "Entity": "/TransactionLocation.cdm.json/TransactionLocation",
+                              "Name": "LocationId"
+                          }
+                      }
+                  ]
+              },
+                {
+                  "ToEntity": "/TransactionLocationType.cdm.json/TransactionLocationType",
+                  "JoinPairs": [
+                      {
+                          "ToAttribute": "TransactionLocationTypeId",
+                          "FromAttribute": {
+                              "Entity": "/TransactionLocation.cdm.json/TransactionLocation",
+                              "Name": "TransactionLocationTypeId"
+                          }
+                      }
+                  ]
+               },
+               {
+                "ToEntity": "/Customer.cdm.json/Customer",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "CustomerId"
+                        }
+                    }               
+                ]
+            },
+             {
+                "ToEntity": "/CustomerEmail.cdm.json/CustomerEmail",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CustomerId",
+                        "FromAttribute": {
+                            "Entity": "/Customer.cdm.json/Customer",
+                            "Name": "CustomerId"
+                        }
+                    }      
+                ]
+            },
+            {
+              "ToEntity": "/TransactionPaymentMethod.cdm.json/TransactionPaymentMethod",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TransactionId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "TransactionId"
+                        }
+                    }        
+                ]
+            },
+            {
+              "ToEntity": "/PaymentMethod.cdm.json/PaymentMethod",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "PaymentMethodId",
+                        "FromAttribute": {
+                            "Entity": "/TransactionPaymentMethod.cdm.json/TransactionPaymentMethod",
+                            "Name": "PaymentMethodId"
+                        }
+                    }         
+                ]
+            },
+            {
+              "ToEntity": "/Currency.cdm.json/Currency",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "IsoCurrencyCode",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "IsoCurrencyCode"
+                        }
+                      }              
+                ]
+            },
+            {
+              "ToEntity": "/TransactionType.cdm.json/TransactionType",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "TransactionTypeId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "TransactionTypeId"
+                        }
+                    }               
+                ]
+            },
+            {
+              "ToEntity": "/Channel.cdm.json/Channel",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "ChannelId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "PurchasingChannelId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Promotion.cdm.json/Promotion",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "PromotionId",
+                        "FromAttribute": {
+                            "Entity": "/Transaction.cdm.json/Transaction",
+                            "Name": "PromotionId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/PromotionCoupon.cdm.json/PromotionCoupon",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "PromotionId",
+                        "FromAttribute": {
+                            "Entity": "/Promotion.cdm.json/Promotion",
+                            "Name": "PromotionId"
+                        }
+                    }             
+                ]
+            },
+            {
+              "ToEntity": "/Coupon.cdm.json/Coupon",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "CouponId",
+                        "FromAttribute": {
+                            "Entity": "/PromotionCoupon.cdm.json/PromotionCoupon",
+                            "Name": "CouponId"
+                        }
+                    }             
+                ]
+            }
+            ]
+        },
+            "primaryKey": [
+            "Transaction_Number"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                "name": "Transaction_Number",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TransactionId"
+                }
+              },
+           {
+                "name": "customer_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "CustomerId"
+                }
+              },
+              {
+                "name": "Transaction_placed_timestamp",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TransactionInitiatedTimestamp"
+                }
+              },
+              {
+                "name": "site_cat1",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Location.cdm.json/Location",
+                  "name": "LocationName"
+                }
+              },
+              {
+                "name": "site_cat2",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionLocationType.cdm.json/TransactionLocationType",
+                  "name": "TransactionLocationTypeName"
+                }
+              },
+              {
+                "name": "customer_email",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/CustomerEmail.cdm.json/CustomerEmail",
+                  "name": "EmailAddress"
+                }
+              },
+              {
+                "name": "payment_info",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/PaymentMethod.cdm.json/PaymentMethod",
+                  "name": "PaymentMethodName"
+                }
+              },
+              {
+                "name": "currency_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Currency.cdm.json/Currency",
+                  "name": "CurrencyName"
+                }
+              },
+              {
+                "name": "Header_Sales_Amount",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TransactionTotalInvoicedAmount"
+                }
+              },
+              {
+                "name": "Transaction_type",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/TransactionType.cdm.json/TransactionType",
+                  "name": "TransactionTypeName"
+                }
+              },
+              {
+                "name": "purchase_channel",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Channel.cdm.json/Channel",
+                  "name": "ChannelName"
+                }
+              },
+              {
+                "name": "business_day_date",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TransactionEntryTimestamp"
+                }
+              },
+              {
+                "name": "promotion_reference_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Promotion.cdm.json/Promotion",
+                  "name": "PromotionName"
+                }
+              },
+              {
+                "name": "coupon_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Coupon.cdm.json/Coupon",
+                  "name": "CouponName"
+                }
+              },
+              {
+                "name": "Discount_Amount",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Transaction.cdm.json/Transaction",
+                  "name": "TotalAdjustmentAmount"
+                }
+              }
+            ]
+           }
+        },
+        {
+          "name": "ProductProperties",
+          "description": "Product category hierarchy, PLU Code attributes are maintained in this table.",
+          "baseEntityReference": {
+            "name": "Product",
+            "path": "/Product.cdm.json"
+          },
+          "DenormalizeInfo": {
+            "Entities": [
+                {
+                    "ToEntity": "/Brand.cdm.json/Brand",
+                    "JoinPairs": [
+                        {
+                            "ToAttribute": "BrandId",
+                            "FromAttribute": {
+                                "Entity": "/Product.cdm.json/Product",
+                                "Name": "PrimaryBrandId"
+                            }
+                        }
+                    ]
+                },
+               {
+                "ToEntity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                "JoinPairs": [
+                    {
+                        "ToAttribute": "UnitOfMeasureId",
+                        "FromAttribute": {
+                            "Entity": "/Product.cdm.json/Product",
+                            "Name": "NetContentUomId"
+                        }
+                    }
+                ]
+             }
+            ]
+        },
+            "primaryKey": [
+            "product_id"
+          ],
+          "projectionInfo": {
+            "attributes": [
+              {
+                "name": "product_id",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Product.cdm.json/Product",
+                  "name": "ProductId"
+                }
+              },
+           {
+                "name": "product_name",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Product.cdm.json/Product",
+                  "name": "ProductName"
+                }
+              },
+              {
+                "name": "brand",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Brand.cdm.json/Brand",
+                  "name": "BrandName"
+                }
+              },
+              {
+                "name": "plu_code",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Product.cdm.json/Product",
+                  "name": "PluCode"
+                }
+              },
+              {
+                "name": "ean",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/Product.cdm.json/Product",
+                  "name": "EuropeanArticleNumber"
+                }
+              },
+              {
+                "name": "unit_of_measures",
+                "type": "Existing",
+                "attributeReference": {
+                  "entity": "/UnitOfMeasure.cdm.json/UnitOfMeasure",
+                  "name": "UnitOfMeasureName"
+                }
+              },
+              {
+                "name": "product_category1",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category2",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category3",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category4",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category5",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category1_code",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category2_code",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category3_code",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category4_code",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "product_category5_code",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              },
+              {
+                "name": "waste_per_uom_sold",
+                "type": "New",
+                "description": "",
+                "dataTypeLength": 128,
+                "dataType": "string"
+              }
+
+            ]
+           }
+        }
+      ],
+      "newEntities": []
+    },
+    "relationshipDefinitions": [
+    ]
+  }
+}

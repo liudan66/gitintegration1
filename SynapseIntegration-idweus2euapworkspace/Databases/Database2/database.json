@@ -1,0 +1,2 @@
+
+// Contains the database information per hive that contains its name, description, storage settings, and pointer to lineage file etc.

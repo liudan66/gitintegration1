@@ -1,0 +1,53 @@
+{ 
+
+“ObjectVersion” : “1”, 
+
+“DatabaseName”:”db1”, 
+
+"ObjectId": "518f0d9e-307c-4702-8d01-f7f73a9c2373", 
+
+"Name": "relationship_region.regionid.regionname_country.countryid.isocountryname", 
+
+"FromTableId": "ca2ac764-222c-4bd5-92e5-fc1b4a6d4e11", 
+
+"FromTableName": "region", 
+
+	"ToTableId": "6c6fee12-e33f-40f8-bf05-0b9b835bb1ff", 
+
+"ToTableName": "country", 
+
+"RealtionshipPairs": [ 
+
+		{ 
+
+"FromColumnName": "regionid", 
+
+"RelationshipType": "OneToOne", 
+
+}, 
+
+{ 
+
+"FromColumnName": "regionid", 
+
+"ToColumnName": "countryid" 
+
+} ,
+{ 
+
+"FromColumnName": "regionname", 
+
+"ToColumnName": "countryname" 
+
+} 
+
+
+], 
+
+"Properties": { 
+
+"isDefault": "true", 
+
+"RelationshipType": " OneToOne" 
+
+}, 

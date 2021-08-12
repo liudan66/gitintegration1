@@ -1,0 +1,111 @@
+{
+	"name": "L1_final_Transaction",
+	"properties": {
+		"activities": [
+			{
+				"name": "ReadWatermark_Transaction",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/subscriptions/030efb7e-a7b1-41da-99e8-aa25e7d3c800/resourceGroups/sancha-rg/providers/Microsoft.IndustryDataLifecycle/pipelineSets/f15a6d2e-a05e-4d1d-9145-f0d3e29d2108/watermarks/f15a6d2e-a05e-4d1d-9145-f0d3e29d2108_Transaction/compute?api-version=2020-01-12-preview",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\r\n  \"PipelineName\": \"@{pipeline().Pipeline}\",\r\n  \"EntityName\": \"Transaction\",\r\n  \"PipelineRunId\": \"@{pipeline().RunId}\"\r\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "TargetModel_TransactionTransform",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "ReadWatermark_Transaction",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "TargetModel_Transaction_DataFlow",
+						"type": "DataFlowReference",
+						"parameters": {
+							"modifiedAfter": {
+								"value": "toTimestamp(\"@{activity('ReadWatermark_Transaction').output.properties.watermarkValue}\", \"yyyy-MM-dd HH:mm:ss.SSS\")",
+								"type": "Expression"
+							},
+							"modifiedBefore": {
+								"value": "toTimestamp(\"@{activity('ReadWatermark_Transaction').output.properties.intendedWatermarkValue}\", \"yyyy-MM-dd HH:mm:ss.SSS\")",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "UpdateWatermark_Transaction",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "TargetModel_TransactionTransform",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/subscriptions/030efb7e-a7b1-41da-99e8-aa25e7d3c800/resourceGroups/sancha-rg/providers/Microsoft.IndustryDataLifecycle/pipelineSets/f15a6d2e-a05e-4d1d-9145-f0d3e29d2108/watermarks/f15a6d2e-a05e-4d1d-9145-f0d3e29d2108_Transaction/sync?api-version=2020-01-12-preview",
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\r\n  \"PipelineName\": \"@{pipeline().Pipeline}\",\r\n  \"EntityName\": \"Transaction\",\r\n  \"PipelineRunId\": \"@{pipeline().RunId}\"\r\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "T1Automation"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-12-13T20:07:09Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

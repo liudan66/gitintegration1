@@ -1,0 +1,20 @@
+{
+	"name": "AM2_DataSet_CustomerSales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalytics",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "AM2"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "main",
+			"table": "CustomerSales"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,108 @@
+{
+	"name": "AM2_CustomerSales_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "AM2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "sanchaworkspace-WorkspaceDefaultSqlServer",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionDeltaSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "sanchaworkspace-WorkspaceDefaultSqlServer",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionLineItemSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "sanchaworkspace-WorkspaceDefaultSqlServer",
+						"type": "LinkedServiceReference"
+					},
+					"name": "ItemSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "sanchaworkspace-WorkspaceDefaultSqlServer",
+						"type": "LinkedServiceReference"
+					},
+					"name": "IndividualCustomerSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AM2_DataSet_CustomerSales",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerSalesSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Deduplicated1TransactionDeltaSource"
+				},
+				{
+					"name": "Transaction"
+				},
+				{
+					"name": "Deduplicated1TransactionLineItemSource"
+				},
+				{
+					"name": "TransactionLineItem"
+				},
+				{
+					"name": "JoinTransactionLineItem"
+				},
+				{
+					"name": "Deduplicated1ItemSource"
+				},
+				{
+					"name": "Item"
+				},
+				{
+					"name": "JoinItem"
+				},
+				{
+					"name": "Deduplicated1IndividualCustomerSource"
+				},
+				{
+					"name": "IndividualCustomer"
+				},
+				{
+					"name": "JoinIndividualCustomer"
+				},
+				{
+					"name": "PreAlterRowCustomerSales"
+				},
+				{
+					"name": "CustomerSales"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tTransactionId as integer,\n\t\tCustomerId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'Transaction.cdm.json/Transaction',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Transaction',\n\tcorpusPath: 'stdm2-corpus',\n\tfolderPath: 'stdm2-exported/Transaction',\n\tfileSystem: 'demoinsights') ~> TransactionDeltaSource\nsource(output(\n\t\tTransactionId as integer,\n\t\tTransactionLineItemId as integer,\n\t\tTransactionLineItemStartTimestamp as timestamp,\n\t\tItemSku as string,\n\t\tQuantity as decimal(10,0),\n\t\tTotalTransactionLineItemAmount as decimal(10,0),\n\t\tTotalTransactionSalesPriceAmount as decimal(10,0),\n\t\tProductPriceAdjustmentPercentage as decimal(10,0),\n\t\tTotalLineItemAdjustmentAmount as decimal(10,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'TransactionLineItem.cdm.json/TransactionLineItem',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'TransactionLineItem',\n\tcorpusPath: 'stdm2-corpus',\n\tfolderPath: 'stdm2-exported/TransactionLineItem',\n\tfileSystem: 'demoinsights') ~> TransactionLineItemSource\nsource(output(\n\t\tItemSku as string,\n\t\tItemName as string,\n\t\tListPrice as decimal(10,0)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'Item.cdm.json/Item',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Item',\n\tcorpusPath: 'stdm2-corpus',\n\tfolderPath: 'stdm2-exported/Item',\n\tfileSystem: 'demoinsights') ~> ItemSource\nsource(output(\n\t\tCustomerId as integer,\n\t\tIndividualCustomerName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'IndividualCustomer.cdm.json/IndividualCustomer',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'IndividualCustomer',\n\tcorpusPath: 'stdm2-corpus',\n\tfolderPath: 'stdm2-exported/IndividualCustomer',\n\tfileSystem: 'demoinsights') ~> IndividualCustomerSource\nTransactionDeltaSource aggregate(groupBy(TransactionId),\n\tCustomerId = last(CustomerId)) ~> Deduplicated1TransactionDeltaSource\nDeduplicated1TransactionDeltaSource select(mapColumn(\n\t\tTransactionId,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Transaction\nTransactionLineItemSource aggregate(groupBy(TransactionId,\n\t\tTransactionLineItemId),\n\tTransactionLineItemStartTimestamp = last(TransactionLineItemStartTimestamp),\n\t\tItemSku = last(ItemSku),\n\t\tQuantity = last(Quantity),\n\t\tTotalTransactionLineItemAmount = last(TotalTransactionLineItemAmount),\n\t\tTotalTransactionSalesPriceAmount = last(TotalTransactionSalesPriceAmount),\n\t\tProductPriceAdjustmentPercentage = last(ProductPriceAdjustmentPercentage),\n\t\tTotalLineItemAdjustmentAmount = last(TotalLineItemAdjustmentAmount)) ~> Deduplicated1TransactionLineItemSource\nDeduplicated1TransactionLineItemSource select(mapColumn(\n\t\tTransactionId,\n\t\tTransactionLineItemId,\n\t\tTransactionLineItemStartTimestamp,\n\t\tItemSku,\n\t\tTotalTransactionSalesPriceAmount,\n\t\tTotalLineItemAdjustmentAmount\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> TransactionLineItem\nTransaction, TransactionLineItem join(Transaction@TransactionId === TransactionLineItem@TransactionId,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinTransactionLineItem\nItemSource aggregate(groupBy(ItemSku),\n\tItemName = last(ItemName),\n\t\tListPrice = last(ListPrice)) ~> Deduplicated1ItemSource\nDeduplicated1ItemSource select(mapColumn(\n\t\tItemSku,\n\t\tItemName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Item\nJoinTransactionLineItem, Item join(TransactionLineItem@ItemSku === Item@ItemSku,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinItem\nIndividualCustomerSource aggregate(groupBy(CustomerId),\n\tIndividualCustomerName = last(IndividualCustomerName)) ~> Deduplicated1IndividualCustomerSource\nDeduplicated1IndividualCustomerSource select(mapColumn(\n\t\tCustomerId,\n\t\tIndividualCustomerName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> IndividualCustomer\nJoinItem, IndividualCustomer join(Transaction@CustomerId === IndividualCustomer@CustomerId,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinIndividualCustomer\nJoinIndividualCustomer select(mapColumn(\n\t\tTransactionLineItemId,\n\t\tDate = TransactionLineItemStartTimestamp,\n\t\tProduct = ItemName,\n\t\tDiscount = TotalLineItemAdjustmentAmount,\n\t\tSales = TotalTransactionSalesPriceAmount,\n\t\tCustomer = IndividualCustomerName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> PreAlterRowCustomerSales\nPreAlterRowCustomerSales alterRow(upsertIf(true())) ~> CustomerSales\nCustomerSales sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['TransactionLineItemId'],\n\tformat: 'table',\n\tstaged: true) ~> CustomerSalesSink"
+		}
+	}
+}

@@ -1,0 +1,46 @@
+{
+	"name": "F0_final_Employee_Customer_Transaction",
+	"properties": {
+		"activities": [
+			{
+				"name": "L0_final_Employee_Customer",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "L0_final_Employee_Customer",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "L1_final_Transaction",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "L0_final_Employee_Customer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "L1_final_Transaction",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "T1Automation"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-12-13T20:07:12Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

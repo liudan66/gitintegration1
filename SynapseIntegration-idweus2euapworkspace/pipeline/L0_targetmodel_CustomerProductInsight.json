@@ -1,0 +1,111 @@
+{
+	"name": "L0_targetmodel_CustomerProductInsight",
+	"properties": {
+		"activities": [
+			{
+				"name": "ReadWatermark_CustomerProductInsight",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/subscriptions/030efb7e-a7b1-41da-99e8-aa25e7d3c800/resourceGroups/sancha-rg/providers/Microsoft.IndustryDataLifecycle/pipelineSets/9698fcc3-bc3c-4fb3-ae5d-255c5fe088bd/watermarks/9698fcc3-bc3c-4fb3-ae5d-255c5fe088bd_CustomerProductInsight/compute?api-version=2020-01-12-preview",
+					"method": "POST",
+					"headers": {
+						"content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\r\n  \"PipelineName\": \"@{pipeline().Pipeline}\",\r\n  \"EntityName\": \"CustomerProductInsight\",\r\n  \"PipelineRunId\": \"@{pipeline().RunId}\"\r\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			},
+			{
+				"name": "targetmodel_CustomerProductInsightTransform",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "ReadWatermark_CustomerProductInsight",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "targetmodel_CustomerProductInsight_DataFlow",
+						"type": "DataFlowReference",
+						"parameters": {
+							"modifiedAfter": {
+								"value": "toTimestamp(\"@{activity('ReadWatermark_CustomerProductInsight').output.properties.watermarkValue}\", \"yyyy-MM-dd HH:mm:ss.SSS\")",
+								"type": "Expression"
+							},
+							"modifiedBefore": {
+								"value": "toTimestamp(\"@{activity('ReadWatermark_CustomerProductInsight').output.properties.intendedWatermarkValue}\", \"yyyy-MM-dd HH:mm:ss.SSS\")",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "UpdateWatermark_CustomerProductInsight",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "targetmodel_CustomerProductInsightTransform",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 3,
+					"retryIntervalInSeconds": 60
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/subscriptions/030efb7e-a7b1-41da-99e8-aa25e7d3c800/resourceGroups/sancha-rg/providers/Microsoft.IndustryDataLifecycle/pipelineSets/9698fcc3-bc3c-4fb3-ae5d-255c5fe088bd/watermarks/9698fcc3-bc3c-4fb3-ae5d-255c5fe088bd_CustomerProductInsight/sync?api-version=2020-01-12-preview",
+					"method": "POST",
+					"headers": {
+						"content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\r\n  \"PipelineName\": \"@{pipeline().Pipeline}\",\r\n  \"EntityName\": \"CustomerProductInsight\",\r\n  \"PipelineRunId\": \"@{pipeline().RunId}\"\r\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com/"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "targetmodel"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-09-02T19:05:01Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

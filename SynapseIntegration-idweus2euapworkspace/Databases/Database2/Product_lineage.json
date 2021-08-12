@@ -1,0 +1,2 @@
+
+// Contains the IDW structure that contains the lineage of each table and column to the associated industry data model. This will only be created for tables that are inherited from industry data models. This file will not show up for custom tables.

@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [TABLE_CATALOG]\n,[TABLE_SCHEMA]\n,[TABLE_NAME]\n,[COLUMN_NAME]\n,[CONSTRAINT_CATALOG]\n,[CONSTRAINT_SCHEMA]\n,[CONSTRAINT_NAME]\n FROM [INFORMATION_SCHEMA].[CONSTRAINT_COLUMN_USAGE]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SynapseDemo",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"name": "StdM2_StartingPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "F0_StdM2_IndividualCustomer_Item_Transaction_Transactio",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "F0_StdM2_IndividualCustomer_Item_Transaction_TransactionLineItem",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "StdM2"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-03-02T13:32:14Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

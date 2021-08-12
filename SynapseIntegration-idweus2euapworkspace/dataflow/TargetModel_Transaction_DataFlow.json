@@ -1,0 +1,43 @@
+{
+	"name": "TargetModel_Transaction_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "TargetModel"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CustomerTransactionDeltaSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Transaction"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tTransactionId as integer,\n\t\tCustomerId as integer,\n\t\tCompletedTime as timestamp,\n\t\tCustomerDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'CustomerTransaction.cdm.json/CustomerTransaction',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'CustomerTransaction',\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationsource',\n\tfolderPath: 'physical/CustomerTransaction',\n\tfileSystem: 't1automationsource') ~> CustomerTransactionDeltaSource\nCustomerTransactionDeltaSource select(mapColumn(\n\t\tTransactionId,\n\t\tTransactionCompletedTimestamp = CompletedTime\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Transaction\nTransaction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'Transaction.cdm.json/Transaction',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Transaction',\n\tfolderPath: 'physical/Transaction',\n\tfileSystem: 't1automationtarget',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationtarget',\n\ttruncate: false) ~> TransactionSink"
+		}
+	}
+}

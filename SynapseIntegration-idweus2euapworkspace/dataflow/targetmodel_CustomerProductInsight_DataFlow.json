@@ -1,0 +1,66 @@
+{
+	"name": "targetmodel_CustomerProductInsight_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "targetmodel"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionLineItemDeltaSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TransactionSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CustomerProductInsightSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TransactionLineItem"
+				},
+				{
+					"name": "Transaction"
+				},
+				{
+					"name": "joinTransaction"
+				},
+				{
+					"name": "aggregatedTransactionLineItem"
+				},
+				{
+					"name": "CustomerProductInsight"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tTransactionId as integer,\n\t\tTransactionLineItemId as integer,\n\t\tTransactionLineItemStartTimestamp as timestamp,\n\t\tTransactionLineItemCompletedTimestamp as timestamp,\n\t\tProductId as integer,\n\t\tItemSku as string,\n\t\tUniversalProductCode as decimal(10,0),\n\t\tQuantity as decimal(10,0),\n\t\tUnitOfMeasureId as integer,\n\t\tPreorderIndicator as integer,\n\t\tProductListPriceAmount as decimal(10,0),\n\t\tTransactionProductPriceAmount as decimal(10,0),\n\t\tIsoCurrencyCode as string,\n\t\tFreeSampleIndicator as boolean,\n\t\tTotalTransactionLineItemAmount as decimal(10,0),\n\t\tTotalTransactionSalesPriceAmount as decimal(10,0),\n\t\tTransactionLineEntryMethodId as integer,\n\t\tTransactionLineItemScanTimestamp as timestamp,\n\t\tPosDeviceId as integer,\n\t\tScaleUsedIndicator as boolean,\n\t\tScaleMeasuredItemWeight as integer,\n\t\tWeightUomId as integer,\n\t\tScaleQuantity as decimal(10,0),\n\t\tTransactionLineVolume as decimal(10,0),\n\t\tVolumeUomId as integer,\n\t\tProductPriceOverrideIndicator as boolean,\n\t\tProductPriceAdjustmentAmount as decimal(10,0),\n\t\tProductPriceAdjustmentPercentage as decimal(10,0),\n\t\tTotalLineItemAdjustmentAmount as decimal(10,0),\n\t\tLineItemNote as string,\n\t\tQuantityBooked as integer,\n\t\tQuantityBilled as integer,\n\t\tQuantityBacklog as integer,\n\t\tAcceptedQuantity as decimal(10,0),\n\t\tQuantityCancelled as integer,\n\t\tQuantityReturned as integer,\n\t\tBookedTimestamp as timestamp,\n\t\tBilledTimestamp as timestamp,\n\t\tCancelledTimestamp as timestamp,\n\t\tReturnedTimestamp as timestamp,\n\t\tCommittedShipmentTimestamp as timestamp,\n\t\tRequestedDeliveryTimestamp as timestamp,\n\t\tCommittedDeliveryTimestamp as timestamp,\n\t\tCommittedAvailableForPickupTimestamp as timestamp,\n\t\tPlannedPickTimestamp as timestamp,\n\t\tActualPickTimestamp as timestamp,\n\t\tPlannedShipmentTimestamp as timestamp,\n\t\tActualShipmentTimestamp as timestamp,\n\t\tPlannedDeliveryTimestamp as timestamp,\n\t\tActualDeliveryTimestamp as timestamp,\n\t\tDeliveryConfirmationTimestamp as timestamp,\n\t\tShipmentChargeAmount as decimal(10,0),\n\t\tShipmentCostAmount as decimal(10,0),\n\t\tPickPackageCostAmount as decimal(10,0),\n\t\tShippingLocationId as integer,\n\t\tShipmentMethodId as integer,\n\t\tDropShipLineItemIndicator as boolean,\n\t\tWaybillNumber as integer,\n\t\tTareWeight as integer,\n\t\tNetWeight as integer,\n\t\tShipCompleteIndicator as boolean,\n\t\tEarliestDeliveryWindowTimestamp as timestamp,\n\t\tLatestDeliveryWindowTimestamp as timestamp,\n\t\tReturnTransactionId as integer,\n\t\tReturnTransactionLineItemId as integer,\n\t\tReturnToStockIndicator as boolean,\n\t\tReturnToStoreIndicator as boolean,\n\t\tApprovedByEmployeeId as integer,\n\t\tSalesChannelId as integer,\n\t\tDistributionChannelId as integer,\n\t\tTransactionLineItemTypeId as integer,\n\t\tTransactionLineItemStatusId as integer,\n\t\tFuelPumpId as integer,\n\t\tBuyClassId as integer,\n\t\tPromotionId as integer,\n\t\tPharmacyId as integer,\n\t\tPharmacyTransactionId as integer,\n\t\tPromotionOfferId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: (addDays(currentUTC(), -180)),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'TransactionLineItem.cdm.json/TransactionLineItem',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'TransactionLineItem',\n\tcorpusPath: 'corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'sourcemodel',\n\tfolderPath: 'SourceFolder/TransactionLineItem',\n\tfileSystem: 'sourcemodel') ~> TransactionLineItemDeltaSource\nsource(output(\n\t\tTransactionId as integer,\n\t\tTransactionInitiatedTimestamp as timestamp,\n\t\tTransactionCompletedTimestamp as timestamp,\n\t\tTransactionReceivedTimestamp as timestamp,\n\t\tTransactionEntryTimestamp as timestamp,\n\t\tTransactionConfirmationTimestamp as timestamp,\n\t\tCreditCheckTimestamp as timestamp,\n\t\tRequestedDeliveryDate as date,\n\t\tCommittedDeliveryDate as date,\n\t\tActualDeliveryTimestamp as timestamp,\n\t\tDeliveryConfirmationTimestamp as timestamp,\n\t\tTransactionAmount as decimal(10,0),\n\t\tShipmentToName as string,\n\t\tShipmentToLocationId as integer,\n\t\tTransactionConfirmationNumber as string,\n\t\tIdentificationCheckedIndicator as boolean,\n\t\tIdentificationId as integer,\n\t\tTotalRetailPriceAmount as decimal(10,0),\n\t\tTotalAdjustmentPercentage as decimal(10,0),\n\t\tTotalAdjustmentAmount as decimal(10,0),\n\t\tTotalTransactionSalesPriceAmount as decimal(10,0),\n\t\tTotalShippingChargeAmount as decimal(10,0),\n\t\tTransactionTotalTaxAmount as decimal(10,0),\n\t\tTransactionRoundingAmount as decimal(10,0),\n\t\tTransactionTotalInvoicedAmount as decimal(10,0),\n\t\tTotalCommissionsPayableAmount as decimal(10,0),\n\t\tSplitCommissionsIndicator as boolean,\n\t\tRequestedShipmentCarrierName as string,\n\t\tAlternateCarrierAcceptableIndicator as boolean,\n\t\tShipCompleteIndicator as boolean,\n\t\tAcknowledgementRequiredIndicator as boolean,\n\t\tExpediteTransactionIndicator as boolean,\n\t\tDropShipmentIndicator as boolean,\n\t\tActualShipmentCarrierName as string,\n\t\tTotalWeight as integer,\n\t\tTotalFreightChargeAmount as decimal(10,0),\n\t\tUnitOfMeasureId as integer,\n\t\tEarliestDeliveryWindowTimestamp as timestamp,\n\t\tLatestDeliveryWindowTimestamp as timestamp,\n\t\tDeliveryInstructions as string,\n\t\tCustomerCreditCheckNote as string,\n\t\tMessageToCustomer as string,\n\t\tCustomerId as integer,\n\t\tCustomerAccountId as integer,\n\t\tPurchasingChannelId as integer,\n\t\tSalesChannelId as integer,\n\t\tDistributionChannelId as integer,\n\t\tMarketingEventId as integer,\n\t\tAdvertisingEventId as integer,\n\t\tPromotionId as integer,\n\t\tTransactionTypeId as integer,\n\t\tBillingCycleId as integer,\n\t\tMerchantId as integer,\n\t\tCustomerIdentificationMethodId as integer,\n\t\tTransactionClassificationId as integer,\n\t\tTransactionProcessingStatusId as integer,\n\t\tIsoCurrencyCode as string,\n\t\tTransactionExecutionMethodId as integer,\n\t\tTransactionPriorityId as integer,\n\t\tTransactionTaxStatusId as integer,\n\t\tWebPageUrl as string,\n\t\tSessionId as integer,\n\t\tPointOfSaleId as integer,\n\t\tStoreId as integer,\n\t\tWarehouseId as integer,\n\t\tResponsibilityCenterId as integer,\n\t\tTransactionNote as string,\n\t\tShipmentMethodId as integer,\n\t\tDeviceId as integer,\n\t\tSoftwareProductId as integer,\n\t\tSoftwareProductVersionNumber as integer,\n\t\tApprovedByEmployeeId as integer,\n\t\tPromotionOfferId as integer,\n\t\tLoyaltyCardId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'Transaction.cdm.json/Transaction',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Transaction',\n\tcorpusPath: 'corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'sourcemodel',\n\tfolderPath: 'SourceFolder/Transaction',\n\tfileSystem: 'sourcemodel') ~> TransactionSource\nTransactionLineItemDeltaSource select(mapColumn(\n\t\tTransactionId,\n\t\tTransactionLineItemId,\n\t\tProductId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> TransactionLineItem\nTransactionSource select(mapColumn(\n\t\tTransactionId,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Transaction\nTransactionLineItem, Transaction join(TransactionLineItem@TransactionId == Transaction@TransactionId,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> joinTransaction\njoinTransaction aggregate(groupBy(CustomerId,\n\t\tProductId),\n\tPurchaseCount = count(TransactionLineItemId)) ~> aggregatedTransactionLineItem\naggregatedTransactionLineItem select(mapColumn(\n\t\tCustomerId,\n\t\tProductId,\n\t\tPurchaseCount\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> CustomerProductInsight\nCustomerProductInsight sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'CustomerProductInsight.cdm.json/CustomerProductInsight',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'CustomerProductInsight',\n\tfolderPath: 'targetdata/CustomerProductInsight',\n\tfileSystem: 'demotarget2',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demotarget2',\n\ttruncate: false,\n\tpartitionBy('hash', 1)) ~> CustomerProductInsightSink"
+		}
+	}
+}

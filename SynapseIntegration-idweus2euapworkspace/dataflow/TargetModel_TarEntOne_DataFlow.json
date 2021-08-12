@@ -1,0 +1,63 @@
+{
+	"name": "TargetModel_TarEntOne_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "TargetModel"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SrcEntOneDeltaSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SrcEntTwoSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TarEntOneSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SrcEntOne"
+				},
+				{
+					"name": "SrcEntTwo"
+				},
+				{
+					"name": "JoinSrcEntTwo"
+				},
+				{
+					"name": "TarEntOne"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tAttr1 as string,\n\t\tAttr2 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'SrcEntOne.cdm.json/SrcEntOne',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'SrcEntOne',\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationsource',\n\tfolderPath: 'physical/SrcEntOne',\n\tfileSystem: 't1automationsource') ~> SrcEntOneDeltaSource\nsource(output(\n\t\tAttr3 as string,\n\t\tAttr2 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'SrcEntTwo.cdm.json/SrcEntTwo',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'SrcEntTwo',\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationsource',\n\tfolderPath: 'physical/SrcEntTwo',\n\tfileSystem: 't1automationsource') ~> SrcEntTwoSource\nSrcEntOneDeltaSource select(mapColumn(\n\t\tAttr1,\n\t\tAttr2\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SrcEntOne\nSrcEntTwoSource select(mapColumn(\n\t\tAttr3,\n\t\tAttr2\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SrcEntTwo\nSrcEntOne, SrcEntTwo join(SrcEntOne@Attr2 == SrcEntTwo@Attr2,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinSrcEntTwo\nJoinSrcEntTwo select(mapColumn(\n\t\tAttr1,\n\t\tAttr2 = SrcEntOne@Attr2,\n\t\tAttr3\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> TarEntOne\nTarEntOne sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'TarEntOne.cdm.json/TarEntOne',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'TarEntOne',\n\tfolderPath: 'physical/TarEntOne',\n\tfileSystem: 't1automationtarget',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationtarget',\n\ttruncate: false) ~> TarEntOneSink"
+		}
+	}
+}

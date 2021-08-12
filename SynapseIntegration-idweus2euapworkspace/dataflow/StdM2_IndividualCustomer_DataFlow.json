@@ -1,0 +1,52 @@
+{
+	"name": "StdM2_IndividualCustomer_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "StdM2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CustomersDeltaSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "AdlsLinkedService",
+						"type": "LinkedServiceReference"
+					},
+					"name": "IndividualCustomerSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Deduplicated1CustomersDeltaSource"
+				},
+				{
+					"name": "Customers"
+				},
+				{
+					"name": "SelectCustomers"
+				},
+				{
+					"name": "IndividualCustomer"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tCustomerId as integer,\n\t\tFullName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'Customers.cdm.json/Customers',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Customers',\n\tcorpusPath: 'sm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\tfolderPath: 'sm2-exported/Customers',\n\tfileSystem: 'demoinsights') ~> CustomersDeltaSource\nCustomersDeltaSource aggregate(groupBy(CustomerId),\n\tFullName = last(FullName)) ~> Deduplicated1CustomersDeltaSource\nDeduplicated1CustomersDeltaSource select(mapColumn(\n\t\tCustomerId,\n\t\tFullName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Customers\nCustomers select(mapColumn(\n\t\tFullName,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectCustomers\nSelectCustomers select(mapColumn(\n\t\tIndividualCustomerName = FullName,\n\t\tCustomerId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> IndividualCustomer\nIndividualCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'IndividualCustomer.cdm.json/IndividualCustomer',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'IndividualCustomer',\n\tfolderPath: 'stdm2-exported/IndividualCustomer',\n\tfileSystem: 'demoinsights',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'stdm2-corpus',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 'demoinsights',\n\ttruncate: false,\n\tpartitionBy('hash', 1)) ~> IndividualCustomerSink"
+		}
+	}
+}

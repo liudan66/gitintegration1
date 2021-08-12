@@ -1,0 +1,2 @@
+
+/// The database lineage file will contain the lin between the database and a specific industry data model i.e. this database is tied to retail industry data model. This file will only be made if a database has a single table from industry data models. 

@@ -1,0 +1,120 @@
+{
+	"name": "TargetModel_Employee_DataFlow",
+	"properties": {
+		"folder": {
+			"name": "TargetModel"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SEmployeeDeltaSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "TargetEmployee"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "LinkedServiceWithSancha",
+						"type": "LinkedServiceReference"
+					},
+					"name": "EmployeeSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SEmployee123"
+				},
+				{
+					"name": "DerivedSEmployee"
+				},
+				{
+					"name": "Employee"
+				},
+				{
+					"name": "Deduplicated1Employee"
+				},
+				{
+					"name": "SelectDeduplicated1Employee"
+				},
+				{
+					"name": "Deduplicated1TargetEmployee"
+				},
+				{
+					"name": "SelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "SelectTarSelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "JoinSelectTarSelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "FilterInsertEmployee"
+				},
+				{
+					"name": "InsertEmployee"
+				},
+				{
+					"name": "SkEmployee"
+				},
+				{
+					"name": "AggregatedSelectTarSelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "MaxSelectTarSelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "JoinMaxSelectTarSelectDeduplicated1TargetEmployee"
+				},
+				{
+					"name": "DerivedEmployee"
+				},
+				{
+					"name": "FinalFilterInsertEmployee"
+				},
+				{
+					"name": "FilterUpdateSelectDeduplicated1Employee"
+				},
+				{
+					"name": "UpdateSelectDeduplicated1Employee"
+				},
+				{
+					"name": "UnionUpdateSelectDeduplicated1Employee"
+				},
+				{
+					"name": "SelectTarUnionUpdateSelectDeduplicated1Employee"
+				},
+				{
+					"name": "JoinSelectTarUnionUpdateSelectDeduplicated1Employee"
+				},
+				{
+					"name": "Employee1"
+				}
+			],
+			"script": "parameters{\n\tmodifiedAfter as timestamp,\n\tmodifiedBefore as timestamp\n}\nsource(output(\n\t\tEmployeeFirstName as string,\n\t\tEmployeeLastName as string,\n\t\tHireDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tmodifiedAfter: ($modifiedAfter),\n\tmodifiedBefore: ($modifiedBefore),\n\tentity: 'SEmployee.cdm.json/SEmployee',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'SEmployee',\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationsource',\n\tfolderPath: 'physical/SEmployee',\n\tfileSystem: 't1automationsource') ~> SEmployeeDeltaSource\nsource(output(\n\t\tEmployeeId as integer,\n\t\tEmployeeName as string,\n\t\tEmployeeHireDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tentity: 'Employee.cdm.json/Employee',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Employee',\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationtarget',\n\tfolderPath: 'physical/Employee',\n\tfileSystem: 't1automationtarget') ~> TargetEmployee\nSEmployeeDeltaSource select(mapColumn(\n\t\tEmployeeFirstName,\n\t\tEmployeeLastName,\n\t\tHireDate\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SEmployee123\nSEmployee123 derive(EmployeeName = EmployeeFirstName + EmployeeLastName) ~> DerivedSEmployee\nDerivedSEmployee select(mapColumn(\n\t\tEmployeeName,\n\t\tEmployeeHireDate = HireDate\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Employee\nEmployee aggregate(groupBy(EmployeeName),\n\tEmployeeHireDate = last(EmployeeHireDate)) ~> Deduplicated1Employee\nDeduplicated1Employee select(mapColumn(\n\t\tEmployeeName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectDeduplicated1Employee\nTargetEmployee aggregate(groupBy(EmployeeName,\n\t\tEmployeeId),\n\tEmployeeHireDate = last(EmployeeHireDate)) ~> Deduplicated1TargetEmployee\nDeduplicated1TargetEmployee select(mapColumn(\n\t\tEmployeeName,\n\t\tEmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectDeduplicated1TargetEmployee\nSelectDeduplicated1TargetEmployee select(mapColumn(\n\t\tTarEmployeeName = EmployeeName,\n\t\tTarEmployeeId = EmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectTarSelectDeduplicated1TargetEmployee\nSelectDeduplicated1Employee, SelectTarSelectDeduplicated1TargetEmployee join(EmployeeName == TarEmployeeName,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinSelectTarSelectDeduplicated1TargetEmployee\nJoinSelectTarSelectDeduplicated1TargetEmployee filter(isNull(TarEmployeeId)) ~> FilterInsertEmployee\nFilterInsertEmployee select(mapColumn(\n\t\tEmployeeName\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> InsertEmployee\nInsertEmployee keyGenerate(output(Sk_EmployeeId as long),\n\tstartAt: 1L) ~> SkEmployee\nSelectTarSelectDeduplicated1TargetEmployee aggregate(Max_TarEmployeeId = max(toInteger(TarEmployeeId)) + 0) ~> AggregatedSelectTarSelectDeduplicated1TargetEmployee\nAggregatedSelectTarSelectDeduplicated1TargetEmployee derive(Max_TarEmployeeId = iif(isNull(Max_TarEmployeeId),0,Max_TarEmployeeId)) ~> MaxSelectTarSelectDeduplicated1TargetEmployee\nSkEmployee, MaxSelectTarSelectDeduplicated1TargetEmployee join(true() == true(),\n\tjoinType:'cross',\n\tbroadcast: 'auto')~> JoinMaxSelectTarSelectDeduplicated1TargetEmployee\nJoinMaxSelectTarSelectDeduplicated1TargetEmployee derive(EmployeeId = Sk_EmployeeId + Max_TarEmployeeId) ~> DerivedEmployee\nDerivedEmployee select(mapColumn(\n\t\tEmployeeName,\n\t\tEmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FinalFilterInsertEmployee\nJoinSelectTarSelectDeduplicated1TargetEmployee filter(!isNull(TarEmployeeId)) ~> FilterUpdateSelectDeduplicated1Employee\nFilterUpdateSelectDeduplicated1Employee select(mapColumn(\n\t\tEmployeeName,\n\t\tEmployeeId = TarEmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> UpdateSelectDeduplicated1Employee\nFinalFilterInsertEmployee, UpdateSelectDeduplicated1Employee union(byName: true)~> UnionUpdateSelectDeduplicated1Employee\nUnionUpdateSelectDeduplicated1Employee select(mapColumn(\n\t\tTarEmployeeName = EmployeeName,\n\t\tTarEmployeeId = EmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> SelectTarUnionUpdateSelectDeduplicated1Employee\nEmployee, SelectTarUnionUpdateSelectDeduplicated1Employee join(EmployeeName == TarEmployeeName,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinSelectTarUnionUpdateSelectDeduplicated1Employee\nJoinSelectTarUnionUpdateSelectDeduplicated1Employee select(mapColumn(\n\t\tEmployeeName,\n\t\tEmployeeHireDate,\n\t\tEmployeeId = TarEmployeeId\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Employee1\nEmployee1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tentity: 'Employee.cdm.json/Employee',\n\tformat: 'cdm',\n\tmanifestType: 'manifest',\n\tmanifestName: 'Employee',\n\tfolderPath: 'physical/Employee',\n\tfileSystem: 't1automationtarget',\n\tcolumnDelimiter: ',',\n\tcolumnNamesAsHeader: true,\n\tcorpusPath: 'logical',\n\tcorpusStore: 'adlsgen2',\n\tadlsgen2_fileSystem: 't1automationtarget',\n\ttruncate: false,\n\tpartitionBy('hash', 1)) ~> EmployeeSink"
+		}
+	}
+}
