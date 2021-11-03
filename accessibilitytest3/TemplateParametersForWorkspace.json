@@ -5,9 +5,6 @@
 		"workspaceName": {
 			"value": "accessibilitytest3"
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"value": ""
-		},
 		"AzureSynapseAnalytics1_connectionString": {
 			"value": ""
 		},
@@ -16,9 +13,6 @@
 		},
 		"accessibilitytest3-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
-		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"value": "https://pierowebtooling.dfs.core.windows.net"
 		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"value": "https://a365-e2e.vault.azure.net/"
