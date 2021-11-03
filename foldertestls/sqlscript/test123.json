@@ -1,6 +1,9 @@
 {
 	"name": "test123",
 	"properties": {
+		"folder": {
+			"name": "folder1"
+		},
 		"content": {
 			"query": "-- type your sql script here, we now have intellisense",
 			"metadata": {
