@@ -70,6 +70,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"annotations": [],
 				"lastPublishTime": "2020-04-14T06:34:13Z"
 			},
@@ -278,35 +282,24 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/TriggerTest1')]",
+			"name": "[concat(parameters('workspaceName'), '/Trigger 1')]",
 			"type": "Microsoft.Synapse/workspaces/triggers",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "test1",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
+				"runtimeState": "Stopped",
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2020-04-14T06:37:00Z",
-						"endTime": "2020-04-15T06:40:00Z",
+						"interval": 15,
+						"startTime": "2021-10-13T12:03:00Z",
 						"timeZone": "UTC"
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/test1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/IntegrationRuntime1')]",
@@ -354,7 +347,7 @@
 						}
 					],
 					"transformations": [],
-					"script": "source(output(\n\t\t{_c0} as string,\n\t\t{_c1} as string,\n\t\t{_c2} as string,\n\t\t{_c3} as string,\n\t\t{_c4} as string,\n\t\t{_c5} as string,\n\t\t{_c6} as string,\n\t\t{_c7} as string,\n\t\t{_c8} as string,\n\t\t{_c9} as string,\n\t\t{_c10} as string,\n\t\t{_c11} as string,\n\t\t{_c12} as string,\n\t\t{_c13} as string,\n\t\t{_c14} as string,\n\t\t{_c15} as string,\n\t\t{_c16} as string,\n\t\t{_c17} as string,\n\t\t{_c18} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'documentPerLine') ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "source(output(\n\t\t{_c0} as string,\n\t\t{_c1} as string,\n\t\t{_c2} as string,\n\t\t{_c3} as string,\n\t\t{_c4} as string,\n\t\t{_c5} as string,\n\t\t{_c6} as string,\n\t\t{_c7} as string,\n\t\t{_c8} as string,\n\t\t{_c9} as string,\n\t\t{_c10} as string,\n\t\t{_c11} as string,\n\t\t{_c12} as string,\n\t\t{_c13} as string,\n\t\t{_c14} as string,\n\t\t{_c15} as string,\n\t\t{_c16} as string,\n\t\t{_c17} as string,\n\t\t{_c18} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'documentPerLine') ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -406,8 +399,28 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 0_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "Begin\nwhile 1=1\nselect 'ZADADDAA123 -- testtesttesttesttesttesttest'\nend",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -426,8 +439,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "default"
+						"databaseName": "default",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -845,8 +858,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "default"
+						"databaseName": "default",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -922,8 +935,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
+						"databaseName": "master",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -942,8 +955,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
+						"databaseName": "master",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -962,8 +975,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
+						"databaseName": "sqlpool",
+						"poolName": "sqlpool"
 					},
 					"resultLimit": -1
 				},
@@ -982,8 +995,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
+						"databaseName": "sqlpool",
+						"poolName": "sqlpool"
 					},
 					"resultLimit": 5000
 				},
@@ -1097,8 +1110,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "sqlpool",
-						"databaseName": "sqlpool"
+						"databaseName": "sqlpool",
+						"poolName": "sqlpool"
 					},
 					"resultLimit": 5000
 				},
@@ -1149,6 +1162,9 @@
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "folder1"
+				},
 				"content": {
 					"query": "-- type your sql script here, we now have intellisense",
 					"metadata": {
