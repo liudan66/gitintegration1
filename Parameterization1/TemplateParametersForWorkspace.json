@@ -1,0 +1,267 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "phipswdevuks01"
+		},
+		"phipswdevuks01-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"CMS_ActivityParty_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_ActivityParty_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_ActivityParty_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_ActivityPointer_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_ActivityPointer_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_ActivityPointer_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_AttributeMap_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_AttributeMap_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_AttributeMap_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Attribute_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Attribute_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Attribute_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_CallCloseContacts_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_CallCloseContacts_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_CallCloseContacts_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_CallOne_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_CallOne_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_CallOne_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_CloseContact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_CloseContact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_CloseContact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_CollectCloseContactCall_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_CollectCloseContactCall_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_CollectCloseContactCall_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Contact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Contact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Contact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_CustomerAddress_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_CustomerAddress_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_CustomerAddress_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_ExternalContact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_ExternalContact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_ExternalContact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_IncidentContact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_IncidentContact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_IncidentContact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_IncidentResolution_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_IncidentResolution_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_IncidentResolution_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Incident_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Incident_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Incident_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Location_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Location_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Location_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Organization_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Organization_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Organization_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_Owner_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Owner_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Owner_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_SystemUser_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_SystemUser_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_SystemUser_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_TestResultsContact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_TestResultsContact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_TestResultsContact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_TracerPhoneCall_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_TracerPhoneCall_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"CMS_TracerPhonecall_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Workplace_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsContactTracing"
+		},
+		"CMS_Workplace_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"CMS_Workplace_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"VMS_ActivityParty_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsVMS"
+		},
+		"VMS_ActivityPointer_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsVMS"
+		},
+		"VMS_Contact_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsVMS"
+		},
+		"VMS_Contact_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"VMS_Contact_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"VMS_IncidentResolution_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsVMS"
+		},
+		"VMS_PatientVaccinationRecord_Dyn_properties_linkedServiceName_referenceName": {
+			"value": "DynamicsVMS"
+		},
+		"VMS_PatientVaccinationRecord_Lake_properties_linkedServiceName_referenceName": {
+			"value": "phipswdevuks01-WorkspaceDefaultStorage"
+		},
+		"VMS_PatientVaccinationRecord_Lake_properties_typeProperties_location_fileSystem": {
+			"value": "hscstorphipdevuks01-dl-gen2-filesystem"
+		},
+		"AzureKeyVaultSynapseDefault_properties_parameters_env_defaultValue": {
+			"value": "uat"
+		},
+		"AzureKeyVaultSynapseDefault_properties_typeProperties_baseUrl": {
+			"value": "https://phipco@{linkedService().env}.vault.azure.net/"
+		},
+		"DynamicsContactTracing_properties_typeProperties_serviceUri": {
+			"value": "https://covid-hscni-uat.crm11.dynamics.com"
+		},
+		"DynamicsContactTracing_properties_typeProperties_servicePrincipalId": {
+			"value": "e2cf27b4-c1b9-49ad-8a2e-cea3db50db04"
+		},
+		"DynamicsContactTracing_properties_typeProperties_servicePrincipalCredential_secretName": {
+			"value": "dynamics-ct-client-secret"
+		},
+		"DynamicsVMS_properties_typeProperties_serviceUri": {
+			"value": "https://hscnivacuat02.crm11.dynamics.com"
+		},
+		"DynamicsVMS_properties_typeProperties_servicePrincipalId": {
+			"value": "4e60487f-5028-4e9b-8cf7-004c09b72e8a"
+		},
+		"DynamicsVMS_properties_typeProperties_servicePrincipalCredential_secretName": {
+			"value": "dynamics-vms-client-secret"
+		},
+		"PowerBIWorkspace_properties_typeProperties_workspaceID": {
+			"value": ""
+		},
+		"PowerBIWorkspace_properties_typeProperties_tenantID": {
+			"value": "9c9a30de-d8d7-4aa4-9600-4be7625ff6c5"
+		},
+		"phipswdevuks01-WorkspaceDefaultSqlServer_name": {
+			"value": "[concat(parameters('workspaceName'), '/phipswdevuks01-WorkspaceDefaultSqlServer')]"
+		},
+		"phipswdevuks01-WorkspaceDefaultStorage_name": {
+			"value": "[concat(parameters('workspaceName'), '/phipswdevuks01-WorkspaceDefaultStorage')]"
+		},
+		"phipswdevuks01-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hscstorphipdevuks01.dfs.core.windows.net"
+		}
+	}
+}

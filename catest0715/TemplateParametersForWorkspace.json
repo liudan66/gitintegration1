@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "catest0715"
+		},
+		"catest0715-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"catest0715-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://catestgen2.dfs.core.windows.net"
+		}
+	}
+}

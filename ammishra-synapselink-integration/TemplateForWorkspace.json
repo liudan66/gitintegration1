@@ -1,0 +1,1268 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "ammishra-synapselink-integration"
+		},
+		"Salesforce1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Salesforce1'"
+		},
+		"Salesforce1_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'Salesforce1'"
+		},
+		"ammishra-synapselink-integration-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ammishra-synapselink-integration-WorkspaceDefaultSqlServer'"
+		},
+		"bmdacsir01prod_GDrive_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'bmdacsir01prod_GDrive'"
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cicdsourcevenkatp-WorkspaceDefaultSqlServer'"
+		},
+		"targetwsvenkatp1-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'targetwsvenkatp1-WorkspaceDefaultSqlServer'"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://login.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "venkatptest123"
+		},
+		"ammishra-synapselink-integration-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://synapseciefarm08.dfs.core.windows.net"
+		},
+		"bm-dac-syn-01-prod-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://bmdacdlst01prod.dfs.core.windows.net"
+		},
+		"bmdacsir01prod_GDrive_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "G:\\共有ドライブ\\【GTD00292】 データ分析基盤\\共通データ"
+		},
+		"bmdacsir01prod_GDrive_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ifcadmin"
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"targetwsvenkatp1-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://venkatpadlsgen2.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/DS_bm_dac_TSR_Datalake_01')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bm-dac-syn-01-prod-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@formatDateTime(convertTimeZone(utcnow(),'UTC','Tokyo Standard Time'),'yyyy-MM-ddTHHmm')",
+							"type": "Expression"
+						},
+						"fileSystem": "tsr"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/bm-dac-syn-01-prod-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DS_bm_dac_TSR_Datalake_Temp')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bm-dac-syn-01-prod-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "2021-03-30T0000",
+							"type": "Expression"
+						},
+						"fileSystem": "tsr"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/bm-dac-syn-01-prod-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DS_bm_dac_TSR_GDrive_02')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bmdacsir01prod_GDrive",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "KJDATA.CSV",
+						"folderPath": "東京商工リサーチ/データ/20210715_法人コード対応"
+					},
+					"columnDelimiter": ",",
+					"encodingName": "SHIFT-JIS",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "�����e�i���X�敪",
+						"type": "String"
+					},
+					{
+						"name": "��ƃR�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�@�l�i�O��敪",
+						"type": "String"
+					},
+					{
+						"name": "�@�l�i���R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "���������Q�����O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "���������Q�����I�[�o�[�t���O",
+						"type": "String"
+					},
+					{
+						"name": "���������Q��������",
+						"type": "String"
+					},
+					{
+						"name": "���������Q�C���f�b�N�X��������",
+						"type": "String"
+					},
+					{
+						"name": "�]���P",
+						"type": "String"
+					},
+					{
+						"name": "�J�i����",
+						"type": "String"
+					},
+					{
+						"name": "�C���f�b�N�X�J�i����",
+						"type": "String"
+					},
+					{
+						"name": "��ƏZ���R�[�h�Q�s�r�q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "��ƏZ���R�[�h�Q�i�h�r�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "��ƗX�֔ԍ�",
+						"type": "String"
+					},
+					{
+						"name": "��Ə��ݒn����",
+						"type": "String"
+					},
+					{
+						"name": "��Ə��ݒn�Q�Z���O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "��Ə��ݒn�Q��Ə��ݒn",
+						"type": "String"
+					},
+					{
+						"name": "��Ɠd�b�ԍ�",
+						"type": "String"
+					},
+					{
+						"name": "�]���Q",
+						"type": "String"
+					},
+					{
+						"name": "�|�Y�t���O",
+						"type": "String"
+					},
+					{
+						"name": "�]�_",
+						"type": "String"
+					},
+					{
+						"name": "���Q���敪",
+						"type": "String"
+					},
+					{
+						"name": "���Q�����R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�d�c�h�m�d�s�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�n�ƁQ�n�ƔN���i����N���j",
+						"type": "String"
+					},
+					{
+						"name": "�n�ƁQ�����ȑO�n�ƔN",
+						"type": "String"
+					},
+					{
+						"name": "�ݗ��N���i����N���j",
+						"type": "String"
+					},
+					{
+						"name": "���{��i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�]�ƈ���",
+						"type": "String"
+					},
+					{
+						"name": "�ꊔ��z�i�~�j",
+						"type": "String"
+					},
+					{
+						"name": "�H�ꐔ",
+						"type": "String"
+					},
+					{
+						"name": "���Ə���",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�P",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�Q",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�R",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�S",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�T",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�U",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�V",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�W",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�X",
+						"type": "String"
+					},
+					{
+						"name": "��s�R�[�h�Q�P�O",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂P�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂P�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂Q�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂Q�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂R�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂R�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂S�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂S�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂T�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂T�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂U�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂U�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂V�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂V�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂W�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂W�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂X�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂X�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂P�O�Q��Z�@�֖�",
+						"type": "String"
+					},
+					{
+						"name": "��s���̂P�O�Q�X�ܖ�",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ�R�[�h�Q�P�i��j",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ�R�[�h�Q�Q�i�]�j",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ�R�[�h�Q�R�i�]�j",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ햼�́Q�Ǝ햼�̂P�i��j",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ햼�́Q�Ǝ햼�̂Q�i�]�j",
+						"type": "String"
+					},
+					{
+						"name": "�Ǝ햼�́Q�Ǝ햼�̂R�i�]�j",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�P",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�Q",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�R",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�S",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�T",
+						"type": "String"
+					},
+					{
+						"name": "�����i�R�[�h�Q�U",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂P",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂Q",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂R",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂S",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂T",
+						"type": "String"
+					},
+					{
+						"name": "�����i���́Q�����i���̂U",
+						"type": "String"
+					},
+					{
+						"name": "�c�Ǝ�ږ��́Q�c�Ǝ�ږ��̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�c�Ǝ�ږ��́Q�c�Ǝ�ږ���",
+						"type": "String"
+					},
+					{
+						"name": "������́Q������̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "������́Q�������",
+						"type": "String"
+					},
+					{
+						"name": "�劔�喼�́Q�劔�喼�̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�劔�喼�́Q�劔�喼��",
+						"type": "String"
+					},
+					{
+						"name": "�d���於�́Q�d���於�̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�d���於�́Q�d���於��",
+						"type": "String"
+					},
+					{
+						"name": "�̔��於�́Q�̔��於�̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�̔��於�́Q�̔��於��",
+						"type": "String"
+					},
+					{
+						"name": "�H��E�x�X�E�c�Ə����́Q�H��E�x�X�E�c�Ə����̊O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�H��E�x�X�E�c�Ə����́Q�H��E�x�X�E�c�Ə�����",
+						"type": "String"
+					},
+					{
+						"name": "�T���Q�T���O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�T���Q�T��",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q���Z�N��",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q����",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q���㍂�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q�ō����敪",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q���v��i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q�z��",
+						"type": "String"
+					},
+					{
+						"name": "�]���R",
+						"type": "String"
+					},
+					{
+						"name": "�O�X�����Z�Q����L���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�]���S",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q���Z�N��",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q����",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q���㍂�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q�ō����敪",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q���v��i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q�z��",
+						"type": "String"
+					},
+					{
+						"name": "�]���T",
+						"type": "String"
+					},
+					{
+						"name": "�O�����Z�Q����L���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�]���U",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q���Z�N��",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q����",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q���㍂�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q�ō����敪",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q���v��i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q�z��",
+						"type": "String"
+					},
+					{
+						"name": "�]���V",
+						"type": "String"
+					},
+					{
+						"name": "�������Z�Q����L���t���O",
+						"type": "String"
+					},
+					{
+						"name": "�]���W",
+						"type": "String"
+					},
+					{
+						"name": "��������Q�L����",
+						"type": "String"
+					},
+					{
+						"name": "��������Q�L���z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O������Q�L����",
+						"type": "String"
+					},
+					{
+						"name": "�O������Q�L���z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�������v�Q�L����",
+						"type": "String"
+					},
+					{
+						"name": "�������v�Q�L���z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�O�����v�Q�L����",
+						"type": "String"
+					},
+					{
+						"name": "�O�����v�Q�L���z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "��l���茎�ԁQ�����z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "��l���茎�ԁQ���v��z�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "�]���X",
+						"type": "String"
+					},
+					{
+						"name": "��\\�Ҏ����Q�O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "��\\�Ҏ����Q�I�[�o�[�t���O",
+						"type": "String"
+					},
+					{
+						"name": "��\\�Ҏ����Q��\\�Ҏ���",
+						"type": "String"
+					},
+					{
+						"name": "�]���P�O",
+						"type": "String"
+					},
+					{
+						"name": "��\\�Ҏ����J�i",
+						"type": "String"
+					},
+					{
+						"name": "���N�����i����j",
+						"type": "String"
+					},
+					{
+						"name": "�j���敪",
+						"type": "String"
+					},
+					{
+						"name": "���x�Q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "���x�Q����",
+						"type": "String"
+					},
+					{
+						"name": "��E�Q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "��E�Q����",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ҏZ���R�[�h�Q�s�r�q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ҏZ���R�[�h�Q�i�h�r�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "��\\�җX�֔ԍ�",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ҏZ������",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ҏZ���Q��\\�ҏZ���O���t���O",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ҏZ���Q��\\�Ҍ��Z��",
+						"type": "String"
+					},
+					{
+						"name": "��\\�ғd�b�ԍ�",
+						"type": "String"
+					},
+					{
+						"name": "�o�g�n�Q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�o�g�n�Q����",
+						"type": "String"
+					},
+					{
+						"name": "�Z���Q�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�Z���Q����",
+						"type": "String"
+					},
+					{
+						"name": "�ŏI�w��Q�w�Z�R�[�h",
+						"type": "String"
+					},
+					{
+						"name": "�ŏI�w��Q�w�Z����",
+						"type": "String"
+					},
+					{
+						"name": "�ŏI�w��Q���Ƌ敪",
+						"type": "String"
+					},
+					{
+						"name": "��R�[�h�Q�P",
+						"type": "String"
+					},
+					{
+						"name": "��R�[�h�Q�Q",
+						"type": "String"
+					},
+					{
+						"name": "��R�[�h�Q�R",
+						"type": "String"
+					},
+					{
+						"name": "����́Q����̂P",
+						"type": "String"
+					},
+					{
+						"name": "����́Q����̂Q",
+						"type": "String"
+					},
+					{
+						"name": "����́Q����̂R",
+						"type": "String"
+					},
+					{
+						"name": "�|�Y�o��",
+						"type": "String"
+					},
+					{
+						"name": "�[�ŁQ�[�ŔN�i����N�j",
+						"type": "String"
+					},
+					{
+						"name": "�[�ŁQ�[�Ŋz�i��~�j",
+						"type": "String"
+					},
+					{
+						"name": "��Ə��ݒn�o�[�R�[�h���",
+						"type": "String"
+					},
+					{
+						"name": "��\\�Ҍ��Z���o�[�R�[�h���",
+						"type": "String"
+					},
+					{
+						"name": "�]���P�P",
+						"type": "String"
+					},
+					{
+						"name": "�@�l�ԍ�",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/bmdacsir01prod_GDrive')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Salesforce1')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "Salesforce",
+				"typeProperties": {
+					"environmentUrl": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]",
+					"username": "[parameters('Salesforce1_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Salesforce1_password')]"
+					},
+					"securityToken": {
+						"type": "SecureString",
+						"value": "[parameters('Salesforce1_securityToken')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ammishra-synapselink-integration-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('ammishra-synapselink-integration-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ammishra-synapselink-integration-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ammishra-synapselink-integration-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/bm-dac-syn-01-prod-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('bm-dac-syn-01-prod-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/bmdacsir01prod_GDrive')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('bmdacsir01prod_GDrive_properties_typeProperties_host')]",
+					"userId": "[parameters('bmdacsir01prod_GDrive_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('bmdacsir01prod_GDrive_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/cicdsourcevenkatp-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('cicdsourcevenkatp-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/cicdsourcevenkatp-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('cicdsourcevenkatp-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/targetwsvenkatp1-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('targetwsvenkatp1-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/targetwsvenkatp1-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('targetwsvenkatp1-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/bmdacsir01prod')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/TSR_CompanyCode_Add')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_bm_dac_TSR_Datalake_01",
+								"type": "DatasetReference"
+							},
+							"name": "TSRDataInCodeabc"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_bm_dac_TSR_Datalake_01",
+								"type": "DatasetReference"
+							},
+							"name": "CodeLessTSRData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_bm_dac_TSR_Datalake_Temp",
+								"type": "DatasetReference"
+							},
+							"name": "TSRCodeAddFileExport"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_bm_dac_TSR_Datalake_Temp",
+								"type": "DatasetReference"
+							},
+							"name": "TSRCodeAddFileExportNew"
+						}
+					],
+					"transformations": [
+						{
+							"name": "TSRCodeAdd"
+						},
+						{
+							"name": "CodeTrim"
+						},
+						{
+							"name": "TSRCodeConditionalSplit1"
+						},
+						{
+							"name": "TSRCodeSurrogateKey1"
+						},
+						{
+							"name": "TSRCodeSelect"
+						},
+						{
+							"name": "TSRCodeSurrogateKey2"
+						},
+						{
+							"name": "TSRCodeDeliverdColumn"
+						},
+						{
+							"name": "TSRCodeUnionCollumn"
+						},
+						{
+							"name": "TSRCodeSelectNew"
+						},
+						{
+							"name": "IncludeNullValuesNew"
+						},
+						{
+							"name": "TSRCodeSurrogateKeyNew1"
+						},
+						{
+							"name": "TSRCodeSurrogateKeyNew2"
+						},
+						{
+							"name": "TSRCodeDelivrdColumnDummyCodeAdd"
+						},
+						{
+							"name": "TSRCodeUnionColumnNew"
+						}
+					],
+					"script": "source(output(\n\t\t{メンテナンス区分} as string,\n\t\t{企業コード} as string,\n\t\t{法人格前後区分} as string,\n\t\t{法人格略コード} as string,\n\t\t{漢字商号＿商号外字フラグ} as string,\n\t\t{漢字商号＿商号オーバーフラグ} as string,\n\t\t{漢字商号＿漢字商号} as string,\n\t\t{漢字商号＿インデックス漢字商号} as string,\n\t\t{余白１} as string,\n\t\t{カナ商号} as string,\n\t\t{インデックスカナ商号} as string,\n\t\t{企業住所コード＿ＴＳＲコード} as string,\n\t\t{企業住所コード＿ＪＩＳコード} as string,\n\t\t{企業郵便番号} as string,\n\t\t{企業所在地桁数} as string,\n\t\t{企業所在地＿住所外字フラグ} as string,\n\t\t{企業所在地＿企業所在地} as string,\n\t\t{企業電話番号} as string,\n\t\t{余白２} as string,\n\t\t{倒産フラグ} as string,\n\t\t{評点} as string,\n\t\t{上場＿上場区分} as string,\n\t\t{上場＿株式コード} as string,\n\t\t{ＥＤＩＮＥＴコード} as string,\n\t\t{創業＿創業年月（西暦年月）} as string,\n\t\t{創業＿明治以前創業年} as string,\n\t\t{設立年月（西暦年月）} as string,\n\t\t{資本金（千円）} as long,\n\t\t{従業員数} as integer,\n\t\t{一株金額（円）} as integer,\n\t\t{工場数} as integer,\n\t\t{事業所数} as integer,\n\t\t{銀行コード＿１} as integer,\n\t\t{銀行コード＿２} as integer,\n\t\t{銀行コード＿３} as integer,\n\t\t{銀行コード＿４} as integer,\n\t\t{銀行コード＿５} as integer,\n\t\t{銀行コード＿６} as integer,\n\t\t{銀行コード＿７} as integer,\n\t\t{銀行コード＿８} as integer,\n\t\t{銀行コード＿９} as integer,\n\t\t{銀行コード＿１０} as integer,\n\t\t{銀行名称１＿金融機関名} as string,\n\t\t{銀行名称１＿店舗名} as string,\n\t\t{銀行名称２＿金融機関名} as string,\n\t\t{銀行名称２＿店舗名} as string,\n\t\t{銀行名称３＿金融機関名} as string,\n\t\t{銀行名称３＿店舗名} as string,\n\t\t{銀行名称４＿金融機関名} as string,\n\t\t{銀行名称４＿店舗名} as string,\n\t\t{銀行名称５＿金融機関名} as string,\n\t\t{銀行名称５＿店舗名} as string,\n\t\t{銀行名称６＿金融機関名} as string,\n\t\t{銀行名称６＿店舗名} as string,\n\t\t{銀行名称７＿金融機関名} as string,\n\t\t{銀行名称７＿店舗名} as string,\n\t\t{銀行名称８＿金融機関名} as string,\n\t\t{銀行名称８＿店舗名} as string,\n\t\t{銀行名称９＿金融機関名} as string,\n\t\t{銀行名称９＿店舗名} as string,\n\t\t{銀行名称１０＿金融機関名} as string,\n\t\t{銀行名称１０＿店舗名} as string,\n\t\t{業種コード＿１（主）} as string,\n\t\t{業種コード＿２（従）} as string,\n\t\t{業種コード＿３（従）} as string,\n\t\t{業種名称＿業種名称１（主）} as string,\n\t\t{業種名称＿業種名称２（従）} as string,\n\t\t{業種名称＿業種名称３（従）} as string,\n\t\t{扱い品コード＿１} as string,\n\t\t{扱い品コード＿２} as string,\n\t\t{扱い品コード＿３} as string,\n\t\t{扱い品コード＿４} as string,\n\t\t{扱い品コード＿５} as string,\n\t\t{扱い品コード＿６} as string,\n\t\t{扱い品名称＿扱い品名称１} as string,\n\t\t{扱い品名称＿扱い品名称２} as string,\n\t\t{扱い品名称＿扱い品名称３} as string,\n\t\t{扱い品名称＿扱い品名称４} as string,\n\t\t{扱い品名称＿扱い品名称５} as string,\n\t\t{扱い品名称＿扱い品名称６} as string,\n\t\t{営業種目名称＿営業種目名称外字フラグ} as string,\n\t\t{営業種目名称＿営業種目名称} as string,\n\t\t{役員名称＿役員名称外字フラグ} as string,\n\t\t{役員名称＿役員名称} as string,\n\t\t{大株主名称＿大株主名称外字フラグ} as string,\n\t\t{大株主名称＿大株主名称} as string,\n\t\t{仕入先名称＿仕入先名称外字フラグ} as string,\n\t\t{仕入先名称＿仕入先名称} as string,\n\t\t{販売先名称＿販売先名称外字フラグ} as string,\n\t\t{販売先名称＿販売先名称} as string,\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ} as string,\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称} as string,\n\t\t{概況＿概況外字フラグ} as string,\n\t\t{概況＿概況} as string,\n\t\t{前々期決算＿決算年月} as string,\n\t\t{前々期決算＿月数} as short,\n\t\t{前々期決算＿売上高（千円）} as long,\n\t\t{前々期決算＿税込引区分} as string,\n\t\t{前々期決算＿利益金（千円）} as long,\n\t\t{前々期決算＿配当} as string,\n\t\t{余白３} as string,\n\t\t{前々期決算＿財務有無フラグ} as string,\n\t\t{余白４} as string,\n\t\t{前期決算＿決算年月} as string,\n\t\t{前期決算＿月数} as short,\n\t\t{前期決算＿売上高（千円）} as long,\n\t\t{前期決算＿税込引区分} as string,\n\t\t{前期決算＿利益金（千円）} as long,\n\t\t{前期決算＿配当} as string,\n\t\t{余白５} as string,\n\t\t{前期決算＿財務有無フラグ} as string,\n\t\t{余白６} as string,\n\t\t{当期決算＿決算年月} as string,\n\t\t{当期決算＿月数} as short,\n\t\t{当期決算＿売上高（千円）} as long,\n\t\t{当期決算＿税込引区分} as string,\n\t\t{当期決算＿利益金（千円）} as long,\n\t\t{当期決算＿配当} as string,\n\t\t{余白７} as string,\n\t\t{当期決算＿財務有無フラグ} as string,\n\t\t{余白８} as string,\n\t\t{当期売上＿伸長率} as integer,\n\t\t{当期売上＿伸長額（千円）} as long,\n\t\t{前期売上＿伸長率} as integer,\n\t\t{前期売上＿伸長額（千円）} as long,\n\t\t{当期利益＿伸長率} as integer,\n\t\t{当期利益＿伸長額（千円）} as long,\n\t\t{前期利益＿伸長率} as integer,\n\t\t{前期利益＿伸長額（千円）} as long,\n\t\t{一人当り月間＿売上金額（千円）} as integer,\n\t\t{一人当り月間＿利益金額（千円）} as integer,\n\t\t{余白９} as string,\n\t\t{代表者氏名＿外字フラグ} as string,\n\t\t{代表者氏名＿オーバーフラグ} as string,\n\t\t{代表者氏名＿代表者氏名} as string,\n\t\t{余白１０} as string,\n\t\t{代表者氏名カナ} as string,\n\t\t{生年月日（西暦）} as string,\n\t\t{男女区分} as string,\n\t\t{干支＿コード} as short,\n\t\t{干支＿名称} as string,\n\t\t{役職＿コード} as string,\n\t\t{役職＿名称} as string,\n\t\t{代表者住所コード＿ＴＳＲコード} as string,\n\t\t{代表者住所コード＿ＪＩＳコード} as string,\n\t\t{代表者郵便番号} as string,\n\t\t{代表者住所桁数} as string,\n\t\t{代表者住所＿代表者住所外字フラグ} as string,\n\t\t{代表者住所＿代表者現住所} as string,\n\t\t{代表者電話番号} as string,\n\t\t{出身地＿コード} as string,\n\t\t{出身地＿名称} as string,\n\t\t{住居＿コード} as string,\n\t\t{住居＿名称} as string,\n\t\t{最終学歴＿学校コード} as string,\n\t\t{最終学歴＿学校名称} as string,\n\t\t{最終学歴＿卒業区分} as string,\n\t\t{趣味コード＿１} as string,\n\t\t{趣味コード＿２} as string,\n\t\t{趣味コード＿３} as string,\n\t\t{趣味名称＿趣味名称１} as string,\n\t\t{趣味名称＿趣味名称２} as string,\n\t\t{趣味名称＿趣味名称３} as string,\n\t\t{倒産経歴} as string,\n\t\t{納税＿納税年（西暦年）} as string,\n\t\t{納税＿納税額（千円）} as string,\n\t\t{企業所在地バーコード情報} as string,\n\t\t{代表者現住所バーコード情報} as string,\n\t\t{余白１１} as string,\n\t\t{法人番号} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['CodeIN/*']) ~> TSRDataInCodeabc\nsource(output(\n\t\t{メンテナンス区分} as string,\n\t\t{企業コード} as string,\n\t\t{法人格前後区分} as string,\n\t\t{法人格略コード} as string,\n\t\t{漢字商号＿商号外字フラグ} as string,\n\t\t{漢字商号＿商号オーバーフラグ} as string,\n\t\t{漢字商号＿漢字商号} as string,\n\t\t{漢字商号＿インデックス漢字商号} as string,\n\t\t{余白１} as string,\n\t\t{カナ商号} as string,\n\t\t{インデックスカナ商号} as string,\n\t\t{企業住所コード＿ＴＳＲコード} as string,\n\t\t{企業住所コード＿ＪＩＳコード} as string,\n\t\t{企業郵便番号} as string,\n\t\t{企業所在地桁数} as string,\n\t\t{企業所在地＿住所外字フラグ} as string,\n\t\t{企業所在地＿企業所在地} as string,\n\t\t{企業電話番号} as string,\n\t\t{余白２} as string,\n\t\t{倒産フラグ} as string,\n\t\t{評点} as string,\n\t\t{上場＿上場区分} as string,\n\t\t{上場＿株式コード} as string,\n\t\t{ＥＤＩＮＥＴコード} as string,\n\t\t{創業＿創業年月（西暦年月）} as string,\n\t\t{創業＿明治以前創業年} as string,\n\t\t{設立年月（西暦年月）} as string,\n\t\t{資本金（千円）} as long,\n\t\t{従業員数} as integer,\n\t\t{一株金額（円）} as integer,\n\t\t{工場数} as integer,\n\t\t{事業所数} as integer,\n\t\t{銀行コード＿１} as string,\n\t\t{銀行コード＿２} as string,\n\t\t{銀行コード＿３} as string,\n\t\t{銀行コード＿４} as string,\n\t\t{銀行コード＿５} as string,\n\t\t{銀行コード＿６} as string,\n\t\t{銀行コード＿７} as string,\n\t\t{銀行コード＿８} as string,\n\t\t{銀行コード＿９} as string,\n\t\t{銀行コード＿１０} as string,\n\t\t{銀行名称１＿金融機関名} as string,\n\t\t{銀行名称１＿店舗名} as string,\n\t\t{銀行名称２＿金融機関名} as string,\n\t\t{銀行名称２＿店舗名} as string,\n\t\t{銀行名称３＿金融機関名} as string,\n\t\t{銀行名称３＿店舗名} as string,\n\t\t{銀行名称４＿金融機関名} as string,\n\t\t{銀行名称４＿店舗名} as string,\n\t\t{銀行名称５＿金融機関名} as string,\n\t\t{銀行名称５＿店舗名} as string,\n\t\t{銀行名称６＿金融機関名} as string,\n\t\t{銀行名称６＿店舗名} as string,\n\t\t{銀行名称７＿金融機関名} as string,\n\t\t{銀行名称７＿店舗名} as string,\n\t\t{銀行名称８＿金融機関名} as string,\n\t\t{銀行名称８＿店舗名} as string,\n\t\t{銀行名称９＿金融機関名} as string,\n\t\t{銀行名称９＿店舗名} as string,\n\t\t{銀行名称１０＿金融機関名} as string,\n\t\t{銀行名称１０＿店舗名} as string,\n\t\t{業種コード＿１（主）} as string,\n\t\t{業種コード＿２（従）} as string,\n\t\t{業種コード＿３（従）} as string,\n\t\t{業種名称＿業種名称１（主）} as string,\n\t\t{業種名称＿業種名称２（従）} as string,\n\t\t{業種名称＿業種名称３（従）} as string,\n\t\t{扱い品コード＿１} as string,\n\t\t{扱い品コード＿２} as string,\n\t\t{扱い品コード＿３} as string,\n\t\t{扱い品コード＿４} as string,\n\t\t{扱い品コード＿５} as string,\n\t\t{扱い品コード＿６} as string,\n\t\t{扱い品名称＿扱い品名称１} as string,\n\t\t{扱い品名称＿扱い品名称２} as string,\n\t\t{扱い品名称＿扱い品名称３} as string,\n\t\t{扱い品名称＿扱い品名称４} as string,\n\t\t{扱い品名称＿扱い品名称５} as string,\n\t\t{扱い品名称＿扱い品名称６} as string,\n\t\t{営業種目名称＿営業種目名称外字フラグ} as string,\n\t\t{営業種目名称＿営業種目名称} as string,\n\t\t{役員名称＿役員名称外字フラグ} as string,\n\t\t{役員名称＿役員名称} as string,\n\t\t{大株主名称＿大株主名称外字フラグ} as string,\n\t\t{大株主名称＿大株主名称} as string,\n\t\t{仕入先名称＿仕入先名称外字フラグ} as string,\n\t\t{仕入先名称＿仕入先名称} as string,\n\t\t{販売先名称＿販売先名称外字フラグ} as string,\n\t\t{販売先名称＿販売先名称} as string,\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ} as string,\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称} as string,\n\t\t{概況＿概況外字フラグ} as string,\n\t\t{概況＿概況} as string,\n\t\t{前々期決算＿決算年月} as string,\n\t\t{前々期決算＿月数} as short,\n\t\t{前々期決算＿売上高（千円）} as long,\n\t\t{前々期決算＿税込引区分} as string,\n\t\t{前々期決算＿利益金（千円）} as long,\n\t\t{前々期決算＿配当} as string,\n\t\t{余白３} as string,\n\t\t{前々期決算＿財務有無フラグ} as string,\n\t\t{余白４} as string,\n\t\t{前期決算＿決算年月} as string,\n\t\t{前期決算＿月数} as short,\n\t\t{前期決算＿売上高（千円）} as long,\n\t\t{前期決算＿税込引区分} as string,\n\t\t{前期決算＿利益金（千円）} as long,\n\t\t{前期決算＿配当} as string,\n\t\t{余白５} as string,\n\t\t{前期決算＿財務有無フラグ} as string,\n\t\t{余白６} as string,\n\t\t{当期決算＿決算年月} as string,\n\t\t{当期決算＿月数} as short,\n\t\t{当期決算＿売上高（千円）} as long,\n\t\t{当期決算＿税込引区分} as string,\n\t\t{当期決算＿利益金（千円）} as long,\n\t\t{当期決算＿配当} as string,\n\t\t{余白７} as string,\n\t\t{当期決算＿財務有無フラグ} as string,\n\t\t{余白８} as string,\n\t\t{当期売上＿伸長率} as integer,\n\t\t{当期売上＿伸長額（千円）} as long,\n\t\t{前期売上＿伸長率} as integer,\n\t\t{前期売上＿伸長額（千円）} as long,\n\t\t{当期利益＿伸長率} as integer,\n\t\t{当期利益＿伸長額（千円）} as long,\n\t\t{前期利益＿伸長率} as integer,\n\t\t{前期利益＿伸長額（千円）} as long,\n\t\t{一人当り月間＿売上金額（千円）} as integer,\n\t\t{一人当り月間＿利益金額（千円）} as integer,\n\t\t{余白９} as string,\n\t\t{代表者氏名＿外字フラグ} as string,\n\t\t{代表者氏名＿オーバーフラグ} as string,\n\t\t{代表者氏名＿代表者氏名} as string,\n\t\t{余白１０} as string,\n\t\t{代表者氏名カナ} as string,\n\t\t{生年月日（西暦）} as string,\n\t\t{男女区分} as string,\n\t\t{干支＿コード} as string,\n\t\t{干支＿名称} as string,\n\t\t{役職＿コード} as string,\n\t\t{役職＿名称} as string,\n\t\t{代表者住所コード＿ＴＳＲコード} as string,\n\t\t{代表者住所コード＿ＪＩＳコード} as string,\n\t\t{代表者郵便番号} as string,\n\t\t{代表者住所桁数} as string,\n\t\t{代表者住所＿代表者住所外字フラグ} as string,\n\t\t{代表者住所＿代表者現住所} as string,\n\t\t{代表者電話番号} as string,\n\t\t{出身地＿コード} as string,\n\t\t{出身地＿名称} as string,\n\t\t{住居＿コード} as string,\n\t\t{住居＿名称} as string,\n\t\t{最終学歴＿学校コード} as string,\n\t\t{最終学歴＿学校名称} as string,\n\t\t{最終学歴＿卒業区分} as string,\n\t\t{趣味コード＿１} as string,\n\t\t{趣味コード＿２} as string,\n\t\t{趣味コード＿３} as string,\n\t\t{趣味名称＿趣味名称１} as string,\n\t\t{趣味名称＿趣味名称２} as string,\n\t\t{趣味名称＿趣味名称３} as string,\n\t\t{倒産経歴} as string,\n\t\t{納税＿納税年（西暦年）} as string,\n\t\t{納税＿納税額（千円）} as string,\n\t\t{企業所在地バーコード情報} as string,\n\t\t{代表者現住所バーコード情報} as string,\n\t\t{余白１１} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['CodeNo/*']) ~> CodeLessTSRData\nCodeTrim, CodeLessTSRData join(CodeTrim@{企業コード} == CodeLessTSRData@{企業コード},\n\tjoinType:'right',\n\tbroadcast: 'auto')~> TSRCodeAdd\nTSRDataInCodeabc select(mapColumn(\n\t\t{企業コード},\n\t\t{法人番号}\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> CodeTrim\nTSRCodeSelect split(or(isNull({法人番号}), length(trim({法人番号})) == 0),\n\tdisjoint: false) ~> TSRCodeConditionalSplit1@(IncludeNullValues, NotIncludeNullValues)\nTSRCodeConditionalSplit1@IncludeNullValues keyGenerate(output(row_number as long),\n\tstartAt: 1L) ~> TSRCodeSurrogateKey1\nTSRCodeAdd select(mapColumn(\n\t\t{法人番号},\n\t\t{メンテナンス区分},\n\t\t{企業コード} = CodeLessTSRData@{企業コード},\n\t\t{法人格前後区分},\n\t\t{法人格略コード},\n\t\t{漢字商号＿商号外字フラグ},\n\t\t{漢字商号＿商号オーバーフラグ},\n\t\t{漢字商号＿漢字商号},\n\t\t{漢字商号＿インデックス漢字商号},\n\t\t{余白１},\n\t\t{カナ商号},\n\t\t{インデックスカナ商号},\n\t\t{企業住所コード＿ＴＳＲコード},\n\t\t{企業住所コード＿ＪＩＳコード},\n\t\t{企業郵便番号},\n\t\t{企業所在地桁数},\n\t\t{企業所在地＿住所外字フラグ},\n\t\t{企業所在地＿企業所在地},\n\t\t{企業電話番号},\n\t\t{余白２},\n\t\t{倒産フラグ},\n\t\t{評点},\n\t\t{上場＿上場区分},\n\t\t{上場＿株式コード},\n\t\t{ＥＤＩＮＥＴコード},\n\t\t{創業＿創業年月（西暦年月）},\n\t\t{創業＿明治以前創業年},\n\t\t{設立年月（西暦年月）},\n\t\t{資本金（千円）},\n\t\t{従業員数},\n\t\t{一株金額（円）},\n\t\t{工場数},\n\t\t{事業所数},\n\t\t{銀行コード＿１},\n\t\t{銀行コード＿２},\n\t\t{銀行コード＿３},\n\t\t{銀行コード＿４},\n\t\t{銀行コード＿５},\n\t\t{銀行コード＿６},\n\t\t{銀行コード＿７},\n\t\t{銀行コード＿８},\n\t\t{銀行コード＿９},\n\t\t{銀行コード＿１０},\n\t\t{銀行名称１＿金融機関名},\n\t\t{銀行名称１＿店舗名},\n\t\t{銀行名称２＿金融機関名},\n\t\t{銀行名称２＿店舗名},\n\t\t{銀行名称３＿金融機関名},\n\t\t{銀行名称３＿店舗名},\n\t\t{銀行名称４＿金融機関名},\n\t\t{銀行名称４＿店舗名},\n\t\t{銀行名称５＿金融機関名},\n\t\t{銀行名称５＿店舗名},\n\t\t{銀行名称６＿金融機関名},\n\t\t{銀行名称６＿店舗名},\n\t\t{銀行名称７＿金融機関名},\n\t\t{銀行名称７＿店舗名},\n\t\t{銀行名称８＿金融機関名},\n\t\t{銀行名称８＿店舗名},\n\t\t{銀行名称９＿金融機関名},\n\t\t{銀行名称９＿店舗名},\n\t\t{銀行名称１０＿金融機関名},\n\t\t{銀行名称１０＿店舗名},\n\t\t{業種コード＿１（主）},\n\t\t{業種コード＿２（従）},\n\t\t{業種コード＿３（従）},\n\t\t{業種名称＿業種名称１（主）},\n\t\t{業種名称＿業種名称２（従）},\n\t\t{業種名称＿業種名称３（従）},\n\t\t{扱い品コード＿１},\n\t\t{扱い品コード＿２},\n\t\t{扱い品コード＿３},\n\t\t{扱い品コード＿４},\n\t\t{扱い品コード＿５},\n\t\t{扱い品コード＿６},\n\t\t{扱い品名称＿扱い品名称１},\n\t\t{扱い品名称＿扱い品名称２},\n\t\t{扱い品名称＿扱い品名称３},\n\t\t{扱い品名称＿扱い品名称４},\n\t\t{扱い品名称＿扱い品名称５},\n\t\t{扱い品名称＿扱い品名称６},\n\t\t{営業種目名称＿営業種目名称外字フラグ},\n\t\t{営業種目名称＿営業種目名称},\n\t\t{役員名称＿役員名称外字フラグ},\n\t\t{役員名称＿役員名称},\n\t\t{大株主名称＿大株主名称外字フラグ},\n\t\t{大株主名称＿大株主名称},\n\t\t{仕入先名称＿仕入先名称外字フラグ},\n\t\t{仕入先名称＿仕入先名称},\n\t\t{販売先名称＿販売先名称外字フラグ},\n\t\t{販売先名称＿販売先名称},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称},\n\t\t{概況＿概況外字フラグ},\n\t\t{概況＿概況},\n\t\t{前々期決算＿決算年月},\n\t\t{前々期決算＿月数},\n\t\t{前々期決算＿売上高（千円）},\n\t\t{前々期決算＿税込引区分},\n\t\t{前々期決算＿利益金（千円）},\n\t\t{前々期決算＿配当},\n\t\t{余白３},\n\t\t{前々期決算＿財務有無フラグ},\n\t\t{余白４},\n\t\t{前期決算＿決算年月},\n\t\t{前期決算＿月数},\n\t\t{前期決算＿売上高（千円）},\n\t\t{前期決算＿税込引区分},\n\t\t{前期決算＿利益金（千円）},\n\t\t{前期決算＿配当},\n\t\t{余白５},\n\t\t{前期決算＿財務有無フラグ},\n\t\t{余白６},\n\t\t{当期決算＿決算年月},\n\t\t{当期決算＿月数},\n\t\t{当期決算＿売上高（千円）},\n\t\t{当期決算＿税込引区分},\n\t\t{当期決算＿利益金（千円）},\n\t\t{当期決算＿配当},\n\t\t{余白７},\n\t\t{当期決算＿財務有無フラグ},\n\t\t{余白８},\n\t\t{当期売上＿伸長率},\n\t\t{当期売上＿伸長額（千円）},\n\t\t{前期売上＿伸長率},\n\t\t{前期売上＿伸長額（千円）},\n\t\t{当期利益＿伸長率},\n\t\t{当期利益＿伸長額（千円）},\n\t\t{前期利益＿伸長率},\n\t\t{前期利益＿伸長額（千円）},\n\t\t{一人当り月間＿売上金額（千円）},\n\t\t{一人当り月間＿利益金額（千円）},\n\t\t{余白９},\n\t\t{代表者氏名＿外字フラグ},\n\t\t{代表者氏名＿オーバーフラグ},\n\t\t{代表者氏名＿代表者氏名},\n\t\t{余白１０},\n\t\t{代表者氏名カナ},\n\t\t{生年月日（西暦）},\n\t\t{男女区分},\n\t\t{干支＿コード},\n\t\t{干支＿名称},\n\t\t{役職＿コード},\n\t\t{役職＿名称},\n\t\t{代表者住所コード＿ＴＳＲコード},\n\t\t{代表者住所コード＿ＪＩＳコード},\n\t\t{代表者郵便番号},\n\t\t{代表者住所桁数},\n\t\t{代表者住所＿代表者住所外字フラグ},\n\t\t{代表者住所＿代表者現住所},\n\t\t{代表者電話番号},\n\t\t{出身地＿コード},\n\t\t{出身地＿名称},\n\t\t{住居＿コード},\n\t\t{住居＿名称},\n\t\t{最終学歴＿学校コード},\n\t\t{最終学歴＿学校名称},\n\t\t{最終学歴＿卒業区分},\n\t\t{趣味コード＿１},\n\t\t{趣味コード＿２},\n\t\t{趣味コード＿３},\n\t\t{趣味名称＿趣味名称１},\n\t\t{趣味名称＿趣味名称２},\n\t\t{趣味名称＿趣味名称３},\n\t\t{倒産経歴},\n\t\t{納税＿納税年（西暦年）},\n\t\t{納税＿納税額（千円）},\n\t\t{企業所在地バーコード情報},\n\t\t{代表者現住所バーコード情報},\n\t\t{余白１１}\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> TSRCodeSelect\nTSRCodeConditionalSplit1@NotIncludeNullValues keyGenerate(output(row_number as long),\n\tstartAt: 1L) ~> TSRCodeSurrogateKey2\nTSRCodeSurrogateKey1 derive({法人番号} = iif(or(isNull({法人番号}), length(trim({法人番号})) == 0), concat(\"D210330\", toString(999999 - row_number + 1)), {法人番号})) ~> TSRCodeDeliverdColumn\nTSRCodeDeliverdColumn, TSRCodeSurrogateKey2 union(byName: true)~> TSRCodeUnionCollumn\nTSRDataInCodeabc select(mapColumn(\n\t\t{法人番号},\n\t\t{メンテナンス区分},\n\t\t{企業コード},\n\t\t{法人格前後区分},\n\t\t{法人格略コード},\n\t\t{漢字商号＿商号外字フラグ},\n\t\t{漢字商号＿商号オーバーフラグ},\n\t\t{漢字商号＿漢字商号},\n\t\t{漢字商号＿インデックス漢字商号},\n\t\t{余白１},\n\t\t{カナ商号},\n\t\t{インデックスカナ商号},\n\t\t{企業住所コード＿ＴＳＲコード},\n\t\t{企業住所コード＿ＪＩＳコード},\n\t\t{企業郵便番号},\n\t\t{企業所在地桁数},\n\t\t{企業所在地＿住所外字フラグ},\n\t\t{企業所在地＿企業所在地},\n\t\t{企業電話番号},\n\t\t{余白２},\n\t\t{倒産フラグ},\n\t\t{評点},\n\t\t{上場＿上場区分},\n\t\t{上場＿株式コード},\n\t\t{ＥＤＩＮＥＴコード},\n\t\t{創業＿創業年月（西暦年月）},\n\t\t{創業＿明治以前創業年},\n\t\t{設立年月（西暦年月）},\n\t\t{資本金（千円）},\n\t\t{従業員数},\n\t\t{一株金額（円）},\n\t\t{工場数},\n\t\t{事業所数},\n\t\t{銀行コード＿１},\n\t\t{銀行コード＿２},\n\t\t{銀行コード＿３},\n\t\t{銀行コード＿４},\n\t\t{銀行コード＿５},\n\t\t{銀行コード＿６},\n\t\t{銀行コード＿７},\n\t\t{銀行コード＿８},\n\t\t{銀行コード＿９},\n\t\t{銀行コード＿１０},\n\t\t{銀行名称１＿金融機関名},\n\t\t{銀行名称１＿店舗名},\n\t\t{銀行名称２＿金融機関名},\n\t\t{銀行名称２＿店舗名},\n\t\t{銀行名称３＿金融機関名},\n\t\t{銀行名称３＿店舗名},\n\t\t{銀行名称４＿金融機関名},\n\t\t{銀行名称４＿店舗名},\n\t\t{銀行名称５＿金融機関名},\n\t\t{銀行名称５＿店舗名},\n\t\t{銀行名称６＿金融機関名},\n\t\t{銀行名称６＿店舗名},\n\t\t{銀行名称７＿金融機関名},\n\t\t{銀行名称７＿店舗名},\n\t\t{銀行名称８＿金融機関名},\n\t\t{銀行名称８＿店舗名},\n\t\t{銀行名称９＿金融機関名},\n\t\t{銀行名称９＿店舗名},\n\t\t{銀行名称１０＿金融機関名},\n\t\t{銀行名称１０＿店舗名},\n\t\t{業種コード＿１（主）},\n\t\t{業種コード＿２（従）},\n\t\t{業種コード＿３（従）},\n\t\t{業種名称＿業種名称１（主）},\n\t\t{業種名称＿業種名称２（従）},\n\t\t{業種名称＿業種名称３（従）},\n\t\t{扱い品コード＿１},\n\t\t{扱い品コード＿２},\n\t\t{扱い品コード＿３},\n\t\t{扱い品コード＿４},\n\t\t{扱い品コード＿５},\n\t\t{扱い品コード＿６},\n\t\t{扱い品名称＿扱い品名称１},\n\t\t{扱い品名称＿扱い品名称２},\n\t\t{扱い品名称＿扱い品名称３},\n\t\t{扱い品名称＿扱い品名称４},\n\t\t{扱い品名称＿扱い品名称５},\n\t\t{扱い品名称＿扱い品名称６},\n\t\t{営業種目名称＿営業種目名称外字フラグ},\n\t\t{営業種目名称＿営業種目名称},\n\t\t{役員名称＿役員名称外字フラグ},\n\t\t{役員名称＿役員名称},\n\t\t{大株主名称＿大株主名称外字フラグ},\n\t\t{大株主名称＿大株主名称},\n\t\t{仕入先名称＿仕入先名称外字フラグ},\n\t\t{仕入先名称＿仕入先名称},\n\t\t{販売先名称＿販売先名称外字フラグ},\n\t\t{販売先名称＿販売先名称},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称},\n\t\t{概況＿概況外字フラグ},\n\t\t{概況＿概況},\n\t\t{前々期決算＿決算年月},\n\t\t{前々期決算＿月数},\n\t\t{前々期決算＿売上高（千円）},\n\t\t{前々期決算＿税込引区分},\n\t\t{前々期決算＿利益金（千円）},\n\t\t{前々期決算＿配当},\n\t\t{余白３},\n\t\t{前々期決算＿財務有無フラグ},\n\t\t{余白４},\n\t\t{前期決算＿決算年月},\n\t\t{前期決算＿月数},\n\t\t{前期決算＿売上高（千円）},\n\t\t{前期決算＿税込引区分},\n\t\t{前期決算＿利益金（千円）},\n\t\t{前期決算＿配当},\n\t\t{余白５},\n\t\t{前期決算＿財務有無フラグ},\n\t\t{余白６},\n\t\t{当期決算＿決算年月},\n\t\t{当期決算＿月数},\n\t\t{当期決算＿売上高（千円）},\n\t\t{当期決算＿税込引区分},\n\t\t{当期決算＿利益金（千円）},\n\t\t{当期決算＿配当},\n\t\t{余白７},\n\t\t{当期決算＿財務有無フラグ},\n\t\t{余白８},\n\t\t{当期売上＿伸長率},\n\t\t{当期売上＿伸長額（千円）},\n\t\t{前期売上＿伸長率},\n\t\t{前期売上＿伸長額（千円）},\n\t\t{当期利益＿伸長率},\n\t\t{当期利益＿伸長額（千円）},\n\t\t{前期利益＿伸長率},\n\t\t{前期利益＿伸長額（千円）},\n\t\t{一人当り月間＿売上金額（千円）},\n\t\t{一人当り月間＿利益金額（千円）},\n\t\t{余白９},\n\t\t{代表者氏名＿外字フラグ},\n\t\t{代表者氏名＿オーバーフラグ},\n\t\t{代表者氏名＿代表者氏名},\n\t\t{余白１０},\n\t\t{代表者氏名カナ},\n\t\t{生年月日（西暦）},\n\t\t{男女区分},\n\t\t{干支＿コード},\n\t\t{干支＿名称},\n\t\t{役職＿コード},\n\t\t{役職＿名称},\n\t\t{代表者住所コード＿ＴＳＲコード},\n\t\t{代表者住所コード＿ＪＩＳコード},\n\t\t{代表者郵便番号},\n\t\t{代表者住所桁数},\n\t\t{代表者住所＿代表者住所外字フラグ},\n\t\t{代表者住所＿代表者現住所},\n\t\t{代表者電話番号},\n\t\t{出身地＿コード},\n\t\t{出身地＿名称},\n\t\t{住居＿コード},\n\t\t{住居＿名称},\n\t\t{最終学歴＿学校コード},\n\t\t{最終学歴＿学校名称},\n\t\t{最終学歴＿卒業区分},\n\t\t{趣味コード＿１},\n\t\t{趣味コード＿２},\n\t\t{趣味コード＿３},\n\t\t{趣味名称＿趣味名称１},\n\t\t{趣味名称＿趣味名称２},\n\t\t{趣味名称＿趣味名称３},\n\t\t{倒産経歴},\n\t\t{納税＿納税年（西暦年）},\n\t\t{納税＿納税額（千円）},\n\t\t{企業所在地バーコード情報},\n\t\t{代表者現住所バーコード情報},\n\t\t{余白１１}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TSRCodeSelectNew\nTSRCodeSelectNew split(or(isNull({法人番号}), length(trim({法人番号})) == 0),\n\tdisjoint: false) ~> IncludeNullValuesNew@(IncludeNullValuesNew, NotIncludeNullValuesNew)\nIncludeNullValuesNew@IncludeNullValuesNew keyGenerate(output(row_number as long),\n\tstartAt: 1L) ~> TSRCodeSurrogateKeyNew1\nIncludeNullValuesNew@NotIncludeNullValuesNew keyGenerate(output(row_number as long),\n\tstartAt: 1L) ~> TSRCodeSurrogateKeyNew2\nTSRCodeSurrogateKeyNew1 derive({法人番号} = iif(or(isNull({法人番号}), length(trim({法人番号})) == 0), concat(\"D\",replace(concat(left((toString(currentDate('JST'),'yyMMdd')),6), toString(999999 - row_number + 1)),\"-\",\"\")), {法人番号})) ~> TSRCodeDelivrdColumnDummyCodeAdd\nTSRCodeDelivrdColumnDummyCodeAdd, TSRCodeSurrogateKeyNew2 union(byName: true)~> TSRCodeUnionColumnNew\nTSRCodeUnionCollumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['①TSRデータ20210330_個人情報込_企業コード付加.CSV'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\t{メンテナンス区分},\n\t\t{企業コード},\n\t\t{法人格前後区分},\n\t\t{法人格略コード},\n\t\t{漢字商号＿商号外字フラグ},\n\t\t{漢字商号＿商号オーバーフラグ},\n\t\t{漢字商号＿漢字商号},\n\t\t{漢字商号＿インデックス漢字商号},\n\t\t{余白１},\n\t\t{カナ商号},\n\t\t{インデックスカナ商号},\n\t\t{企業住所コード＿ＴＳＲコード},\n\t\t{企業住所コード＿ＪＩＳコード},\n\t\t{企業郵便番号},\n\t\t{企業所在地桁数},\n\t\t{企業所在地＿住所外字フラグ},\n\t\t{企業所在地＿企業所在地},\n\t\t{企業電話番号},\n\t\t{余白２},\n\t\t{倒産フラグ},\n\t\t{評点},\n\t\t{上場＿上場区分},\n\t\t{上場＿株式コード},\n\t\t{ＥＤＩＮＥＴコード},\n\t\t{創業＿創業年月（西暦年月）},\n\t\t{創業＿明治以前創業年},\n\t\t{設立年月（西暦年月）},\n\t\t{資本金（千円）},\n\t\t{従業員数},\n\t\t{一株金額（円）},\n\t\t{工場数},\n\t\t{事業所数},\n\t\t{銀行コード＿１},\n\t\t{銀行コード＿２},\n\t\t{銀行コード＿３},\n\t\t{銀行コード＿４},\n\t\t{銀行コード＿５},\n\t\t{銀行コード＿６},\n\t\t{銀行コード＿７},\n\t\t{銀行コード＿８},\n\t\t{銀行コード＿９},\n\t\t{銀行コード＿１０},\n\t\t{銀行名称１＿金融機関名},\n\t\t{銀行名称１＿店舗名},\n\t\t{銀行名称２＿金融機関名},\n\t\t{銀行名称２＿店舗名},\n\t\t{銀行名称３＿金融機関名},\n\t\t{銀行名称３＿店舗名},\n\t\t{銀行名称４＿金融機関名},\n\t\t{銀行名称４＿店舗名},\n\t\t{銀行名称５＿金融機関名},\n\t\t{銀行名称５＿店舗名},\n\t\t{銀行名称６＿金融機関名},\n\t\t{銀行名称６＿店舗名},\n\t\t{銀行名称７＿金融機関名},\n\t\t{銀行名称７＿店舗名},\n\t\t{銀行名称８＿金融機関名},\n\t\t{銀行名称８＿店舗名},\n\t\t{銀行名称９＿金融機関名},\n\t\t{銀行名称９＿店舗名},\n\t\t{銀行名称１０＿金融機関名},\n\t\t{銀行名称１０＿店舗名},\n\t\t{業種コード＿１（主）},\n\t\t{業種コード＿２（従）},\n\t\t{業種コード＿３（従）},\n\t\t{業種名称＿業種名称１（主）},\n\t\t{業種名称＿業種名称２（従）},\n\t\t{業種名称＿業種名称３（従）},\n\t\t{扱い品コード＿１},\n\t\t{扱い品コード＿２},\n\t\t{扱い品コード＿３},\n\t\t{扱い品コード＿４},\n\t\t{扱い品コード＿５},\n\t\t{扱い品コード＿６},\n\t\t{扱い品名称＿扱い品名称１},\n\t\t{扱い品名称＿扱い品名称２},\n\t\t{扱い品名称＿扱い品名称３},\n\t\t{扱い品名称＿扱い品名称４},\n\t\t{扱い品名称＿扱い品名称５},\n\t\t{扱い品名称＿扱い品名称６},\n\t\t{営業種目名称＿営業種目名称外字フラグ},\n\t\t{営業種目名称＿営業種目名称},\n\t\t{役員名称＿役員名称外字フラグ},\n\t\t{役員名称＿役員名称},\n\t\t{大株主名称＿大株主名称外字フラグ},\n\t\t{大株主名称＿大株主名称},\n\t\t{仕入先名称＿仕入先名称外字フラグ},\n\t\t{仕入先名称＿仕入先名称},\n\t\t{販売先名称＿販売先名称外字フラグ},\n\t\t{販売先名称＿販売先名称},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称},\n\t\t{概況＿概況外字フラグ},\n\t\t{概況＿概況},\n\t\t{前々期決算＿決算年月},\n\t\t{前々期決算＿月数},\n\t\t{前々期決算＿売上高（千円）},\n\t\t{前々期決算＿税込引区分},\n\t\t{前々期決算＿利益金（千円）},\n\t\t{前々期決算＿配当},\n\t\t{余白３},\n\t\t{前々期決算＿財務有無フラグ},\n\t\t{余白４},\n\t\t{前期決算＿決算年月},\n\t\t{前期決算＿月数},\n\t\t{前期決算＿売上高（千円）},\n\t\t{前期決算＿税込引区分},\n\t\t{前期決算＿利益金（千円）},\n\t\t{前期決算＿配当},\n\t\t{余白５},\n\t\t{前期決算＿財務有無フラグ},\n\t\t{余白６},\n\t\t{当期決算＿決算年月},\n\t\t{当期決算＿月数},\n\t\t{当期決算＿売上高（千円）},\n\t\t{当期決算＿税込引区分},\n\t\t{当期決算＿利益金（千円）},\n\t\t{当期決算＿配当},\n\t\t{余白７},\n\t\t{当期決算＿財務有無フラグ},\n\t\t{余白８},\n\t\t{当期売上＿伸長率},\n\t\t{当期売上＿伸長額（千円）},\n\t\t{前期売上＿伸長率},\n\t\t{前期売上＿伸長額（千円）},\n\t\t{当期利益＿伸長率},\n\t\t{当期利益＿伸長額（千円）},\n\t\t{前期利益＿伸長率},\n\t\t{前期利益＿伸長額（千円）},\n\t\t{一人当り月間＿売上金額（千円）},\n\t\t{一人当り月間＿利益金額（千円）},\n\t\t{余白９},\n\t\t{代表者氏名＿外字フラグ},\n\t\t{代表者氏名＿オーバーフラグ},\n\t\t{代表者氏名＿代表者氏名},\n\t\t{余白１０},\n\t\t{代表者氏名カナ},\n\t\t{生年月日（西暦）},\n\t\t{男女区分},\n\t\t{干支＿コード},\n\t\t{干支＿名称},\n\t\t{役職＿コード},\n\t\t{役職＿名称},\n\t\t{代表者住所コード＿ＴＳＲコード},\n\t\t{代表者住所コード＿ＪＩＳコード},\n\t\t{代表者郵便番号},\n\t\t{代表者住所桁数},\n\t\t{代表者住所＿代表者住所外字フラグ},\n\t\t{代表者住所＿代表者現住所},\n\t\t{代表者電話番号},\n\t\t{出身地＿コード},\n\t\t{出身地＿名称},\n\t\t{住居＿コード},\n\t\t{住居＿名称},\n\t\t{最終学歴＿学校コード},\n\t\t{最終学歴＿学校名称},\n\t\t{最終学歴＿卒業区分},\n\t\t{趣味コード＿１},\n\t\t{趣味コード＿２},\n\t\t{趣味コード＿３},\n\t\t{趣味名称＿趣味名称１},\n\t\t{趣味名称＿趣味名称２},\n\t\t{趣味名称＿趣味名称３},\n\t\t{倒産経歴},\n\t\t{納税＿納税年（西暦年）},\n\t\t{納税＿納税額（千円）},\n\t\t{企業所在地バーコード情報},\n\t\t{代表者現住所バーコード情報},\n\t\t{余白１１},\n\t\t{法人番号}\n\t),\n\tpartitionBy('hash', 1)) ~> TSRCodeAddFileExport\nTSRCodeUnionColumnNew sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['KJDATA_企業コード付加.CSV'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\t{メンテナンス区分},\n\t\t{企業コード},\n\t\t{法人格前後区分},\n\t\t{法人格略コード},\n\t\t{漢字商号＿商号外字フラグ},\n\t\t{漢字商号＿商号オーバーフラグ},\n\t\t{漢字商号＿漢字商号},\n\t\t{漢字商号＿インデックス漢字商号},\n\t\t{余白１},\n\t\t{カナ商号},\n\t\t{インデックスカナ商号},\n\t\t{企業住所コード＿ＴＳＲコード},\n\t\t{企業住所コード＿ＪＩＳコード},\n\t\t{企業郵便番号},\n\t\t{企業所在地桁数},\n\t\t{企業所在地＿住所外字フラグ},\n\t\t{企業所在地＿企業所在地},\n\t\t{企業電話番号},\n\t\t{余白２},\n\t\t{倒産フラグ},\n\t\t{評点},\n\t\t{上場＿上場区分},\n\t\t{上場＿株式コード},\n\t\t{ＥＤＩＮＥＴコード},\n\t\t{創業＿創業年月（西暦年月）},\n\t\t{創業＿明治以前創業年},\n\t\t{設立年月（西暦年月）},\n\t\t{資本金（千円）},\n\t\t{従業員数},\n\t\t{一株金額（円）},\n\t\t{工場数},\n\t\t{事業所数},\n\t\t{銀行コード＿１},\n\t\t{銀行コード＿２},\n\t\t{銀行コード＿３},\n\t\t{銀行コード＿４},\n\t\t{銀行コード＿５},\n\t\t{銀行コード＿６},\n\t\t{銀行コード＿７},\n\t\t{銀行コード＿８},\n\t\t{銀行コード＿９},\n\t\t{銀行コード＿１０},\n\t\t{銀行名称１＿金融機関名},\n\t\t{銀行名称１＿店舗名},\n\t\t{銀行名称２＿金融機関名},\n\t\t{銀行名称２＿店舗名},\n\t\t{銀行名称３＿金融機関名},\n\t\t{銀行名称３＿店舗名},\n\t\t{銀行名称４＿金融機関名},\n\t\t{銀行名称４＿店舗名},\n\t\t{銀行名称５＿金融機関名},\n\t\t{銀行名称５＿店舗名},\n\t\t{銀行名称６＿金融機関名},\n\t\t{銀行名称６＿店舗名},\n\t\t{銀行名称７＿金融機関名},\n\t\t{銀行名称７＿店舗名},\n\t\t{銀行名称８＿金融機関名},\n\t\t{銀行名称８＿店舗名},\n\t\t{銀行名称９＿金融機関名},\n\t\t{銀行名称９＿店舗名},\n\t\t{銀行名称１０＿金融機関名},\n\t\t{銀行名称１０＿店舗名},\n\t\t{業種コード＿１（主）},\n\t\t{業種コード＿２（従）},\n\t\t{業種コード＿３（従）},\n\t\t{業種名称＿業種名称１（主）},\n\t\t{業種名称＿業種名称２（従）},\n\t\t{業種名称＿業種名称３（従）},\n\t\t{扱い品コード＿１},\n\t\t{扱い品コード＿２},\n\t\t{扱い品コード＿３},\n\t\t{扱い品コード＿４},\n\t\t{扱い品コード＿５},\n\t\t{扱い品コード＿６},\n\t\t{扱い品名称＿扱い品名称１},\n\t\t{扱い品名称＿扱い品名称２},\n\t\t{扱い品名称＿扱い品名称３},\n\t\t{扱い品名称＿扱い品名称４},\n\t\t{扱い品名称＿扱い品名称５},\n\t\t{扱い品名称＿扱い品名称６},\n\t\t{営業種目名称＿営業種目名称外字フラグ},\n\t\t{営業種目名称＿営業種目名称},\n\t\t{役員名称＿役員名称外字フラグ},\n\t\t{役員名称＿役員名称},\n\t\t{大株主名称＿大株主名称外字フラグ},\n\t\t{大株主名称＿大株主名称},\n\t\t{仕入先名称＿仕入先名称外字フラグ},\n\t\t{仕入先名称＿仕入先名称},\n\t\t{販売先名称＿販売先名称外字フラグ},\n\t\t{販売先名称＿販売先名称},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称外字フラグ},\n\t\t{工場・支店・営業所名称＿工場・支店・営業所名称},\n\t\t{概況＿概況外字フラグ},\n\t\t{概況＿概況},\n\t\t{前々期決算＿決算年月},\n\t\t{前々期決算＿月数},\n\t\t{前々期決算＿売上高（千円）},\n\t\t{前々期決算＿税込引区分},\n\t\t{前々期決算＿利益金（千円）},\n\t\t{前々期決算＿配当},\n\t\t{余白３},\n\t\t{前々期決算＿財務有無フラグ},\n\t\t{余白４},\n\t\t{前期決算＿決算年月},\n\t\t{前期決算＿月数},\n\t\t{前期決算＿売上高（千円）},\n\t\t{前期決算＿税込引区分},\n\t\t{前期決算＿利益金（千円）},\n\t\t{前期決算＿配当},\n\t\t{余白５},\n\t\t{前期決算＿財務有無フラグ},\n\t\t{余白６},\n\t\t{当期決算＿決算年月},\n\t\t{当期決算＿月数},\n\t\t{当期決算＿売上高（千円）},\n\t\t{当期決算＿税込引区分},\n\t\t{当期決算＿利益金（千円）},\n\t\t{当期決算＿配当},\n\t\t{余白７},\n\t\t{当期決算＿財務有無フラグ},\n\t\t{余白８},\n\t\t{当期売上＿伸長率},\n\t\t{当期売上＿伸長額（千円）},\n\t\t{前期売上＿伸長率},\n\t\t{前期売上＿伸長額（千円）},\n\t\t{当期利益＿伸長率},\n\t\t{当期利益＿伸長額（千円）},\n\t\t{前期利益＿伸長率},\n\t\t{前期利益＿伸長額（千円）},\n\t\t{一人当り月間＿売上金額（千円）},\n\t\t{一人当り月間＿利益金額（千円）},\n\t\t{余白９},\n\t\t{代表者氏名＿外字フラグ},\n\t\t{代表者氏名＿オーバーフラグ},\n\t\t{代表者氏名＿代表者氏名},\n\t\t{余白１０},\n\t\t{代表者氏名カナ},\n\t\t{生年月日（西暦）},\n\t\t{男女区分},\n\t\t{干支＿コード},\n\t\t{干支＿名称},\n\t\t{役職＿コード},\n\t\t{役職＿名称},\n\t\t{代表者住所コード＿ＴＳＲコード},\n\t\t{代表者住所コード＿ＪＩＳコード},\n\t\t{代表者郵便番号},\n\t\t{代表者住所桁数},\n\t\t{代表者住所＿代表者住所外字フラグ},\n\t\t{代表者住所＿代表者現住所},\n\t\t{代表者電話番号},\n\t\t{出身地＿コード},\n\t\t{出身地＿名称},\n\t\t{住居＿コード},\n\t\t{住居＿名称},\n\t\t{最終学歴＿学校コード},\n\t\t{最終学歴＿学校名称},\n\t\t{最終学歴＿卒業区分},\n\t\t{趣味コード＿１},\n\t\t{趣味コード＿２},\n\t\t{趣味コード＿３},\n\t\t{趣味名称＿趣味名称１},\n\t\t{趣味名称＿趣味名称２},\n\t\t{趣味名称＿趣味名称３},\n\t\t{倒産経歴},\n\t\t{納税＿納税年（西暦年）},\n\t\t{納税＿納税額（千円）},\n\t\t{企業所在地バーコード情報},\n\t\t{代表者現住所バーコード情報},\n\t\t{余白１１},\n\t\t{法人番号}\n\t),\n\tpartitionBy('hash', 1)) ~> TSRCodeAddFileExportNew"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/DS_bm_dac_TSR_Datalake_01')]",
+				"[concat(variables('workspaceId'), '/datasets/DS_bm_dac_TSR_Datalake_Temp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "create PROCEDURE [dbo].[p1] AS\nBEGIN\n    select [name] from [sys].[tables] order by [name] \nEND",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 50
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/amit')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 268435456000,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/another')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 268435456000,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/datamart')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 268435456000,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/smalldb')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 268435456000,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/test1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 268435456000,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		}
+	]
+}

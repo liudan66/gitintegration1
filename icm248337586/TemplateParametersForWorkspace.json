@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "icm248337586"
+		},
+		"icm248337586-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"icm248337586-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://bcdrtestvenkatp1.vault.azure.net/"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"value": "AzureBlobStorage1-connectionString"
+		}
+	}
+}

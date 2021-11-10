@@ -1,0 +1,10 @@
+{
+	"name": "synapse-ws-sqlOnDemand--accessibilitytestep",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/58f8824d-32b0-4825-9825-02fa6a801546/resourceGroups/Test_Accessibility/providers/Microsoft.Synapse/workspaces/accessibilitytestep",
+		"groupId": "sqlOnDemand",
+		"fqdns": [
+			"accessibilitytestep-ondemand.b1262f2a-efdf-44c1-ba81-56e5ef2bd114.sql.azuresynapse.net"
+		]
+	}
+}

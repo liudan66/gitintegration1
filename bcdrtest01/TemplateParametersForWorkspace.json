@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "bcdrtest01"
+		},
+		"venkatp28-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"venkatp29-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"venkatp28-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"venkatp29-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		}
+	}
+}

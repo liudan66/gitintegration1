@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "cicdsourcevenkatp"
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"Salesforce1_password": {
+			"value": ""
+		},
+		"Salesforce1_securityToken": {
+			"value": ""
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://login.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"value": "venkatptest123"
+		}
+	}
+}

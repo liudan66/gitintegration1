@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentParameters.json#",
+  "contentVersion": "2021.09.23.1",
+  "parameters": {
+    "FinanceDataLake_properties_typeProperties_dataLakeStoreUri": {
+      "value": "adl://sapfinancedatalakeppe.azuredatalakestore.net"
+    },
+    "FinanceDataLake_properties_typeProperties_servicePrincipalId": {
+      "value": "7a7b697e-79f2-4bbc-8bee-ad6e9f5cfe5e"
+    },
+    "mercurysynapsestaging-WorkspaceDefaultSqlServer_connectionString": {
+      "value": "Data Source=foo;Initial Catalog=bar"
+    },
+    "mercurysynapsestaging-WorkspaceDefaultSqlServer_properties_typeProperties_connectionString": {
+      "value": "Data Source=baz;Initial Catalog=bat"
+    },
+    "mercurysynapsestaging-WorkspaceDefaultStorage_properties_typeProperties_url": {
+      "value": "https://mercuryv2devdatalake.dfs.core.windows.net"
+    },
+    "workspaceName": {
+      "value": "mercurysynapsedev1"
+    },
+    "DataProcessing_properties_jobProperties_className": {
+      "value": "com.microsoft.mercury.processing.Main"
+    },
+    "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.enabled": {
+      "value": "false"
+    },
+    "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.maxExecutors": {
+      "value": 2
+    },
+    "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.minExecutors": {
+      "value": 2
+    },
+    "DataProcessing_properties_jobProperties_driverCores": {
+      "value": 4
+    },
+    "DataProcessing_properties_jobProperties_driverMemory": {
+      "value": "28g"
+    },
+    "DataProcessing_properties_jobProperties_executorCores": {
+      "value": 4
+    },
+    "DataProcessing_properties_jobProperties_executorMemory": {
+      "value": "28g"
+    },
+    "DataProcessing_properties_jobProperties_file": {
+      "value": "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/data-processing_2.11-0.1.0-SNAPSHOT.jar"
+    },
+    "DataProcessing_properties_jobProperties_jars": {
+      "value": [
+        "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/mercury-utils_2.11-0.1.2.jar",
+        "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/spark-mssql-connector-1.0.1.jar",
+        "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/Telemetry-2.0.0.51.jar",
+        "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/applicationinsights-core-2.6.2.jar",
+        "abfss://mercury-synapse@mercuryv2devdatalake.dfs.core.windows.net/Jars/DataProcessingTest/scalaj-http_2.11-2.4.2.jar"
+      ]
+    },
+    "DataProcessing_properties_jobProperties_numExecutors": {
+      "value": 2
+    },
+    "DataProcessing_properties_jobProperties_args": {
+      "value": ["-some arguments here"]
+    },
+    "DataProcessing_properties_language": {
+      "value": "scala"
+    },
+    "DataProcessing_properties_requiredSparkVersion": {
+      "value": 2.4
+    },
+    "DataProcessing_properties_targetBigDataPool_referenceName": {
+      "value": "dataprocessing"
+    }
+
+  }
+}

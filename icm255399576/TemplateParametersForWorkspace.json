@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "icm255399576"
+		},
+		"FileServer1_password": {
+			"value": ""
+		},
+		"icm255399576-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "\\\\venkatp16\\f$\\temp\\file1.txt"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "venkatp"
+		},
+		"icm255399576-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"Trigger 4_properties_typeProperties_scope": {
+			"value": "/subscriptions/be3e6d5c-f54f-474d-ae7e-128a5af5a691/resourceGroups/rgcicdbugbash/providers/Microsoft.Storage/storageAccounts/venkatpadlsgen2"
+		},
+		"Trigger 5_properties_typeProperties_scope": {
+			"value": "/subscriptions/be3e6d5c-f54f-474d-ae7e-128a5af5a691/resourceGroups/BCDR_Test01/providers/Microsoft.EventGrid/topics/testeventgrid1"
+		}
+	}
+}

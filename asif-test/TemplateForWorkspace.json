@@ -1,0 +1,1607 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "gcs-iapp-desc-dev-syn"
+		},
+		"GenericDBName_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'GenericDBName'"
+		},
+		"gcs-iapp-desc-dev-syn-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'gcs-iapp-desc-dev-syn-WorkspaceDefaultSqlServer'"
+		},
+		"ACSKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://cscp-acs-dev-kv.vault.azure.net/"
+		},
+		"CADIE_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://cscpdataestateametest.dfs.core.windows.net"
+		},
+		"CADIE_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"CADIE_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+		},
+		"GenericDBName_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "@{linkedService().ServicePrincipalID}"
+		},
+		"GenericDBName_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"acsstoragegen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://acsstoragegen2dev.dfs.core.windows.net"
+		},
+		"acsstoragegen2_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"acsstoragegen2_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+		},
+		"gcs-iapp-desc-dev-syn-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://acsstoragegen2dev.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Master logging pipeline')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Logging proc",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "dbo.usp_ETL_Logging",
+							"storedProcedureParameters": {
+								"DatabaseName": {
+									"value": {
+										"value": "@pipeline().parameters.dbname",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"FailureMessage": {
+									"value": {
+										"value": "@pipeline().parameters.FailureMessage",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"JobName": {
+									"value": {
+										"value": "@pipeline().parameters.Jobname",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ObjectID": {
+									"value": {
+										"value": "@pipeline().parameters.ObjectID",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ParameterUsed": {
+									"value": "NA",
+									"type": "String"
+								},
+								"procedureName": {
+									"value": null,
+									"type": "String"
+								},
+								"ProcessID": {
+									"value": {
+										"value": "@pipeline().parameters.ProcessID",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"RowsImpacted": {
+									"value": null,
+									"type": "Int64"
+								},
+								"schemaName": {
+									"value": null,
+									"type": "String"
+								},
+								"StartTime": {
+									"value": {
+										"value": "@pipeline().TriggerTime",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"Status": {
+									"value": {
+										"value": "@pipeline().parameters.status",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"StepName": {
+									"value": {
+										"value": "@pipeline().parameters.StepName",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "GenericDBName",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"ServerName": {
+									"value": "@pipeline().parameters.servername",
+									"type": "Expression"
+								},
+								"DBName": {
+									"value": "@pipeline().parameters.dbname",
+									"type": "Expression"
+								},
+								"ServicePrincipalID": "2FD5B9EE-7822-4BF9-8BEC-72E00D17D4BF"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"dbname": {
+						"type": "string",
+						"defaultValue": "DBiappMasterData"
+					},
+					"servername": {
+						"type": "string",
+						"defaultValue": "cscp-acs-uat-sql.database.windows.net"
+					},
+					"status": {
+						"type": "string",
+						"defaultValue": "FAILED"
+					},
+					"Jobname": {
+						"type": "string",
+						"defaultValue": "iApp Plan Editor (Metadata)"
+					},
+					"StepName": {
+						"type": "string",
+						"defaultValue": "Master Controller Pipeline Failed"
+					},
+					"ScenarioName": {
+						"type": "string",
+						"defaultValue": " "
+					},
+					"Flag": {
+						"type": "string",
+						"defaultValue": "1"
+					},
+					"ProcessID": {
+						"type": "string",
+						"defaultValue": "79b475a1-0b77-4ec7-a8ff-7c6cb6536782"
+					},
+					"FailureMessage": {
+						"type": "string",
+						"defaultValue": "Master Controller Pipeline Failed"
+					},
+					"ObjectID": {
+						"type": "string",
+						"defaultValue": "17ee2f91-9329-4c4d-9dd7-80827a237bef"
+					},
+					"Reference": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"testFunction": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Master Data Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-09-10T22:36:58Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/GenericDBName')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MasterPipeline')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Update Publish Details",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Execute MasterNotebook",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[usp_PublishDetail]",
+							"storedProcedureParameters": {
+								"ADLSFileName": {
+									"value": null,
+									"type": "String"
+								},
+								"ADLSFilePath": {
+									"value": null,
+									"type": "String"
+								},
+								"DAX_suffix": {
+									"value": null,
+									"type": "String"
+								},
+								"DaxExportType": {
+									"value": null,
+									"type": "String"
+								},
+								"DaxFilepath": {
+									"value": null,
+									"type": "String"
+								},
+								"FilePath": {
+									"value": null,
+									"type": "String"
+								},
+								"Json": {
+									"value": {
+										"value": "@string(activity('Execute MasterNotebook').output.status.Output.result.exitValue)",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"ProcessID": {
+									"value": {
+										"value": "@pipeline().parameters.ProcessID",
+										"type": "Expression"
+									},
+									"type": "Guid"
+								},
+								"RowCount": {
+									"value": null,
+									"type": "Int64"
+								},
+								"ScenarioName": {
+									"value": null,
+									"type": "String"
+								},
+								"SourceDataset": {
+									"value": null,
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "GenericDBName",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"ServerName": {
+									"value": "@pipeline().parameters.LoggingServerName",
+									"type": "Expression"
+								},
+								"DBName": {
+									"value": "@pipeline().parameters.LoggingDBName",
+									"type": "Expression"
+								},
+								"ServicePrincipalID": {
+									"value": "@pipeline().parameters.ServicePrincipalID",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set variable RunPageUrl",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Update Publish Details",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "RunPageUrl",
+							"value": {
+								"value": "@string(activity('Execute MasterNotebook').output.status.Output.status.appInfo.driverLogUrl)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Failure Notebook Logging",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Set variable RunPageUrl_Failed",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Master logging pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"dbname": {
+									"value": "@pipeline().parameters.LoggingDBName",
+									"type": "Expression"
+								},
+								"servername": {
+									"value": "@pipeline().parameters.LoggingServerName",
+									"type": "Expression"
+								},
+								"status": "FAILED",
+								"Jobname": "iApp Synapse Pipeline",
+								"StepName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								},
+								"Flag": "1",
+								"ProcessID": {
+									"value": "@pipeline().parameters.ProcessID",
+									"type": "Expression"
+								},
+								"FailureMessage": {
+									"value": "@string(activity('Execute MasterNotebook').output)",
+									"type": "Expression"
+								},
+								"ObjectID": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"Reference": {
+									"value": "@variables('RunPageUrl')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Success Logging",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Set variable RunPageUrl",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Master logging pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"dbname": {
+									"value": "@pipeline().parameters.LoggingDBName",
+									"type": "Expression"
+								},
+								"servername": {
+									"value": "@pipeline().parameters.LoggingServerName",
+									"type": "Expression"
+								},
+								"status": "SUCCESS",
+								"Jobname": "iApp Synapse Pipeline",
+								"StepName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								},
+								"Flag": "1",
+								"ProcessID": {
+									"value": "@pipeline().parameters.ProcessID",
+									"type": "Expression"
+								},
+								"FailureMessage": {
+									"value": "@string(activity('Execute MasterNotebook').output)",
+									"type": "Expression"
+								},
+								"ObjectID": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"Reference": {
+									"value": "@variables('RunPageUrl')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Set variable RunPageUrl_Failed",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Execute MasterNotebook",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "RunPageUrl",
+							"value": {
+								"value": "@string(activity('Execute MasterNotebook').output.status.Output.status.appInfo.driverLogUrl)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Execute MasterNotebook",
+						"type": "SynapseNotebook",
+						"dependsOn": [
+							{
+								"activity": "Initialize Logging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "MasterNB",
+								"type": "NotebookReference"
+							},
+							"parameters": {
+								"inputJson": {
+									"value": {
+										"value": "@string(json(string(pipeline().parameters.inputJson)).firstRow.jsonInput)",
+										"type": "Expression"
+									},
+									"type": "string"
+								},
+								"NotebookName": {
+									"value": {
+										"value": "@string(json(string(pipeline().parameters.inputJson)).firstRow.NotebookPath)",
+										"type": "Expression"
+									},
+									"type": "string"
+								}
+							},
+							"snapshot": true
+						}
+					},
+					{
+						"name": "Initialize Logging",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Master logging pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"dbname": {
+									"value": "@pipeline().parameters.LoggingDBName",
+									"type": "Expression"
+								},
+								"servername": {
+									"value": "@pipeline().parameters.LoggingServerName",
+									"type": "Expression"
+								},
+								"status": "INITIALIZED",
+								"Jobname": "iApp Synapse Pipeline",
+								"StepName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								},
+								"Flag": "1",
+								"ProcessID": {
+									"value": "@pipeline().parameters.ProcessID",
+									"type": "Expression"
+								},
+								"ObjectID": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"Reference": {
+									"value": "@variables('RunPageUrl')",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"LoggingServerName": {
+						"type": "string",
+						"defaultValue": "cscp-acs-DEV-sql.database.windows.net"
+					},
+					"LoggingDBName": {
+						"type": "string",
+						"defaultValue": "dbiAppMasterData"
+					},
+					"ServicePrincipalID": {
+						"type": "string",
+						"defaultValue": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+					},
+					"ProcessID": {
+						"type": "string",
+						"defaultValue": "556e9f69-f5dd-4690-8c1d-0e6c9a92f479"
+					},
+					"inputJson": {
+						"type": "string",
+						"defaultValue": {
+							"firstRow": {
+								"JsonInput": "{\r\n    \"ProcessID\": \"556e9f69-f5dd-4690-8c1d-0e6c9a92f479\",\r\n    \"Process\": \"iApp Fraud Detection Framework\",\r\n    \"Tenant\": \"DS_SYNAPSE_01\",\r\n    \"Requests\": [\r\n      {\r\n        \"ModelType\": \"iApp\",\r\n        \"EnvironmentType\": \"Development\",\r\n        \"ProcessType\": \"iApp Fraud Detection\",\r\n        \"ParentRequestID\": \"4BAD010A-599E-40C9-B996-5711C3EAB900\",\r\n        \"RequestID\": \"4BAD010A-599E-40C9-B996-5711C3EAB901\",\r\n        \"UserID\": \"karanpar\",\r\n        \"Scenarios\": [\r\n          {\r\n            \"Scenario\": \"IAPP Fraud Detection 20210830_110749203\",\r\n            \"Datasets\": [\r\n              {\r\n                \"DataSource\": \"iApp Development\",\r\n                \"Dataset\": \"Compute Usage\",\r\n                \"ProviderType\": \"ADLSGen2\",\r\n                \"DataFormat\": \"CSV\",\r\n                \"Location\": \"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/ComputeUsage2Years.csv\"\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"InvocationID\": \"ba26593e-fa0c-408c-8f04-d238a90d0008\"\r\n  }",
+								"ProcessName": "iApp Fraud Detection Framework",
+								"NotebookPath": "/DS/FraudDetection/DetectFraudUsage",
+								"Tenant": "DS_SYNAPSE_01",
+								"ExistingClusterID": "https://gcs-iapp-dev-syn.dev.azuresynapse.net/"
+							},
+							"effectiveIntegrationRuntime": "DefaultIntegrationRuntime (West US 2)",
+							"billingReference": {
+								"activityType": "PipelineActivity",
+								"billableDuration": [
+									{
+										"meterType": "AzureIR",
+										"duration": 0.016666666666666666,
+										"unit": "DIUHours"
+									}
+								]
+							},
+							"durationInQueue": {
+								"integrationRuntimeQueue": 0
+							}
+						}
+					}
+				},
+				"variables": {
+					"RunPageUrl": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Master Data Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-09-11T00:31:12Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/GenericDBName')]",
+				"[concat(variables('workspaceId'), '/pipelines/Master logging pipeline')]",
+				"[concat(variables('workspaceId'), '/notebooks/MasterNB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MasterPipelineTest')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute MasterNotebook",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "MasterNB",
+								"type": "NotebookReference"
+							},
+							"parameters": {
+								"inputJson": {
+									"value": {
+										"value": "@string(json(string(pipeline().parameters.json)).firstRow.jsonInput)",
+										"type": "Expression"
+									},
+									"type": "string"
+								},
+								"NotebookName": {
+									"value": {
+										"value": "@string(json(string(pipeline().parameters.json)).firstRow.NotebookPath)",
+										"type": "Expression"
+									},
+									"type": "string"
+								}
+							},
+							"snapshot": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"json": {
+						"type": "string",
+						"defaultValue": {
+							"firstRow": {
+								"JsonInput": "{\r\n    \"ProcessID\": \"556e9f69-f5dd-4690-8c1d-0e6c9a92f479\",\r\n    \"Process\": \"iApp Fraud Detection Framework\",\r\n    \"Tenant\": \"DS_SYNAPSE_01\",\r\n    \"Requests\": [\r\n      {\r\n        \"ModelType\": \"iApp\",\r\n        \"EnvironmentType\": \"Development\",\r\n        \"ProcessType\": \"iApp Fraud Detection\",\r\n        \"ParentRequestID\": \"4BAD010A-599E-40C9-B996-5711C3EAB900\",\r\n        \"RequestID\": \"4BAD010A-599E-40C9-B996-5711C3EAB901\",\r\n        \"UserID\": \"karanpar\",\r\n        \"Scenarios\": [\r\n          {\r\n            \"Scenario\": \"IAPP Fraud Detection 20210830_110749203\",\r\n            \"Datasets\": [\r\n              {\r\n                \"DataSource\": \"iApp Development\",\r\n                \"Dataset\": \"Compute Usage\",\r\n                \"ProviderType\": \"ADLSGen2\",\r\n                \"DataFormat\": \"CSV\",\r\n                \"Location\": \"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/ComputeUsage2YearsV2.csv\"\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"InvocationID\": \"ba26593e-fa0c-408c-8f04-d238a90d0008\"\r\n  }",
+								"ProcessName": "iApp Fraud Detection Framework",
+								"NotebookPath": "/DS/FraudDetection/DetectFraudUsage",
+								"Tenant": "DS_SYNAPSE_01",
+								"ExistingClusterID": "https://gcs-iapp-dev-syn.dev.azuresynapse.net/"
+							},
+							"effectiveIntegrationRuntime": "DefaultIntegrationRuntime (West US 2)",
+							"billingReference": {
+								"activityType": "PipelineActivity",
+								"billableDuration": [
+									{
+										"meterType": "AzureIR",
+										"duration": 0.016666666666666666,
+										"unit": "DIUHours"
+									}
+								]
+							},
+							"durationInQueue": {
+								"integrationRuntimeQueue": 0
+							}
+						}
+					}
+				},
+				"variables": {
+					"RunPageUrl": {
+						"type": "String"
+					},
+					"NotebookName": {
+						"type": "String"
+					},
+					"inputJson": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Master Data Load"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-09-10T22:37:00Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/MasterNB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ds_iAppMasterDB')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "GenericDBName",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ServerName": {
+							"value": "@dataset().ServerName",
+							"type": "Expression"
+						},
+						"DBName": {
+							"value": "@dataset().DbName",
+							"type": "Expression"
+						},
+						"ServicePrincipalID": {
+							"value": "@dataset().ServiceprincipalID",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"TableName": {
+						"type": "string",
+						"defaultValue": "stg.tblbusinesscalendar"
+					},
+					"ServerName": {
+						"type": "string"
+					},
+					"DbName": {
+						"type": "string"
+					},
+					"ServiceprincipalID": {
+						"type": "string",
+						"defaultValue": "fdb89d6c-bbbb-4940-9312-36bcac5b264f"
+					}
+				},
+				"folder": {
+					"name": "iAppMasterDB"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@first(split(dataset().TableName,'.'))",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@last(split(dataset().TableName,'.'))",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/GenericDBName')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ACSKeyVault')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('ACSKeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/CADIE')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('CADIE_properties_typeProperties_url')]",
+					"tenant": "[parameters('CADIE_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('CADIE_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalCredentialType": "ServicePrincipalKey",
+					"servicePrincipalCredential": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "ACSKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "cscp-acs-adls-db-sec"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ACSKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/GenericDBName')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"ServerName": {
+						"type": "string",
+						"defaultValue": "cscp-acs-dev-sql.database.windows.net"
+					},
+					"DBName": {
+						"type": "string",
+						"defaultValue": "dbiAPPMasterData"
+					},
+					"ServicePrincipalID": {
+						"type": "string",
+						"defaultValue": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('GenericDBName_connectionString')]",
+					"servicePrincipalId": "[parameters('GenericDBName_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "ACSKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "cscp-acs-adls-db-dev-sec"
+					},
+					"tenant": "[parameters('GenericDBName_properties_typeProperties_tenant')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ACSKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/acsstoragegen2')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('acsstoragegen2_properties_typeProperties_url')]",
+					"tenant": "[parameters('acsstoragegen2_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('acsstoragegen2_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalCredentialType": "ServicePrincipalKey",
+					"servicePrincipalCredential": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "ACSKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "cscp-acs-adls-db-sec"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ACSKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/gcs-iapp-desc-dev-syn-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('gcs-iapp-desc-dev-syn-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/gcs-iapp-desc-dev-syn-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('gcs-iapp-desc-dev-syn-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DetectFraudUsage')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "DS/FraudDetection"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "iAppDSSparkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/fa352f92-a3cd-4082-827c-142fca3460bf/resourceGroups/rg-acs-dev/providers/Microsoft.Synapse/workspaces/gcs-iapp-desc-dev-syn/bigDataPools/iAppDSSparkPool",
+						"name": "iAppDSSparkPool",
+						"type": "Spark",
+						"endpoint": "https://gcs-iapp-desc-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/iAppDSSparkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"#Parameters\r\n",
+							"inputJson = '{\\\"ProcessID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"Process\\\":\\\"iApp Fraud Detection Framework\\\",\\\"Tenant\\\":\\\"DS_SYNAPSE_01\\\",\\\"Requests\\\":[{\\\"ModelType\\\":\\\"iApp\\\",\\\"EnvironmentType\\\":\\\"Development\\\",\\\"ProcessType\\\":\\\"iApp Fraud Detection\\\",\\\"ParentRequestID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"RequestID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"Parameters\\\":{\\\"StartDate\\\":\\\"10/1/2020\\\"},\\\"Scenarios\\\":[{\\\"Scenario\\\":\\\"IAPP Fraud DETECTION 20201111_152431083\\\",\\\"Datasets\\\":[{\\\"DataSource\\\":\\\"iApp Development\\\",\\\"Dataset\\\":\\\"ComputeUsage\\\",\\\"ProviderType\\\":\\\"ADLSv2\\\",\\\"DataFormat\\\":\\\"CSV\\\",\\\"Location\\\":\\\"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/ComputeUsage2Years.csv\\\"}]}]}]}'\r\n",
+							"#'{\\r\\n    \\\"ProcessID\\\": \\\"556e9f69-f5dd-4690-8c1d-0e6c9a92f479\\\",\\r\\n    \\\"Process\\\": \\\"iApp Fraud Detection Framework\\\",\\r\\n    \\\"Tenant\\\": \\\"DS_SYNAPSE_01\\\",\\r\\n    \\\"Requests\\\": [\\r\\n      {\\r\\n        \\\"ModelType\\\": \\\"iApp\\\",\\r\\n        \\\"EnvironmentType\\\": \\\"Development\\\",\\r\\n        \\\"ProcessType\\\": \\\"iApp Fraud Detection\\\",\\r\\n        \\\"ParentRequestID\\\": \\\"4BAD010A-599E-40C9-B996-5711C3EAB900\\\",\\r\\n        \\\"RequestID\\\": \\\"4BAD010A-599E-40C9-B996-5711C3EAB901\\\",\\r\\n        \\\"UserID\\\": \\\"karanpar\\\",\\r\\n        \\\"Scenarios\\\": [\\r\\n          {\\r\\n            \\\"Scenario\\\": \\\"IAPP Fraud Detection 20210830_110749203\\\",\\r\\n            \\\"Datasets\\\": [\\r\\n              {\\r\\n                \\\"DataSource\\\": \\\"iApp Development\\\",\\r\\n                \\\"Dataset\\\": \\\"Compute Usage\\\",\\r\\n                \\\"ProviderType\\\": \\\"ADLSGen2\\\",\\r\\n                \\\"DataFormat\\\": \\\"CSV\\\",\\r\\n                \\\"Location\\\": \\\"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/ComputeUsage2Years.csv\\\"\\r\\n              }\\r\\n            ]\\r\\n          }\\r\\n        ]\\r\\n      }\\r\\n    ],\\r\\n    \\\"InvocationID\\\": \\\"ba26593e-fa0c-408c-8f04-d238a90d0008\\\"\\r\\n  }'\r\n",
+							"#Notebook variables\r\n",
+							"adlsPath = ''\r\n",
+							"destAdlsPath= 'abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/tmp_synapseoutput/FraudUsagev2.csv' ;\r\n",
+							"Environment = ''\r\n",
+							"DatasetName = ''"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import json\r\n",
+							" \r\n",
+							"#parse input details from inputJson\r\n",
+							"#print(inputJson)\r\n",
+							"#Convert into dictionary\r\n",
+							"event_grid_dict = json.loads(inputJson)\r\n",
+							" \r\n",
+							"#Traverse dictionary structure into list\r\n",
+							"dataset_list = event_grid_dict['Requests'][0]['Scenarios'][0]['Datasets']\r\n",
+							"Environment = event_grid_dict['Requests'][0]['EnvironmentType']\r\n",
+							"GUID = event_grid_dict['ProcessID']\r\n",
+							"\r\n",
+							"#parse the paths\r\n",
+							"UsageList = []\r\n",
+							"DatasetTypeList = []\r\n",
+							"\r\n",
+							"for i in dataset_list:  \r\n",
+							"  UsageList.append(i[\"Location\"])\r\n",
+							"  DatasetTypeList.append(i[\"Dataset\"])\r\n",
+							"adlsPath = UsageList[0]\r\n",
+							"#DatasetName = DatasetTypeList[0]\r\n",
+							"print(\"AdlsPath:\" + adlsPath)\r\n",
+							"\r\n",
+							""
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"from pyspark.sql import SparkSession\r\n",
+							"from pyspark.sql.types import *\r\n",
+							"\r\n",
+							"#Service Principal\r\n",
+							"spark.conf.set(\"spark.storage.synapse.linkedServiceName\", \"acsstoragegen2\")\r\n",
+							"spark.conf.set(\"fs.azure.account.oauth.provider.type\", \"com.microsoft.azure.synapse.tokenlibrary.LinkedServiceBasedTokenProvider\")\r\n",
+							"\r\n",
+							"usage = spark.read.option('header', 'true') \\\r\n",
+							".option('delimiter', ',') \\\r\n",
+							".csv(adlsPath)\r\n",
+							"#print(usage)\r\n",
+							"usage = usage\r\n",
+							"usage.filter(usage.IsFraud == \"Yes\").repartition(1).write.csv(destAdlsPath, mode='overwrite')\r\n",
+							""
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import json\r\n",
+							"mssparkutils.notebook.exit(json.dumps(\r\n",
+							"    {    \r\n",
+							"        \"Datasets\": \r\n",
+							"        [     \r\n",
+							"            {        \r\n",
+							"                \"DataSource\": \"Decision Science Production\",\r\n",
+							"                \"Dataset\": \"Fraud Detection Result\",\r\n",
+							"                \"Location\": destAdlsPath       \r\n",
+							"            }       \r\n",
+							"        ]  \r\n",
+							"    }\r\n",
+							"    ))"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 14
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DetectFraudUsageWithMarkup')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "DS/FraudDetection"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "iAppDSSparkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/fa352f92-a3cd-4082-827c-142fca3460bf/resourceGroups/rg-acs-dev/providers/Microsoft.Synapse/workspaces/gcs-iapp-desc-dev-syn/bigDataPools/iAppDSSparkPool",
+						"name": "iAppDSSparkPool",
+						"type": "Spark",
+						"endpoint": "https://gcs-iapp-desc-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/iAppDSSparkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Notebook Help\r\n",
+							"## Input Parameter Details\r\n",
+							"|Parameter Name| Parameter Type|\r\n",
+							"|---|\r\n",
+							"|json|json|\r\n",
+							"\r\n",
+							"<details>\r\n",
+							"    <summary>json sample - click to expand</summary>\r\n",
+							"    `\r\n",
+							"\t\r\n",
+							"\t\"firstRow\": {\r\n",
+							"\t\t\"JsonInput\": \"{,,,,,,,\r\n",
+							"\t\t\"ProcessID\": \"EDEA2A52-D58C-41FE-AB62-32C05D381608\",\r\n",
+							"\t\t\"Process\": \"iApp Fraud Detection Framework\",\r\n",
+							"\t\t\"Tenant\": \"DS_SYNAPSE_01\",\r\n",
+							"\t\t\"Requests\": [\r\n",
+							"\t\t\t{\r\n",
+							"\t\t\t\t\"ModelType\": \"iApp\",\r\n",
+							"\t\t\t\t\"EnvironmentType\": \"Development\",\r\n",
+							"\t\t\t\t\"ProcessType\": \"iApp Fraud Detection\",\r\n",
+							"\t\t\t\t\"ParentRequestID\": \"56B9306F-43B3-493C-A260-960BBE92EE00\",\r\n",
+							"\t\t\t\t\"RequestID\": \"56B9306F-43B3-493C-A260-960BBE92EE01\",\r\n",
+							"\t\t\t\t\"UserID\": \"karanpar\",\r\n",
+							"\t\t\t\t\"Scenarios\": [\r\n",
+							"\t\t\t\t\t{\r\n",
+							"\t\t\t\t\t\t\"Scenario\": \"IAPP Fraud Detection 20210830_110749203\",\r\n",
+							"\t\t\t\t\t\t\"Datasets\": [\r\n",
+							"\t\t\t\t\t\t\t{\r\n",
+							"\t\t\t\t\t\t\t\t\"DataSource\": \"iApp Dev\",\r\n",
+							"\t\t\t\t\t\t\t\t\"Dataset\": \"Compute Usage\",\r\n",
+							"\t\t\t\t\t\t\t\t\"ProviderType\": \"ADLSGen2\",\r\n",
+							"\t\t\t\t\t\t\t\t\"DataFormat\": \"CSV\",\r\n",
+							"\t\t\t\t\t\t\t\t\"Location\": \"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/tmp_synapseoutput/FraudUsagev2.csv\"\r\n",
+							"\t\t\t\t\t\t\t}\r\n",
+							"\t\t\t\t\t\t]\r\n",
+							"\t\t\t\t\t}\r\n",
+							"\t\t\t\t]\r\n",
+							"\t\t\t}\r\n",
+							"\t\t],\r\n",
+							"\t\t\"InvocationID\": \"e8808db1-a65d-4227-adbe-9706b1858bd4\"\r\n",
+							"\t},\r\n",
+							"\t\",: null,: null,: null,: null,: null,\r\n",
+							"\t\"ProcessName\": \"iApp Fraud Detection Framework\",\r\n",
+							"\t\"NotebookPath\": \"GetFraudComputeUsageSP\",\r\n",
+							"\t\"Tenant\": \"DS_SYNAPSE_01\",\r\n",
+							"\t\"ExistingClusterID\": \"https://gcs-iapp-dev-syn.dev.azuresynapse.net/\"\r\n",
+							"\t},\r\n",
+							"\t\"effectiveIntegrationRuntime\": \"DefaultIntegrationRuntime (West US 2)\",\r\n",
+							"    \"billingReference\": {\r\n",
+							"        \"activityType\": \"PipelineActivity\",\r\n",
+							"        \"billableDuration\": [\r\n",
+							"            {\r\n",
+							"                \"meterType\": \"AzureIR\",\r\n",
+							"                \"duration\": 0.016666666666666666,\r\n",
+							"                \"unit\": \"DIUHours\"\r\n",
+							"            }\r\n",
+							"        ]\r\n",
+							"    },\r\n",
+							"    \"durationInQueue\": {\r\n",
+							"        \"integrationRuntimeQueue\": 0\r\n",
+							"    }}`\r\n",
+							"</details>    \r\n",
+							"\r\n",
+							"\r\n",
+							""
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"#Parameters\r\n",
+							"inputJson = \"\"\r\n",
+							"#Notebook variables\r\n",
+							"adlsPath = \"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/ComputeUsage2Years.csv\"\r\n",
+							"destAdlsPath= \"abfss://acs@acsstoragegen2dev.dfs.core.windows.net/athenaofe/ComputeUsage/tmp_synapseoutput/FraudUsagev2.csv\" ;"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Processing Logic\r\n",
+							"* Read the Compute Usage data\r\n",
+							"* Filter the data by isFraud flag\r\n",
+							"* output to destination file"
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"from pyspark.sql import SparkSession\r\n",
+							"from pyspark.sql.types import *\r\n",
+							"\r\n",
+							"usage = spark.read.option('header', 'true') \\\r\n",
+							".option('delimiter', ',') \\\r\n",
+							".csv(adlsPath)\r\n",
+							"\r\n",
+							"usage.write.csv(destAdlsPath, mode='overwrite')"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Output Details\r\n",
+							"\r\n",
+							"<details>\r\n",
+							"    <summary> output json - click to expand </summary>\r\n",
+							"    `{    \r\n",
+							"        \"Datasets\": \r\n",
+							"        [     \r\n",
+							"            {        \r\n",
+							"                \"DataSource\": \"Decision Science Production\",\r\n",
+							"                \"Dataset\": \"Fraud Detection Result\",\r\n",
+							"                \"Location\": destAdlsPath       \r\n",
+							"            }       \r\n",
+							"        ]  \r\n",
+							"    }`\r\n",
+							"\r\n",
+							"</details>\r\n",
+							""
+						],
+						"attachments": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"import json\r\n",
+							"mssparkutils.notebook.exit(json.dumps(\r\n",
+							"    {    \r\n",
+							"        \"Datasets\": \r\n",
+							"        [     \r\n",
+							"            {        \r\n",
+							"                \"DataSource\": \"Decision Science Production\",\r\n",
+							"                \"Dataset\": \"Fraud Detection Result\",\r\n",
+							"                \"Location\": destAdlsPath       \r\n",
+							"            }       \r\n",
+							"        ]  \r\n",
+							"    }\r\n",
+							"    ))"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 3
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/GetDateTime')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "common"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "iAppDSSparkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/fa352f92-a3cd-4082-827c-142fca3460bf/resourceGroups/rg-acs-dev/providers/Microsoft.Synapse/workspaces/gcs-iapp-desc-dev-syn/bigDataPools/iAppDSSparkPool",
+						"name": "iAppDSSparkPool",
+						"type": "Spark",
+						"endpoint": "https://gcs-iapp-desc-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/iAppDSSparkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"import datetime\r\n",
+							"now = datetime.datetime.now()\r\n",
+							"dt = now.strftime(\"%Y-%m-%d %H:%M:%S\")\r\n",
+							"\r\n",
+							"mssparkutils.notebook.exit(dt)"
+						],
+						"outputs": [],
+						"execution_count": 2
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MasterNB')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "common"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "iAppDSSparkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/fa352f92-a3cd-4082-827c-142fca3460bf/resourceGroups/rg-acs-dev/providers/Microsoft.Synapse/workspaces/gcs-iapp-desc-dev-syn/bigDataPools/iAppDSSparkPool",
+						"name": "iAppDSSparkPool",
+						"type": "Spark",
+						"endpoint": "https://gcs-iapp-desc-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/iAppDSSparkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 8,
+						"memory": 56,
+						"extraHeader": null
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"NotebookName = \"/DS/FraudDetection/DetectFraudUsage\"\r\n",
+							"inputJson = '{\\\"ProcessID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"Process\\\":\\\"iApp Fraud Detection Framework\\\",\\\"Tenant\\\":\\\"DS_SYNAPSE_01\\\",\\\"Requests\\\":[{\\\"ModelType\\\":\\\"iApp\\\",\\\"EnvironmentType\\\":\\\"Development\\\",\\\"ProcessType\\\":\\\"iApp Fraud Detection\\\",\\\"ParentRequestID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"RequestID\\\":\\\"406EE5A9-0F05-4714-B3C3-E6FDADE9B1D5\\\",\\\"Parameters\\\":{\\\"StartDate\\\":\\\"10/1/2020\\\"},\\\"Scenarios\\\":[{\\\"Scenario\\\":\\\"IAPP Fraud DETECTION 20201111_152431083\\\",\\\"Datasets\\\":[{\\\"DataSource\\\":\\\"iApp Development\\\",\\\"Dataset\\\":\\\"ComputeUsage\\\",\\\"ProviderType\\\":\\\"ADLSv2\\\",\\\"DataFormat\\\":\\\"CSV\\\",\\\"Location\\\":\\\"https://acsstoragegen2dev.dfs.core.windows.net/acs/athenaofe/ComputeUsage/ComputeUsage2Years.csv\\\"}]}]}]}'"
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"mssparkutils.notebook.exit(mssparkutils.notebook.run(NotebookName, 3660, {\"inputJson\": inputJson }))\r\n",
+							"\r\n",
+							""
+						],
+						"attachments": null,
+						"outputs": [],
+						"execution_count": 2
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/iAppDSSqlPool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "westus2"
+		}
+	]
+}

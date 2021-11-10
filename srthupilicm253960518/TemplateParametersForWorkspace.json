@@ -1,0 +1,75 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "srthupilicm253960518"
+		},
+		"Salesforce1_password": {
+			"value": ""
+		},
+		"Salesforce1_securityToken": {
+			"value": ""
+		},
+		"ammishra-synapselink-integration-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bmdacsir01prod_GDrive_password": {
+			"value": ""
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"icm260687232-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"srthupil-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"srthupilicm253960518-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"srthupilsqlodtestfalse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"targetwsvenkatp1-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://login.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_username": {
+			"value": "venkatptest123"
+		},
+		"ammishra-synapselink-integration-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://synapseciefarm08.dfs.core.windows.net"
+		},
+		"bm-dac-syn-01-prod-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bmdacdlst01prod.dfs.core.windows.net"
+		},
+		"bmdacsir01prod_GDrive_properties_typeProperties_host": {
+			"value": "G:\\共有ドライブ\\【GTD00292】 データ分析基盤\\共通データ"
+		},
+		"bmdacsir01prod_GDrive_properties_typeProperties_userId": {
+			"value": "ifcadmin"
+		},
+		"cicdsourcevenkatp-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"icm260687232-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		},
+		"srthupil-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://srthupilsynapsetest.dfs.core.windows.net"
+		},
+		"srthupilicm253960518-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://srthupilsynapsetest.dfs.core.windows.net"
+		},
+		"srthupilsqlodtestfalse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://srthupilsynapsetest.dfs.core.windows.net"
+		},
+		"targetwsvenkatp1-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://venkatpadlsgen2.dfs.core.windows.net"
+		}
+	}
+}

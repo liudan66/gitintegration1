@@ -1,0 +1,87 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "asaworkspacevshah"
+		},
+		"ADBDeltaLake_accessToken": {
+			"value": ""
+		},
+		"AzureMLService1_servicePrincipalKey": {
+			"value": ""
+		},
+		"CosmosDb1_connectionString": {
+			"value": ""
+		},
+		"LSAzureSqlOD_connectionString": {
+			"value": ""
+		},
+		"asadatalakevshah_accountKey": {
+			"value": ""
+		},
+		"asastorevshah_connectionString": {
+			"value": ""
+		},
+		"asaworkspacevshah-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"dwYelp_connectionString": {
+			"value": ""
+		},
+		"dwyelp2_connectionString": {
+			"value": ""
+		},
+		"explrazstorage_accountKey": {
+			"value": ""
+		},
+		"sfdc_vrlshah_password": {
+			"value": ""
+		},
+		"sfdc_vrlshah_securityToken": {
+			"value": ""
+		},
+		"sqlpool01_connectionString": {
+			"value": ""
+		},
+		"sqlpool01_workload01_connectionString": {
+			"value": ""
+		},
+		"sqlpool01_workload02_connectionString": {
+			"value": ""
+		},
+		"AzureMLService1_properties_typeProperties_subscriptionId": {
+			"value": "982f0ec6-f886-45e3-9ba3-e777611a1369"
+		},
+		"AzureMLService1_properties_typeProperties_resourceGroupName": {
+			"value": "Synapse-MCW"
+		},
+		"AzureMLService1_properties_typeProperties_servicePrincipalId": {
+			"value": "22d4f4ff-e719-4440-8b43-da4c0caea12f"
+		},
+		"AzureMLService1_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"asadatalakevshah_properties_typeProperties_url": {
+			"value": "https://asadatalakevshah.dfs.core.windows.net"
+		},
+		"asakeyvaultvshah_properties_typeProperties_baseUrl": {
+			"value": "https://asakeyvaultvshah.vault.azure.net/"
+		},
+		"asaworkspacevshah-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://asadatalakevshah.dfs.core.windows.net"
+		},
+		"ctrxdatalake01_sasUri": {
+			"value": ""
+		},
+		"explrazstorage_properties_typeProperties_url": {
+			"value": "https://explrazstorage.dfs.core.windows.net"
+		},
+		"sfdc_vrlshah_properties_typeProperties_environmentUrl": {
+			"value": "https://login.salesforce.com"
+		},
+		"sfdc_vrlshah_properties_typeProperties_username": {
+			"value": "vrlshah@yahoo.com"
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "bigdataqa0602ws-devops"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"bigdataqa0602ws-devops-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"bigdataqa0602ws-devops-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaodevopsgen2.dfs.core.windows.net"
+		}
+	}
+}

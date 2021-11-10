@@ -1,0 +1,2781 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "eudbisynws"
+		},
+		"MaverickTest_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MaverickTest'"
+		},
+		"MaverickTest_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'MaverickTest'"
+		},
+		"SynapseSQLMaverickDBOnDemand_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SynapseSQLMaverickDBOnDemand'"
+		},
+		"eudbidl_adls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'eudbidl_adls'"
+		},
+		"eudbisynws-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'eudbisynws-WorkspaceDefaultSqlServer'"
+		},
+		"MaverickTest_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ITINERISNV\\WaLap"
+		},
+		"eudbidl_adls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://eudbidl.dfs.core.windows.net"
+		},
+		"eudbisynws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://eudbidl.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataCleanupADLS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Cleans ITPProcessStop",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DFCleanITPProcessStop",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"StagingITPProcessstop": {},
+									"curTPPROCESSSTOP": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-11-26T17:48:33Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/DFCleanITPProcessStop')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataEntityToADLS_Ent_Customer')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Entity Customer",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT *,\n\tCHECKSUM(CustomerKey) as PKHASH,\n\tCHECKSUM(AccountNumber,\n\tCustomerName,\n\tCustomerLanguage,\n\tSocialSecurityNumber,\n\tOrganisationNumber,\n\tDUNSNumber,\n\tCustomerGroupDescription,\n\tCustomerGroupID,\n\tSegment,\n\tSubsegment,\n\tMainContactWorker,\n\tCustomerType,\n\tClassificationGroup,\n\tRecordType,\n\tAdres,\n\tAddressFull,\n\tAddressStreet,\n\tAdressNumber,\n\tAdressBus,\n\tAddressAdjective,\n\tAddressZipCode,\n\tAddressMunicipality,\n\tAddressMunicipalityName,\n\tAdressCountry,\n\tDuplicateCustomer,\n\tLineOfBusiness,\n\tMethodOfPaymentID,\n\tMethodOfPaymentDescription,\n\tTermsOfPaymentID,\n\tTermsOfPaymentDescription,\n\tCustomerCreatedDateTime,\n\tActiveCustomer,\n\tProcesstopInfo,\n\tProcesstopsActiveInfo,\n\tBankAccountInformation,\n\tGroupedCustomerInfo,\n\tTelephone,\n\tMail,\n\tFax,\n\tMobile,\n\tNonBlockingReason,\n\tAddressLocation,\n\tCustomerValue,\n\tExternalCustomerNumber,\n\tVATNumber,\n\tPrintCollectionInfo,\n\tResponsibleInformation,\n\tContactPersonPresentInfo,\n\tPrimaryPostalAddressPresentInfo,\n\tPrimaryElectronicAddressPresentInfo,\n\tForeignKVKNumber,\n\tOnlineCustomer,\n\tMEZMeterrequestGroup,\n\tMEZDescriptionCustomerNameMasterContract,\n\tMEZNextRequestDate,\n\tMixCustomerSME,\n\tODAApprovalSignedReturn,\n\tOINNumber,\n\tPrinttype,\n\tCreatedDateAndTime,\n\tCreatedBy,\n\tModifiedDateAndTime,\n\tModifiedBy,\n\tPartyKey) as VALUEHASH\n\t,GETDATE() AS DTCreated\nFROM (\n\tSELECT\n\t\tCUS.RECID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerKey\n\t\t,CUS.ACCOUNTNUM\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AccountNumber\n\t\t,CONVERT(NVARCHAR(100),REPLACE(REPLACE(RTRIM(LTRIM(DPT.NAME)),'  ',' '),CHAR(10),' '))\tAS CustomerName\n\t\t,DPT.LANGUAGEID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerLanguage\n\t\t,DPT.IUS_ADR_SECUREDID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS SocialSecurityNumber\n\t\t,DPT.OrgNumber\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS OrganisationNumber\n\t\t,ddn.DunsNumber\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS DUNSNumber\n\t\t,CGR.NAME\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerGroupDescription\n\t\t,CUS.CUSTGROUP\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerGroupID\n\t\t,CUS.SEGMENTID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Segment\n\t\t,CUS.SubsegmentId\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Subsegment\n\t\t,wkp.Name\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MainContactWorker\n\t\t,RTP.Klanttype\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerType\n\t\t,CUS.CUSTCLASSIFICATIONID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ClassificationGroup\n\t\t,RTP.Recordtype\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS RecordType\n\t\t,ADR.Adres,' ' + CHAR(10)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressFull\n\t\t,ADR.Straat\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressStreet\n\t\t,ADR.Huisnummer\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AdressNumber\n\t\t,ADR.Bus\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AdressBus\n\t\t,ADR.HuisnummerSuffix\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressAdjective\n\t\t,ADR.Postcode\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressZipCode\n\t\t,ADR.Gemeente\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressMunicipality\n\t\t,ADR.Plaatsnaam\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressMunicipalityName\n\t\t,ADR.Land\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AdressCountry\n\t\t,CUS.IUS_CUS_DUPLICATECUSTOMER\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS DuplicateCustomer\n\t\t,LOB.DESCRIPTION\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS LineOfBusiness\n\t\t,CUS.PAYMMODE\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MethodOfPaymentID\n\t\t,CPT.NAME\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MethodOfPaymentDescription\n\t\t,CUS.PAYMTERMID\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS TermsOfPaymentID\n\t\t,PTM.DESCRIPTION\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS TermsOfPaymentDescription\n\t\t,CONVERT(DATE,DATEADD(HOUR,2,CUS.CREATEDDATETIME))\t\t\t\t\t\t\t\t\t\tAS CustomerCreatedDateTime\n\t\t,CASE WHEN AKL.ActieveKlant = 1 THEN 'Actieve klant' ELSE 'Inactieve klant' END\t\t\tAS ActiveCustomer\n\t\t,CASE WHEN BLK.Actief is null\n\t\t\t  THEN 'Processtop niet aanwezig' ELSE 'Processtop aanwezig' END\t\t\t\t\tAS ProcesstopInfo\n\t\t,BLK.Actief\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ProcesstopsActiveInfo\n\t\t-- Ideally we would want the following field to look like a csv consisting of IBAN,BIC,Type,Purpose e.g. IBAN,BIC,SDD/OV,All/CN/FAC;IBAN2,BIC2,SDD/OV,All/CN/FAC;...\n\t\t,CASE WHEN BNK.Factuur = BNK.Creditnota THEN BNK.Factuur\n\t\t\t\t  +\n\t\t\t\t  CASE WHEN BNK.SDD_FK = 1 THEN ' (SDD)' ELSE '' END\n\t\t\t  WHEN BNK.Factuur != '' and BNK.Creditnota != '' then 'FAC: ' + BNK.Factuur\n\t\t\t\t  +\n\t\t\t\t  CASE WHEN SDD_FK = 1 THEN ' (SDD)' ELSE '' END\n\t\t\t\t  + ' CN: ' + BNK.Creditnota\n\t\t\t\t  +\n\t\t\t\t  CASE WHEN SDD_CN = 1 THEN ' (SDD)' ELSE '' END\n\t\t\t  WHEN BNK.Factuur != '' THEN 'FAC: ' + BNK.Factuur\n\t\t\t\t  +\n\t\t\t\t  CASE WHEN SDD_FK = 1 THEN ' (SDD)' ELSE '' END\n\t\t\t  WHEN BNK.Creditnota != '' THEN 'CN: ' + BNK.Creditnota\n\t\t\t\t  +\n\t\t\t\t  CASE WHEN SDD_CN = 1 THEN ' (SDD)' ELSE '' END\n\t\t\t  ELSE null end\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS BankAccountInformation\n\t\t,CASE WHEN FST.ATL is not null THEN 'Verzamelklant' ELSE 'Geen verzamelklant' END\t\tAS GroupedCustomerInfo\n\t\t,ISNULL(ELA.CUS_Telefoon,'')\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Telephone\n\t\t,ISNULL(ELA.CUS_Mail,'')\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Mail\n\t\t,ISNULL(ELA.CUS_Fax,'')\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Fax\n\t\t,ISNULL(ELA.CUS_Mobiel,'')\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Mobile\n\t\t,ISNULL(AFS.NietAfsluitbaarReden,'Afsluiting niet geblokkeerd')\t\t\t\t\t\t\tAS NonBlockingReason\n\t\t,ADR.Plaatsnaam + ', ' + ADR.Land\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS AddressLocation\n\t\t,cus.IUS_CUS_CustomerValueId\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CustomerValue\n\t\t,cus.IUS_CUS_ExternalCustNum\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ExternalCustomerNumber\n\t\t,cus.VATNum\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS VATNumber\n\t\t,cpc.Printverzamelingen\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS PrintCollectionInfo\n\t\t,crs.Verantwoordelijken\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ResponsibleInformation\n\t\t,CASE WHEN CTP.ActieveContactpersoon = 1\n\t\t\t  THEN 'Heeft actieve contactpersoon' ELSE 'Geen actieve contactpersoon' END\t\tAS ContactPersonPresentInfo\n\t\t,CASE WHEN CPA.RecId IS NOT NULL\n\t\t\t  THEN 'Heeft primair postadres' ELSE 'Geen primair postadres' END\t\t\t\t\tAS PrimaryPostalAddressPresentInfo\n\t\t,CASE WHEN ELA.CUS_Mail != ''\n\t\t\t  THEN 'Heeft primair mailadres' ELSE 'Geen primair mailadres' END\t\t\t\t\tAS PrimaryElectronicAddressPresentInfo\n\t\t,ext.[NietNLKVK]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ForeignKVKNumber\n\t\t,ext.[Online]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS OnlineCustomer\n\t\t,ext.[MEZclgroep]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MEZMeterrequestGroup\n\t\t,ext.[MEZkenmerk]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MEZDescriptionCustomerNameMasterContract\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t,ext.[MEZcldatum]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MEZNextRequestDate\n\t\t,ext.[MIX]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS MixCustomerSME\n\t\t,ext.[ODAGetek]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ODAApprovalSignedReturn\n\t\t,ext.[OINNummer]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS OINNumber\n\t\t,ext.[Printtype]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS Printtype\n\t\t,DATEADD(HOUR, 2, cus.CreatedDateTime)\t\t\t\t\t\t\t\t\t\t\t\t\tAS CreatedDateAndTime\n\t\t,cus.CreatedBy\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS CreatedBy\n\t\t,DATEADD(HOUR, 2, (SELECT Max(lastupdatedate) FROM (\n\t\t\t\tVALUES\t(CUS.ModifiedDateTime),\t(DPT.ModifiedDateTime),(wkr.modifieddatetime),\n\t\t\t\t(RTP.CTTModifiedDateTime),(ADR.LPAModifiedDateTime),(CPT.MODIFIEDDATETIME)\n\t\t\t\t,(ext.EXTModifiedDateTime))\n\t\t\t\t\t\tAS UpdateDate(lastupdatedate)) )                                        AS ModifiedDateAndTime\n\t\t,cus.ModifiedBy\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS ModifiedBy\n\t\t,ISNULL(dpt.RecId, 0)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS PartyKey\n\tFROM CUSTTABLE CUS\n\tJOIN DIRPARTYTABLE DPT\n\t\tON DPT.PARTITION = CUS.PARTITION\n\t\t\tAND DPT.RECID = CUS.PARTY\n\tLEFT JOIN DirDunsNumber ddn\n\t\tON ddn.PARTITION = CUS.PARTITION\n\t\t\tAND ddn.RecId = dpt.DunsNumberRecId\n\tLEFT JOIN HcmWorker wkr\n\t\tON wkr.PARTITION = CUS.PARTITION\n\t\t\tAND wkr.RecId = cus.MainContactWorker\n\tLEFT JOIN DirPartyTable wkp\n\t\tON wkp.PARTITION = CUS.PARTITION\n\t\t\tAND wkp.RecId = wkr.PERSON\n\tJOIN CUSTGROUP CGR\n\t\tON CGR.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND CGR.PARTITION = CUS.PARTITION\n\t\t\tAND CGR.CUSTGROUP = CUS.CUSTGROUP\n\tOUTER APPLY (\n\t\tSELECT TOP 1 GIS.GROUPEDINVSTRUCTID\n\t\t\t,COUNT(GIL.AGREEMENTID) AS ATL\n\t\tFROM IUS_AGR_GROUPEDINVSTRUCTINFO GIS\n\t\tJOIN IUS_AGR_GROUPEDINVSTRUCTLINE GIL\n\t\t\tON GIL.DATAAREAID = GIS.DATAAREAID\n\t\t\t\tAND GIL.PARTITION = GIS.PARTITION\n\t\t\t\tAND GIL.GROUPEDINVSTRUCTID = GIS.GROUPEDINVSTRUCTID\n\t\tWHERE GIS.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND GIS.PARTITION = CUS.PARTITION\n\t\t\tAND GIS.CUSTACCOUNT = CUS.ACCOUNTNUM\n\t\tGROUP BY GIS.GROUPEDINVSTRUCTID\n\t\tHAVING COUNT(GIL.AGREEMENTID) > 1\n\t\t) FST\n\tOUTER APPLY (\n\t\tSELECT CTT.CUSTOMERTYPE AS Klanttype\n\t\t\t,BET.BASEENUMLABEL AS Recordtype\n\t\t\t,CTT.MODIFIEDDATETIME as CTTModifiedDateTime\n\t\tFROM IUS_CUS_CUSTOMERTYPETABLE CTT\n\t\tJOIN ITP_BASEENUMTABLE BET\n\t\t\tON BET.PARTITION = CTT.PARTITION\n\t\t\t\tAND BET.BASEENUMNAME = 'DirPartyBaseType'\n\t\t\t\tAND BET.BASEENUMVALUE = CTT.RECORDTYPE\n\t\tWHERE CTT.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND CTT.PARTITION = CUS.PARTITION\n\t\t\tAND CTT.RECID = CUS.IUS_CUS_CUSTOMERTYPE\n\t\t) RTP\n\tOUTER APPLY (\n\t\tSELECT LPA.RECID\n\t\tFROM DIRPARTYTABLE DPT\n\t\tJOIN DIRPARTYLOCATION LOC\n\t\t\tON LOC.PARTITION = CUS.PARTITION\n\t\t\t\tAND LOC.PARTY = DPT.RECID\n\t\t\t\tAND LOC.ISPOSTALADDRESS = 1\n\t\t\t\tAND LOC.ISPRIMARY = 1\n\t\tJOIN LOGISTICSPOSTALADDRESS LPA\n\t\t\tON LPA.PARTITION = CUS.PARTITION\n\t\t\t\tAND LPA.LOCATION = LOC.LOCATION\n\t\t\t\tAND LPA.VALIDTO > '2154-12-30'\n\t\tWHERE DPT.PARTITION = CUS.PARTITION\n\t\t\tAND DPT.RECID = CUS.PARTY\n\t\t\tAND dpt.RecId != 5637334570 -- #ECN #TODO - cleansing! dubbel primair adres\n\t\t) CPA\n\tOUTER APPLY (\n\t\tSELECT LPA.COUNTRYREGIONID AS Landcode\n\t\t\t,LAC.SHORTNAME AS Land\n\t\t\t,LPA.ZIPCODE AS Postcode\n\t\t\t,ISNULL(NULLIF(LPA.COUNTY, ''), LPA.CITY) AS Gemeente\n\t\t\t,LPA.CITY AS Plaatsnaam\n\t\t\t,LPA.STREET AS Straat\n\t\t\t,LPA.STREETNUMBER AS Huisnummer\n\t\t\t,LPA.BUILDINGCOMPLIMENT AS HuisnummerSuffix\n\t\t\t,LPA.IUS_ADR_HOUSENUMCHARACTER AS Bus\n\t\t\t,LPA.ADDRESS AS Adres\n\t\t\t,LPA.MODIFIEDDATETIME as LPAModifiedDateTime\n\t\tFROM LOGISTICSPOSTALADDRESS LPA\n\t\tLEFT JOIN LOGISTICSADDRESSCOUNTRYREGIONTRANSLATION LAC\n\t\t\tON LAC.PARTITION = CUS.PARTITION\n\t\t\t\tAND LAC.COUNTRYREGIONID = LPA.COUNTRYREGIONID\n\t\t\t\tAND LAC.LANGUAGEID = 'NL'\n\t\tWHERE LPA.PARTITION = CUS.PARTITION\n\t\t\tAND LPA.RECID = CPA.RECID\n\t\t) ADR\n\tOUTER APPLY (\n\t\tSELECT STUFF((\n\t\t\t\t\tSELECT DISTINCT '-' + BET.BASEENUMLABEL\n\t\t\t\t\tFROM ITP_PROCESSSTOP PST\n\t\t\t\t\tJOIN ITP_PROCESSSTOPREASON PSR\n\t\t\t\t\t\tON PSR.RecId = PST.ReasonRecId\n\t\t\t\t\tJOIN ITP_BASEENUMTABLE BET\n\t\t\t\t\t\tON BET.BASEENUMNAME = 'ITP_ProcessTypes'\n\t\t\t\t\t\t\tAND BET.BASEENUMVALUE = PSR.PROCESSTYPE\n\t\t\t\t\t\t\tAND BET.PARTITION = CUS.PARTITION\n\t\t\t\t\tWHERE PST.DATAAREAID = CUS.DATAAREAID\n\t\t\t\t\t\tAND PST.PARTITION = CUS.PARTITION\n\t\t\t\t\t\tAND PST.REFTABLEID = 77\n\t\t\t\t\t\tAND PST.REFRECID = CUS.RECID\n\t\t\t\t\t\tAND GETDATE() BETWEEN PST.STARTDATE\n\t\t\t\t\t\t\tAND ISNULL(NULLIF(PST.ENDDATE, ''), '2154-12-31')\n\t\t\t\t\tORDER BY '-' + BET.BASEENUMLABEL\n\t\t\t\t\tFOR XML PATH('')\n\t\t\t\t\t), 1, 1, '') AS Actief\n\t\t) BLK\n\tOUTER APPLY (\n\t\tSELECT\n\t\t\t MAX(CASE CBR.CREDITNOTEACCOUNT\tWHEN 1 THEN CBR.ACCOUNTID\t\t\tELSE '' END) AS Creditnota\n\t\t\t,MAX(CASE CBR.INVOICEACCOUNT\tWHEN 1 THEN CBR.ACCOUNTID\t\t\tELSE '' END) AS Factuur\n\t\t\t,MAX(CASE CBR.CREDITNOTEACCOUNT\tWHEN 1 THEN CBR.DIRECTDEBITMANDATE\tELSE 0 END) AS SDD_CN\n\t\t\t,MAX(CASE CBR.INVOICEACCOUNT\tWHEN 1 THEN CBR.DIRECTDEBITMANDATE\tELSE 0 END) AS SDD_FK\n\t\tFROM IBM_BNK_CUSTBANKACCOUNTRELATION CBR\n\t\tWHERE CBR.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND CBR.PARTITION = CUS.PARTITION\n\t\t\tAND CBR.CREDITNOTEACCOUNT + CBR.INVOICEACCOUNT > 0\n\t\t\tAND CBR.INVSTRUCTID = ''\n\t\t\tAND CBR.CUSTACCOUNT = CUS.ACCOUNTNUM\n\t\tGROUP BY CBR.CUSTACCOUNT\n\t\t) BNK\n\tOUTER APPLY (\n\t\tSELECT\n\t\t\t MAX(CASE WHEN LEA.TYPE = 1\t\tTHEN LEA.LOCATOR ELSE '' END) AS CUS_Telefoon\n\t\t\t,MAX(CASE WHEN LEA.TYPE = 2\t\tTHEN LEA.LOCATOR ELSE '' END) AS CUS_Mail\n\t\t\t,MAX(CASE WHEN LEA.TYPE = 5\t\tTHEN LEA.LOCATOR ELSE '' END) AS CUS_Fax\n\t\t\t,MAX(CASE WHEN LEA.TYPE = 150\tTHEN LEA.LOCATOR ELSE '' END) AS CUS_Mobiel\n\t\tFROM DIRPARTYLOCATION DPL\n\t\tJOIN LOGISTICSELECTRONICADDRESS LEA\n\t\t\tON LEA.PARTITION = DPL.PARTITION\n\t\t\t\tAND LEA.LOCATION = DPL.LOCATION\n\t\t\t\tAND LEA.TYPE IN (1,2,5,150)\n\t\t\t\tAND LEA.ISPRIMARY = 1\n\t\tWHERE DPL.PARTITION = CUS.PARTITION\n\t\t\tAND DPL.PARTY = DPT.RECID\n\t\t\tAND DPL.ISPRIMARY = 1\n\t\tGROUP BY DPL.PARTY\n\t\t) ELA\n\tOUTER APPLY (\n\t\tSELECT TOP 1 1 AS ActieveKlant\n\t\tFROM IUS_AGR_AGREEMENT AGR\n\t\tJOIN IUS_AGR_AGREEMENTSTATUS AST\n\t\t\tON AST.DATAAREAID = AGR.DATAAREAID\n\t\t\t\tAND AST.PARTITION = AGR.PARTITION\n\t\t\t\tAND AST.ISBILLABLE = 1\n\t\tWHERE AGR.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND AGR.PARTITION = CUS.PARTITION\n\t\t\tAND AGR.CUSTACCOUNT = CUS.ACCOUNTNUM\n\t\t) AKL\n\tOUTER APPLY (\n\t\tSELECT STUFF((\n\t\t\t\t\tSELECT DISTINCT '=' + ISNULL(NULLIF(cpc.DocuType, ''), 'Alle') + ':' + cpc.PrintCollection\n\t\t\t\t\tFROM ITP_OPM_CustPrintCollections cpc\n\t\t\t\t\tWHERE cpc.PARTITION = cus.PARTITION\n\t\t\t\t\t\tAND cpc.DataAreaId = cus.DataAreaId\n\t\t\t\t\t\tAND cpc.DirPartyTableRefRecId = cus.Party\n\t\t\t\t\tORDER BY '=' + ISNULL(NULLIF(cpc.DocuType, ''), 'Alle') + ':' + cpc.PrintCollection\n\t\t\t\t\tFOR XML PATH('')\n\t\t\t\t\t), 1, 1, '') AS Printverzamelingen\n\t\t) cpc -- [C]ust[P]rint[C]ollection\n\tOUTER APPLY (\n\t\tSELECT STUFF((\n\t\t\t\t\tSELECT '=' + rtp.[Description] + '+' + ISNULL(wkp.[Name], '') + '+' + ISNULL(dep.[Name], '')\n\t\t\t\t\tFROM IUS_CUS_Responsible rsp\n\t\t\t\t\tINNER JOIN IUS_CUS_ResponsibilityType rtp\n\t\t\t\t\t\tON rtp.PARTITION = cus.PARTITION\n\t\t\t\t\t\t\tAND rtp.DataAreaId = cus.DataAreaId\n\t\t\t\t\t\t\tAND rtp.RecId = rsp.ResponsibilityType\n\t\t\t\t\tLEFT JOIN HcmWorker wrk\n\t\t\t\t\t\tON wrk.PARTITION = cus.PARTITION\n\t\t\t\t\t\t\tAND wrk.RecId = rsp.OwnerWorker\n\t\t\t\t\tLEFT JOIN DirPartyTable wkp\n\t\t\t\t\t\tON wkp.PARTITION = cus.PARTITION\n\t\t\t\t\t\t\tAND wkp.RecId = wrk.Person\n\t\t\t\t\tLEFT JOIN DirPartyTable dep\n\t\t\t\t\t\tON dep.PARTITION = cus.PARTITION\n\t\t\t\t\t\t\tAND dep.RecId = rsp.Department\n\t\t\t\t\tWHERE rsp.PARTITION = cus.PARTITION\n\t\t\t\t\t\tAND rsp.DataAreaId = cus.DataAreaId\n\t\t\t\t\t\tAND rsp.CustAccount = cus.AccountNum\n\t\t\t\t\tORDER BY '=' + rtp.[Description] + '+' + ISNULL(wkp.[Name], '') + '+' + ISNULL(dep.[Name], '')\n\t\t\t\t\tFOR XML PATH('')\n\t\t\t\t\t), 1, 1, '') AS Verantwoordelijken\n\t\t) crs -- [C]ustomer[R]espon[s]ible\n\tOUTER APPLY (\n\t\tSELECT TOP 1 1 AS ActieveContactpersoon\n\t\tFROM ContactPerson cp\n\t\tWHERE cp.PARTITION = cus.PARTITION\n\t\t\tAND cp.ContactForParty = cus.Party\n\t\t\tAND cp.Inactive = 0\n\t\t) CTP -- [C]on[t]act[p]erson\n\tOUTER APPLY (\n\t\tSELECT TOP 1 CRR.DESCRIPTION AS NietAfsluitbaarReden\n\t\tFROM IUS_CUS_INHIBITCLOSEDOWNREASON ICR\n\t\tJOIN IUS_AST_CLOSEREOPENREASONTABLE CRR\n\t\t\tON CRR.PARTITION = CUS.PARTITION\n\t\t\t\tAND CRR.DATAAREAID = CUS.DATAAREAID\n\t\t\t\tAND CRR.RECID = ICR.REASON\n\t\tWHERE ICR.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND ICR.PARTITION = CUS.PARTITION\n\t\t\tAND ICR.CUSTACCOUNT = CUS.ACCOUNTNUM\n\t\t\tAND CONVERT(DATE, GETDATE()) BETWEEN ICR.STARTDATE\n\t\t\t\tAND ISNULL(NULLIF(ICR.ENDDATE, ''), '2154-12-31')\n\t\tORDER BY ICR.STARTDATE DESC\n\t\t) AFS\n\tLEFT JOIN CUSTPAYMMODETABLE CPT\n\t\tON CPT.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND CPT.PARTITION = CUS.PARTITION\n\t\t\tAND CPT.PAYMMODE = CUS.PAYMMODE\n\tLEFT JOIN PAYMTERM PTM\n\t\tON PTM.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND PTM.PARTITION = CUS.PARTITION\n\t\t\tAND PTM.PAYMTERMID = CUS.PAYMTERMID\n\tLEFT JOIN LINEOFBUSINESS LOB\n\t\tON LOB.DATAAREAID = CUS.DATAAREAID\n\t\t\tAND LOB.PARTITION = CUS.PARTITION\n\t\t\tAND LOB.LINEOFBUSINESSID = CUS.LINEOFBUSINESSID\n\tOUTER APPLY (\n\t\tSELECT\n\t\t\t MAX(CASE ept.PROPERTYID WHEN 'Niet-NLKVK'\tTHEN ext.VALUE ELSE NULL END) AS [NietNLKVK]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'Online'\t\tTHEN ext.VALUE ELSE NULL END) AS [Online]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'MEZclgroep'\tTHEN ext.VALUE ELSE NULL END) AS [MEZclgroep]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'MEZkenmerk'\tTHEN ext.VALUE ELSE NULL END) AS [MEZkenmerk]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'MEZcldatum'\tTHEN ext.VALUE ELSE NULL END) AS [MEZcldatum]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'MIX'\t\t\tTHEN ext.VALUE ELSE NULL END) AS [MIX]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'ODA getek'\tTHEN ext.VALUE ELSE NULL END) AS [ODAGetek]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'OIN nummer'\tTHEN ext.VALUE ELSE NULL END) AS [OINNummer]\n\t\t\t,MAX(CASE ept.PROPERTYID WHEN 'Printtype'\tTHEN ext.VALUE ELSE NULL END) AS [Printtype]\n\t\t\t,MAX(Ext.MODIFIEDDATETIME) AS EXTModifiedDateTime\n\t\tFROM ITP_ExtendedProperty ext\n\t\tJOIN ITP_ExtendedPropertyType ept\n\t\t\tON ept.RecId = ext.PropertyTypeRefRecId\n\t\t\t\tAND ept.PARTITION = ext.PARTITION\n\t\t\t\tAND ept.DataAreaId = ext.DataAreaId\n\t\tWHERE ext.PARTITION = cus.PARTITION\n\t\t\tAND ext.DataAreaId = cus.DataAreaId\n\t\t\tAND ext.RefRecId = dpt.RecId\n\t\t\tAND ext.RefTableId = 2303 -- DirPartyTable\n\t\t\tAND ext.StartDate <= GETDATE()\n\t\t\tAND (ext.EndDate = '' OR ext.EndDate >= GETDATE())\n\t\t) ext\n\tWHERE CUS.DATAAREAID = 'eco'\n\t\tAND CUS.PARTITION = 5637144576\n\t) T;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "customerCurated",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-11-24T11:53:08Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/SQLServerOnPrem')]",
+				"[concat(variables('workspaceId'), '/datasets/customerCurated')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataEntityToADLS_Ent_Product')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Entity Product",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "maverick-staging//Product"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT *\n,CHECKSUM(ProductKey) as PKHASH\n\t,CHECKSUM(\n\t\tProductID,\n\t\tProductDescription,\n\t\tDeliveryType,\n\t\tDeliveryDirection,\n\t\tVolumeSetName,\n\t\tProductStatus\n\t) AS VALUEHASH\n\t,GETDATE() AS DTChanged\nFROM (\n\tSELECT\n\t\tPRD.RECID\t\t\t\t\t\tAS ProductKey\n\t\t,PRD.PRODUCTID\t\t\t\t\tAS ProductID\n\t\t,PRD.NAME\t\t\t\t\t\tAS ProductDescription\n\t\t,UPPER(PRD.DELIVERYTYPE)\t\tAS DeliveryType\n\t\t,dds.[DeliveryDirection]\t\tAS DeliveryDirection\n\t\t,vol.[Name]\t\t\t\t\t\tAS VolumeSetName\n\t\t,BET.BASEENUMLABEL\t\t\t\tAS ProductStatus\n\tFROM IUS_PRD_PRODUCT PRD\n\tLEFT OUTER JOIN IUS_AGR_VolumeSet vol\n\t\tON vol.PARTITION = PRD.PARTITION\n\t\t\tAND vol.DataAreaId = PRD.DataAreaId\n\t\t\tAND vol.RecId = PRD.VolumeSetRefRecId\n\tLEFT OUTER JOIN IUS_MPO_DeliveryDirectionSetup dds\n\t\tON dds.PARTITION = PRD.PARTITION\n\t\t\tAND dds.DataAreaId = PRD.DataAreaId\n\t\t\tAND dds.RecId = PRD.EBADeliveryDirectionRefRecId\n\tLEFT JOIN ITP_BASEENUMTABLE BET\n\t\tON BET.PARTITION = PRD.PARTITION\n\t\t\tAND BET.BASEENUMNAME = 'IUS_PRD_ProductStatusses'\n\t\t\tAND BET.BASEENUMVALUE = PRD.STATUS\n\tWHERE PRD.DATAAREAID = 'eco'\n\t\tAND PRD.PARTITION = 5637144576\n\t) T",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProductKey",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "ProductKey",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProductID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductDescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProductDescription",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DeliveryType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DeliveryType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DeliveryDirection",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DeliveryDirection",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VolumeSetName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "VolumeSetName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductStatus",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProductStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PKHASH",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "PKHASH",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "VALUEHASH",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "VALUEHASH",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DTChanged",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "DTChanged",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvCuratedProduct",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-11-19T14:52:31Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/SQLServerOnPrem')]",
+				"[concat(variables('workspaceId'), '/datasets/csvCuratedProduct')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DataFromOnPremSQLToADLS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetTables').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy Tables From SQL",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"sqlReaderStoredProcedureName": "[[dbo].[sp_GetTableWithHashValues]",
+											"storedProcedureParameters": {
+												"parTableName": {
+													"type": "String",
+													"value": {
+														"value": "@{item().TableName}",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings",
+												"copyBehavior": "FlattenHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"parallelCopies": 4,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SQLServerOnPrem",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "csvTablesStaging",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "GetTables",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "csvTables",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Copy ProcessStop",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "/****** Script for SelectTopNRows command from SSMS  ******/\nSELECT CHECKSUM(RECID) as PKHASH,\n\tCHECKSUM([ENDDATE]\n      ,[COMMENTS]\n      ,[ORIGIN]\n      ,[ORIGINREFERENCE]\n      ,[STARTDATE]\n      ,[REFTABLEID]\n      ,[REFRECID]\n      ,[REASONRECID]\n      ,[ICM_FIL_FILETYPEID]\n      ,[DEL_STATUS]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[STOPFILETYPEID]\n      ,[ENDDATEBYOFFSET]\n      ,[PARTITION])\tas VALUEHASH\n\t,[ENDDATE]\n      ,REPLACE(REPLACE(REPLACE(COMMENTS, CHAR(13), ' '), CHAR(10), ' '),'\"','') as COMMENTS\n      ,[ORIGIN]\n      ,[ORIGINREFERENCE]\n      ,[STARTDATE]\n      ,[REFTABLEID]\n      ,[REFRECID]\n      ,[REASONRECID]\n      ,[ICM_FIL_FILETYPEID]\n      ,[DEL_STATUS]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[STOPFILETYPEID]\n      ,[ENDDATEBYOFFSET]\n      ,[PARTITION]\n  FROM [dbo].[ITP_PROCESSSTOP]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTG_ITPProcessStop",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy IUSAgrGroupedInvStructInfo",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT \n\t\tCHECKSUM(RECID) as PKHASH\n\t\t,CHECKSUM([INVOICECOMPLETEPCT]\n      ,[CUSTACCOUNT]\n      ,[CUSTPAYMMODE]\n      ,[ENDDATE]\n      ,[STARTDATE]\n      ,[CUSTPAYMTERMID]\n      ,[GROUPEDINVSTRUCTID]\n      ,[POSTINGCYCLEID]\n      ,[INVOICEGROUPID]\n      ,[BUSRELACCOUNT]\n      ,[CORRECTIONOUTPUTTYPE]\n      ,[IBM_BNK_REFUSALCOUNTERVALUE]\n      ,[SCOPINGBEHAVIOR]\n      ,[REFERENCEFIELD1]\n      ,[REFERENCEFIELD2]\n      ,[REFERENCEFIELD3]\n      ,[PRINTCOLLECTIONID]\n      ,[PRINTDETAILEDAGREEMINFO]\n      ,[PRINTANNEX]\n      ,[USEINVOICEPRINTCOLLECTIONSETUP]\n      ,[LANGUAGEID]\n      ,[INVOICEACCOUNT]\n      ,[FINALSTMTDAYSVARIATION]\n      ,[FINALSTMTDAYSWAIT]\n      ,[FINALSTMTTOGETHER]\n      ,[INTERCEPTCODE]\n      ,REPLACE([DESCRIPTION],'\"','')\n      ,[IBM_BNK_CUSTDIRDEBITMANDATEDEFAULT]\n      ,[MODIFIEDDATETIME]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[SEPARATEPREPAYMENTHEADER]\n      ,[PAYMMODEOVERRULEONSTMT]\n      ,[ACTIVECONTRACT]\n      ,[ISTEMPLATE]\n      ,[HMD_INV_INVOICECOMPLETEVALIDATIONTYPE]\n      ,[HMD_AGR_INVOICEMETHODREFRECID]\n      ,[PARTITION]\n      ,[ECN_AGR_MONTHLYSTATEMENTSFORSMARTMETER]) as VALUEHASH\t\n\t\t,[INVOICECOMPLETEPCT]\n      ,[CUSTACCOUNT]\n      ,[CUSTPAYMMODE]\n      ,[ENDDATE]\n      ,[STARTDATE]\n      ,[CUSTPAYMTERMID]\n      ,[GROUPEDINVSTRUCTID]\n      ,[POSTINGCYCLEID]\n      ,[INVOICEGROUPID]\n      ,[BUSRELACCOUNT]\n      ,[CORRECTIONOUTPUTTYPE]\n      ,[IBM_BNK_REFUSALCOUNTERVALUE]\n      ,[SCOPINGBEHAVIOR]\n      ,[REFERENCEFIELD1]\n      ,[REFERENCEFIELD2]\n      ,[REFERENCEFIELD3]\n      ,[PRINTCOLLECTIONID]\n      ,[PRINTDETAILEDAGREEMINFO]\n      ,[PRINTANNEX]\n      ,[USEINVOICEPRINTCOLLECTIONSETUP]\n      ,[LANGUAGEID]\n      ,[INVOICEACCOUNT]\n      ,[FINALSTMTDAYSVARIATION]\n      ,[FINALSTMTDAYSWAIT]\n      ,[FINALSTMTTOGETHER]\n      ,[INTERCEPTCODE]\n      ,REPLACE([DESCRIPTION],'\"','')\n      ,[IBM_BNK_CUSTDIRDEBITMANDATEDEFAULT]\n      ,[MODIFIEDDATETIME]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[SEPARATEPREPAYMENTHEADER]\n      ,[PAYMMODEOVERRULEONSTMT]\n      ,[ACTIVECONTRACT]\n      ,[ISTEMPLATE]\n      ,[HMD_INV_INVOICECOMPLETEVALIDATIONTYPE]\n      ,[HMD_AGR_INVOICEMETHODREFRECID]\n      ,[PARTITION]\n      ,[ECN_AGR_MONTHLYSTATEMENTSFORSMARTMETER]\n  FROM [dbo].[IUS_AGR_GROUPEDINVSTRUCTINFO]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGIusAgrGroupedinvstructinfo",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy LogisticsPostalAddress",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "/****** Script for SelectTopNRows command from SSMS  ******/\nSELECT \n\t CHECKSUM(RECID) as PKHASH\n\t ,CHECKSUM([ADDRESS],[COUNTRYREGIONID]\n      ,[ZIPCODE]\n      ,[STATE]\n      ,[COUNTY]\n      ,[CITY]\n      ,[STREET]\n      ,[LATITUDE]\n      ,[LONGITUDE]\n      ,[TIMEZONE]\n      ,[STREETNUMBER]\n      ,[BUILDINGCOMPLIMENT]\n      ,[POSTBOX]\n      ,[CITYRECID]\n      ,[DISTRICT]\n      ,[LOCATION]\n      ,[ZIPCODERECID]\n      ,[VALIDTO]\n      ,[VALIDTOTZID]\n      ,[VALIDFROM]\n      ,[VALIDFROMTZID]\n      ,[DISTRICTNAME]\n      ,[STREETID_RU]\n      ,[HOUSEID_RU]\n      ,[FLATID_RU]\n      ,[APARTMENT_RU]\n      ,[IUS_ADR_LOTIDOFFICIAL]\n      ,[ISPRIVATE]\n      ,[IUS_ADR_COMMENT]\n      ,[IUS_ADR_EXTERNALID]\n      ,[IUS_ADR_NOCONTACT]\n      ,[IUS_ADR_HOUSENUMCHARACTER]\n      ,[IUS_ADR_NOHOUSENUMBER]\n      ,[IUS_ADR_STREETREFRECID]\n      ,[IUS_ADR_STREETSECTIONREFRECID]\n      ,[BUILDING_RU]\n      ,[PRIVATEFORPARTY]\n      ,[CITYKANA_JP]\n      ,[STREETKANA_JP]\n      ,[IUS_ADR_FULLHOUSENUMBER]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[RECVERSION]\n      ,[PARTITION]\n      ,[DEL_IUS_RUP_CUSTINVOICETABLERECID]\n      ,[DEL_BSI_CRM_ADDITIONALNAME]\n      ,[DEL_BSI_CRM_ADDITIONALNAME2]\n      ,[DEL_ADDRESSWITHOUTCOUNTRYRECID]) as VALUEHASH\n\t ,REPLACE(REPLACE(REPLACE([ADDRESS], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [ADDRESS]\n      ,[COUNTRYREGIONID]\n      ,[ZIPCODE]\n      ,[STATE]\n      ,[COUNTY]\n      ,[CITY]\n      ,[STREET]\n      ,[LATITUDE]\n      ,[LONGITUDE]\n      ,[TIMEZONE]\n      ,[STREETNUMBER]\n      ,REPLACE(REPLACE(REPLACE([BUILDINGCOMPLIMENT], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [BUILDINGCOMPLIMENT]\n      ,[POSTBOX]\n      ,[CITYRECID]\n      ,[DISTRICT]\n      ,[LOCATION]\n      ,[ZIPCODERECID]\n      ,[VALIDTO]\n      ,[VALIDTOTZID]\n      ,[VALIDFROM]\n      ,[VALIDFROMTZID]\n      ,[DISTRICTNAME]\n      ,[STREETID_RU]\n      ,[HOUSEID_RU]\n      ,[FLATID_RU]\n      ,[APARTMENT_RU]\n      ,[IUS_ADR_LOTIDOFFICIAL]\n      ,[ISPRIVATE]\n      ,[IUS_ADR_COMMENT]\n      ,[IUS_ADR_EXTERNALID]\n      ,[IUS_ADR_NOCONTACT]\n      ,[IUS_ADR_HOUSENUMCHARACTER]\n      ,[IUS_ADR_NOHOUSENUMBER]\n      ,[IUS_ADR_STREETREFRECID]\n      ,[IUS_ADR_STREETSECTIONREFRECID]\n      ,[BUILDING_RU]\n      ,[PRIVATEFORPARTY]\n      ,[CITYKANA_JP]\n      ,[STREETKANA_JP]\n      ,[IUS_ADR_FULLHOUSENUMBER]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[RECVERSION]\n      ,[PARTITION]\n      ,[RECID]\n      ,[DEL_IUS_RUP_CUSTINVOICETABLERECID]\n      ,[DEL_BSI_CRM_ADDITIONALNAME]\n      ,[DEL_BSI_CRM_ADDITIONALNAME2]\n      ,[DEL_ADDRESSWITHOUTCOUNTRYRECID]\n  FROM [dbo].[LOGISTICSPOSTALADDRESS]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGLogisticsPostalAddress",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy BaseEnumTable",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT CHECKSUM([BASEENUMNAME]\n      ,[BASEENUMVALUE]\n\t  ,[PARTITION]) as PKHASH\n\t,CHECKSUM([BASEENUMLABEL]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[BASEENUMLABELID]\n      ,[BASEENUMLABELMODULE]\n      ,[BASEENUMSYMBOL]) as VALUEHASH\n\t\t,[BASEENUMNAME]\n      ,[BASEENUMVALUE]\n      ,REPLACE(REPLACE(REPLACE([BASEENUMLABEL], CHAR(13), ' '), CHAR(10), ' '),'\"','-') as [BASEENUMLABEL]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[BASEENUMLABELID]\n      ,[BASEENUMLABELMODULE]\n      ,[BASEENUMSYMBOL]\n      ,[PARTITION]\n  FROM [dbo].[ITP_BASEENUMTABLE]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGBaseEnumTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy AgrAgreement",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "/****** Script for SelectTopNRows command from SSMS  ******/\nSELECT CHECKSUM([AGREEMENTID],[DATAAREAID],[PARTITION]) as PKHASH\n\t\t,CHECKSUM([STATUSID]\n      ,[ISCOMMERCIALAGREEMENT]\n      ,[ISINVOICEAGREEMENT]\n      ,[ISDELIVERYAGREEMENT]\n      ,[ISCLICKAGREEMENT]\n      ,[ISTEMPLATE]\n      ,[CUSTACCOUNT]\n      ,[AGREEMENTTEMPLATEID]\n      ,[PHASE]\n      ,[TEMPLATEDESCRIPTION]\n      ,[TEMPLATESTATUS]\n      ,[STATUSFLOWID]\n      ,[STARTDATE]\n      ,[ENDDATE]\n      ,[ENDINGREASON]\n      ,[COPYFROMAGREEMENTID]\n      ,[COPYREASONID]\n      ,[ORIGINALSTARTDATE]\n      ,[ORIGINALENDDATE]\n      ,[ORIGIN]\n      ,[QUOTATIONPROPOSALID]\n      ,[DEL_EXPIRATIONDATE]\n      ,[AGINGPERIODLINEREFRECID]\n      ,[BUSRELACCOUNT]\n      ,[AGREEMENTPRICECODE]\n      ,[PRICINGDATETIME]\n      ,[PRICINGDATETIMETZID]\n      ,[TERMINATIONDATE]\n      ,[EXTENDEDAGREEMENTID]\n      ,[REFERENCEFIELD1]\n      ,[REFERENCEFIELD2]\n      ,[REFERENCEFIELD3]\n      ,[ISMULTISITE]\n      ,[ISROOT]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[RENEGOCIATEDAGREEMENTID]\n      ,[ISPREMISESAGREEMENT]\n      ,[ENDDATETRIGGERDATE]\n      ,[STARTDATETRIGGERDATE]\n      ,[READYFORPRICING]\n      ,[EXTENDEDQUOTATIONPROPOSALID]\n      ,[AGREEMENTNAME]\n      ,[DEL_AGREEMENTPRICECODEALT]\n      ,[HMD_AGR_EASYGREENINGALLOWED]\n      ,[HMD_AGR_EASYGREENINGEXECUTED]\n      ,[HMD_AGR_CHAINMARGINAMOUNT]\n      ,[HMD_AGR_GROSSMARGINAMOUNT]) as VALUEHASH\n\t\t,[AGREEMENTID]\n      ,[STATUSID]\n      ,[ISCOMMERCIALAGREEMENT]\n      ,[ISINVOICEAGREEMENT]\n      ,[ISDELIVERYAGREEMENT]\n      ,[ISCLICKAGREEMENT]\n      ,[ISTEMPLATE]\n      ,[CUSTACCOUNT]\n      ,[AGREEMENTTEMPLATEID]\n      ,[PHASE]\n      ,[TEMPLATEDESCRIPTION]\n      ,[TEMPLATESTATUS]\n      ,[STATUSFLOWID]\n      ,[STARTDATE]\n      ,[ENDDATE]\n      ,[ENDINGREASON]\n      ,[COPYFROMAGREEMENTID]\n      ,[COPYREASONID]\n      ,[ORIGINALSTARTDATE]\n      ,[ORIGINALENDDATE]\n      ,[ORIGIN]\n      ,[QUOTATIONPROPOSALID]\n      ,[DEL_EXPIRATIONDATE]\n      ,[AGINGPERIODLINEREFRECID]\n      ,[BUSRELACCOUNT]\n      ,[AGREEMENTPRICECODE]\n      ,[PRICINGDATETIME]\n      ,[PRICINGDATETIMETZID]\n      ,[TERMINATIONDATE]\n      ,[EXTENDEDAGREEMENTID]\n      ,REPLACE(REPLACE(REPLACE([REFERENCEFIELD1], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [REFERENCEFIELD1]\n      ,REPLACE(REPLACE(REPLACE([REFERENCEFIELD2], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [REFERENCEFIELD2]\n      ,REPLACE(REPLACE(REPLACE([REFERENCEFIELD3], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [REFERENCEFIELD3]\n      ,[ISMULTISITE]\n      ,[ISROOT]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[RENEGOCIATEDAGREEMENTID]\n      ,[ISPREMISESAGREEMENT]\n      ,[ENDDATETRIGGERDATE]\n      ,[STARTDATETRIGGERDATE]\n      ,[READYFORPRICING]\n      ,[EXTENDEDQUOTATIONPROPOSALID]\n      ,[AGREEMENTNAME]\n      ,[DEL_AGREEMENTPRICECODEALT]\n      ,[HMD_AGR_EASYGREENINGALLOWED]\n      ,[HMD_AGR_EASYGREENINGEXECUTED]\n      ,[PARTITION]\n      ,[HMD_AGR_CHAINMARGINAMOUNT]\n      ,[HMD_AGR_GROSSMARGINAMOUNT]\n  FROM [dbo].[IUS_AGR_AGREEMENT]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGIusAgrAgreement",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy IUS_MPO_DeliveryDirectionSetup",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT CHECKSUM(RECID) as PKHASH,\n\t\tCHECKSUM([DELIVERYDIRECTION]\n      ,[DESCRIPTION]\n      ,[EXTERNALID]\n      ,[METERINGPOINTTYPE]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[PARTITION]) as VALUEHASH\n\t,[DELIVERYDIRECTION]\n      ,REPLACE(REPLACE(REPLACE([DESCRIPTION], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [DESCRIPTION]\n      ,[EXTERNALID]\n      ,[METERINGPOINTTYPE]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[PARTITION]\n  FROM [dbo].[IUS_MPO_DELIVERYDIRECTIONSETUP]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGMPODeliveryDirectionSetup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy IUS_AGR_Volumeset",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT \n\tCHECKSUM(RECID) as PKHASH\n\t,CHECKSUM([DESCRIPTION]\n      ,[NAME]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[PARTITION]) as VALUEHASH\n\t,REPLACE(REPLACE(REPLACE([DESCRIPTION], CHAR(13), ' '), CHAR(10), ' '),'\"','')[DESCRIPTION]\n      ,[NAME]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RECID]\n      ,[PARTITION]\n  FROM [UMAX_2012_Maverick_Test].[dbo].[IUS_AGR_VOLUMESET]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvAGRVolumeset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy IUS_MPO_MasterData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "GetTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT CHECKSUM(RECID) as PKHASH\n\t\t,CHECKSUM([METERINGPOINTID]\n\t  ,[GOS]    \n      ,[DATAAREAID]\n      ,[PARTITION]\n      ,[MODIFIEDDATETIME]\n\t  ,FROMDATE) as VALUEHASH\n\t\t,[METERINGPOINTID]\n\t  ,[GOS]    \n      ,[DATAAREAID]\n      ,[RECID]\n      ,[PARTITION]\n      ,[MODIFIEDDATETIME]\n\t  ,FROMDATE\n  FROM [dbo].[IUS_MPO_MASTERDATA]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvSTGIusMpoMasterdata",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy CaseDetailBase",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ForEach Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "/****** Script for SelectTopNRows command from SSMS  ******/\nSELECT\n\tCHECKSUM(RECID) as PKHASH\n\t,CHECKSUM([CASEID]\n      ,[STATUS]\n      ,[DESCRIPTION]\n      ,[PRIORITY]\n      ,[MEMO]\n      ,[CLOSEDBY]\n      ,[CATEGORYRECID]\n      ,[CLOSEDDATETIME]\n      ,[CLOSEDDATETIMETZID]\n      ,[CONTACTPERSONID]\n      ,[PARTY]\n      ,[INSTANCERELATIONTYPE]\n      ,[PROCESS]\n      ,[EMAILID]\n      ,[OWNERWORKER]\n      ,[DEPARTMENT]\n      ,[IUS_CAS_CASESUBTYPE]\n      ,[DEL_IUS_CAS_STAGEID]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[MODIFIEDTRANSACTIONID]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RELATIONTYPE]\n      ,[IUS_CAS_SHOWONLINE]\n      ,[DEL_IUS_CAS_STAGECHANGEDATETIME]\n      ,[DEL_IUS_CAS_STAGECHANGEDATETIMETZID]\n      ,[IUS_CRM_EMAILADDRESS]\n      ,[IUS_CRM_MAILSENTTO]\n      ,[IUS_CRM_MAILTIMESTAMP]\n      ,[IUS_CRM_MAILTIMESTAMPTZID]\n      ,[IUS_CAS_STAGEFLOWREFRECID]\n      ,[IUS_CAS_STAGEREFRECID]\n      ,[DEL_IUS_AGR_MOVEID]\n      ,[IUS_CAS_ISCUSTOMER]\n      ,[HMD_CAS_INTERNALDATE]\n      ,[PARTITION]\n      ,[QUESTIONNAIREID]\n      ,[SERVICELEVELAGREEMENTID]\n      ,[ANSWERID]\n      ,[PROJID]\n      ,[STAGEID]\n      ,[SERVICELEVELAGREEMENTSTATUS]\n      ,[COMPLIANCE]\n      ,[SLALATESTCOMPLETIONDATETIME]\n      ,[SLALATESTCOMPLETIONDATETIMETZID]\n      ,[RESOLUTION]\n      ,[PLANNEDEFFECTIVEDATE]\n      ,[APPROVEDHOURS]\n      ,[LEAVEREASON]\n      ,[APPROVED]\n      ,[APPROVEDBY]\n      ,[ESTIMATEDLEAVEENDDATE]\n      ,[FMLAHOURSAVAILABLE]\n      ,[HOURSWORKED]\n      ,[HOURSWORKEDPAYROLLINTEGRATION]\n      ,[LEAVEREQUESTDATE]\n      ,[LEAVESCHEDULE]\n      ,[LEAVESTARTDATE]\n      ,[LENGTHOFSERVICE]\n      ,[MILITARYFMLAHOURSAVAILABLE]\n      ,[DEL_FIELD1]\n      ,[DEL_OWNER]) as VALUEHASH\n\t  ,[CASEID]\n      ,[STATUS]\n      ,REPLACE(REPLACE(REPLACE([DESCRIPTION], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [DESCRIPTION]\n      ,[PRIORITY]\n      ,REPLACE(REPLACE(REPLACE([MEMO], CHAR(13), ' '), CHAR(10), ' '),'\"','') as [MEMO]\n      ,[CLOSEDBY]\n      ,[CATEGORYRECID]\n      ,[CLOSEDDATETIME]\n      ,[CLOSEDDATETIMETZID]\n      ,[CONTACTPERSONID]\n      ,[PARTY]\n      ,[INSTANCERELATIONTYPE]\n      ,[PROCESS]\n      ,[EMAILID]\n      ,[OWNERWORKER]\n      ,[DEPARTMENT]\n      ,[IUS_CAS_CASESUBTYPE]\n      ,[DEL_IUS_CAS_STAGEID]\n      ,[MODIFIEDDATETIME]\n      ,[MODIFIEDBY]\n      ,[MODIFIEDTRANSACTIONID]\n      ,[CREATEDDATETIME]\n      ,[CREATEDBY]\n      ,[DATAAREAID]\n      ,[RECVERSION]\n      ,[RELATIONTYPE]\n      ,[RECID]\n      ,[IUS_CAS_SHOWONLINE]\n      ,[DEL_IUS_CAS_STAGECHANGEDATETIME]\n      ,[DEL_IUS_CAS_STAGECHANGEDATETIMETZID]\n      ,[IUS_CRM_EMAILADDRESS]\n      ,[IUS_CRM_MAILSENTTO]\n      ,[IUS_CRM_MAILTIMESTAMP]\n      ,[IUS_CRM_MAILTIMESTAMPTZID]\n      ,[IUS_CAS_STAGEFLOWREFRECID]\n      ,[IUS_CAS_STAGEREFRECID]\n      ,[DEL_IUS_AGR_MOVEID]\n      ,[IUS_CAS_ISCUSTOMER]\n      ,[HMD_CAS_INTERNALDATE]\n      ,[PARTITION]\n      ,[QUESTIONNAIREID]\n      ,[SERVICELEVELAGREEMENTID]\n      ,[ANSWERID]\n      ,[PROJID]\n      ,[STAGEID]\n      ,[SERVICELEVELAGREEMENTSTATUS]\n      ,[COMPLIANCE]\n      ,[SLALATESTCOMPLETIONDATETIME]\n      ,[SLALATESTCOMPLETIONDATETIMETZID]\n      ,[RESOLUTION]\n      ,[PLANNEDEFFECTIVEDATE]\n      ,[APPROVEDHOURS]\n      ,[LEAVEREASON]\n      ,[APPROVED]\n      ,[APPROVEDBY]\n      ,[ESTIMATEDLEAVEENDDATE]\n      ,[FMLAHOURSAVAILABLE]\n      ,[HOURSWORKED]\n      ,[HOURSWORKEDPAYROLLINTEGRATION]\n      ,[LEAVEREQUESTDATE]\n      ,[LEAVESCHEDULE]\n      ,[LEAVESTARTDATE]\n      ,[LENGTHOFSERVICE]\n      ,[MILITARYFMLAHOURSAVAILABLE]\n      ,[DEL_FIELD1]\n      ,[DEL_OWNER]\n  FROM [UMAX_2012_Maverick_Test].[dbo].[CASEDETAILBASE]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SQLServerOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvCaseDetailBase",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-12-04T14:32:40Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/csvTables')]",
+				"[concat(variables('workspaceId'), '/datasets/SQLServerOnPrem')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTG_ITPProcessStop')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGIusAgrGroupedinvstructinfo')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGLogisticsPostalAddress')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGBaseEnumTable')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGIusAgrAgreement')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGMPODeliveryDirectionSetup')]",
+				"[concat(variables('workspaceId'), '/datasets/csvAGRVolumeset')]",
+				"[concat(variables('workspaceId'), '/datasets/csvSTGIusMpoMasterdata')]",
+				"[concat(variables('workspaceId'), '/datasets/csvCaseDetailBase')]",
+				"[concat(variables('workspaceId'), '/datasets/csvTablesStaging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/IncrementalLoadData')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Extract Data from SQL to Staging",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DataFromOnPremSQLToADLS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-11-26T17:47:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/DataFromOnPremSQLToADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ViewsToADLS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "/****** Script for SelectTopNRows command from SSMS  ******/\nSELECT [CustomerKey]\n      ,[AccountNumber]\n      ,[CustomerName]\n      ,[CustomerLanguage]\n      ,[SocialSecurityNumber]\n      ,[OrganisationNumber]\n      ,[DUNSNumber]\n      ,[CustomerGroupDescription]\n      ,[CustomerGroupID]\n      ,[Segment]\n      ,[Subsegment]\n      ,[MainContactWorker]\n      ,[CustomerType]\n      ,[ClassificationGroup]\n      ,[RecordType]\n      ,[Adres]\n      ,[AddressFull]\n      ,[AddressStreet]\n      ,[AdressNumber]\n      ,[AdressBus]\n      ,[AddressAdjective]\n      ,[AddressZipCode]\n      ,[AddressMunicipality]\n      ,[AddressMunicipalityName]\n      ,[AdressCountry]\n      ,[DuplicateCustomer]\n      ,[LineOfBusiness]\n      ,[MethodOfPaymentID]\n      ,[MethodOfPaymentDescription]\n      ,[TermsOfPaymentID]\n      ,[TermsOfPaymentDescription]\n      ,[CustomerCreatedDateTime]\n      ,[ActiveCustomer]\n      ,[ProcesstopInfo]\n      ,[ProcesstopsActiveInfo]\n      ,[BankAccountInformation]\n      ,[GroupedCustomerInfo]\n      ,[Telephone]\n      ,[Mail]\n      ,[Fax]\n      ,[Mobile]\n      ,[NonBlockingReason]\n      ,[AddressLocation]\n      ,[CustomerValue]\n      ,[ExternalCustomerNumber]\n      ,[VATNumber]\n      ,[PrintCollectionInfo]\n      ,[ResponsibleInformation]\n      ,[ContactPersonPresentInfo]\n      ,[PrimaryPostalAddressPresentInfo]\n      ,[PrimaryElectronicAddressPresentInfo]\n      ,[ForeignKVKNumber]\n      ,[OnlineCustomer]\n      ,[MEZMeterrequestGroup]\n      ,[MEZDescriptionCustomerNameMasterContract]\n      ,[MEZNextRequestDate]\n      ,[MixCustomerSME]\n      ,[ODAApprovalSignedReturn]\n      ,[OINNumber]\n      ,[Printtype]\n      ,[CreatedDateAndTime]\n      ,[CreatedBy]\n      ,[ModifiedDateAndTime]\n      ,[ModifiedBy]\n      ,[PartyKey]\n  FROM [dbo].[vCustomer]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSynapseMaverickDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "vCURCustomer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2020-12-02T13:52:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureSynapseMaverickDB')]",
+				"[concat(variables('workspaceId'), '/datasets/vCURCustomer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseMaverickDB')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SynapseSQLMaverickDBOnDemand",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SynapseSQLMaverickDBOnDemand')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Customer')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Customer",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_0kc')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Product",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MaverickStagingFolder')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "synapse"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQLServerOnPrem')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MaverickTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/MaverickTest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SourceDataset_0kc')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MaverickTest",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/MaverickTest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvAGRVolumeset')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "IUS_AGR_Volumeset",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvCaseDetailBase')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CASEDETAILBASE",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvCuratedProduct')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "maverick-curated"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGBaseEnumTable')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ITP_BASEENUMTABLE",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGIusAgrAgreement')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "IUS_AGR_AGREEMENT",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PKHASH",
+						"type": "String"
+					},
+					{
+						"name": "VALUEHASH",
+						"type": "String"
+					},
+					{
+						"name": "AGREEMENTID",
+						"type": "String"
+					},
+					{
+						"name": "STATUSID",
+						"type": "String"
+					},
+					{
+						"name": "ISCOMMERCIALAGREEMENT",
+						"type": "String"
+					},
+					{
+						"name": "ISINVOICEAGREEMENT",
+						"type": "String"
+					},
+					{
+						"name": "ISDELIVERYAGREEMENT",
+						"type": "String"
+					},
+					{
+						"name": "ISCLICKAGREEMENT",
+						"type": "String"
+					},
+					{
+						"name": "ISTEMPLATE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTACCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "AGREEMENTTEMPLATEID",
+						"type": "String"
+					},
+					{
+						"name": "PHASE",
+						"type": "String"
+					},
+					{
+						"name": "TEMPLATEDESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "TEMPLATESTATUS",
+						"type": "String"
+					},
+					{
+						"name": "STATUSFLOWID",
+						"type": "String"
+					},
+					{
+						"name": "STARTDATE",
+						"type": "String"
+					},
+					{
+						"name": "ENDDATE",
+						"type": "String"
+					},
+					{
+						"name": "ENDINGREASON",
+						"type": "String"
+					},
+					{
+						"name": "COPYFROMAGREEMENTID",
+						"type": "String"
+					},
+					{
+						"name": "COPYREASONID",
+						"type": "String"
+					},
+					{
+						"name": "ORIGINALSTARTDATE",
+						"type": "String"
+					},
+					{
+						"name": "ORIGINALENDDATE",
+						"type": "String"
+					},
+					{
+						"name": "ORIGIN",
+						"type": "String"
+					},
+					{
+						"name": "QUOTATIONPROPOSALID",
+						"type": "String"
+					},
+					{
+						"name": "DEL_EXPIRATIONDATE",
+						"type": "String"
+					},
+					{
+						"name": "AGINGPERIODLINEREFRECID",
+						"type": "String"
+					},
+					{
+						"name": "BUSRELACCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "AGREEMENTPRICECODE",
+						"type": "String"
+					},
+					{
+						"name": "PRICINGDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "PRICINGDATETIMETZID",
+						"type": "String"
+					},
+					{
+						"name": "TERMINATIONDATE",
+						"type": "String"
+					},
+					{
+						"name": "EXTENDEDAGREEMENTID",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD1",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD2",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD3",
+						"type": "String"
+					},
+					{
+						"name": "ISMULTISITE",
+						"type": "String"
+					},
+					{
+						"name": "ISROOT",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDBY",
+						"type": "String"
+					},
+					{
+						"name": "CREATEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "CREATEDBY",
+						"type": "String"
+					},
+					{
+						"name": "DATAAREAID",
+						"type": "String"
+					},
+					{
+						"name": "RECVERSION",
+						"type": "String"
+					},
+					{
+						"name": "RECID",
+						"type": "String"
+					},
+					{
+						"name": "RENEGOCIATEDAGREEMENTID",
+						"type": "String"
+					},
+					{
+						"name": "ISPREMISESAGREEMENT",
+						"type": "String"
+					},
+					{
+						"name": "ENDDATETRIGGERDATE",
+						"type": "String"
+					},
+					{
+						"name": "STARTDATETRIGGERDATE",
+						"type": "String"
+					},
+					{
+						"name": "READYFORPRICING",
+						"type": "String"
+					},
+					{
+						"name": "EXTENDEDQUOTATIONPROPOSALID",
+						"type": "String"
+					},
+					{
+						"name": "AGREEMENTNAME",
+						"type": "String"
+					},
+					{
+						"name": "DEL_AGREEMENTPRICECODEALT",
+						"type": "String"
+					},
+					{
+						"name": "HMD_AGR_EASYGREENINGALLOWED",
+						"type": "String"
+					},
+					{
+						"name": "HMD_AGR_EASYGREENINGEXECUTED",
+						"type": "String"
+					},
+					{
+						"name": "PARTITION",
+						"type": "String"
+					},
+					{
+						"name": "HMD_AGR_CHAINMARGINAMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "HMD_AGR_GROSSMARGINAMOUNT",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGIusAgrGroupedinvstructinfo')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "IUS_AGR_GROUPEDINVSTRUCTINFO",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PKHASH",
+						"type": "String"
+					},
+					{
+						"name": "VALUEHASH",
+						"type": "String"
+					},
+					{
+						"name": "INVOICECOMPLETEPCT",
+						"type": "String"
+					},
+					{
+						"name": "CUSTACCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "CUSTPAYMMODE",
+						"type": "String"
+					},
+					{
+						"name": "ENDDATE",
+						"type": "String"
+					},
+					{
+						"name": "STARTDATE",
+						"type": "String"
+					},
+					{
+						"name": "CUSTPAYMTERMID",
+						"type": "String"
+					},
+					{
+						"name": "GROUPEDINVSTRUCTID",
+						"type": "String"
+					},
+					{
+						"name": "POSTINGCYCLEID",
+						"type": "String"
+					},
+					{
+						"name": "INVOICEGROUPID",
+						"type": "String"
+					},
+					{
+						"name": "BUSRELACCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "CORRECTIONOUTPUTTYPE",
+						"type": "String"
+					},
+					{
+						"name": "IBM_BNK_REFUSALCOUNTERVALUE",
+						"type": "String"
+					},
+					{
+						"name": "SCOPINGBEHAVIOR",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD1",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD2",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCEFIELD3",
+						"type": "String"
+					},
+					{
+						"name": "PRINTCOLLECTIONID",
+						"type": "String"
+					},
+					{
+						"name": "PRINTDETAILEDAGREEMINFO",
+						"type": "String"
+					},
+					{
+						"name": "PRINTANNEX",
+						"type": "String"
+					},
+					{
+						"name": "USEINVOICEPRINTCOLLECTIONSETUP",
+						"type": "String"
+					},
+					{
+						"name": "LANGUAGEID",
+						"type": "String"
+					},
+					{
+						"name": "INVOICEACCOUNT",
+						"type": "String"
+					},
+					{
+						"name": "FINALSTMTDAYSVARIATION",
+						"type": "String"
+					},
+					{
+						"name": "FINALSTMTDAYSWAIT",
+						"type": "String"
+					},
+					{
+						"name": "FINALSTMTTOGETHER",
+						"type": "String"
+					},
+					{
+						"name": "INTERCEPTCODE",
+						"type": "String"
+					},
+					{
+						"name": "DESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "IBM_BNK_CUSTDIRDEBITMANDATEDEFAULT",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "DATAAREAID",
+						"type": "String"
+					},
+					{
+						"name": "RECVERSION",
+						"type": "String"
+					},
+					{
+						"name": "RECID",
+						"type": "String"
+					},
+					{
+						"name": "SEPARATEPREPAYMENTHEADER",
+						"type": "String"
+					},
+					{
+						"name": "PAYMMODEOVERRULEONSTMT",
+						"type": "String"
+					},
+					{
+						"name": "ACTIVECONTRACT",
+						"type": "String"
+					},
+					{
+						"name": "ISTEMPLATE",
+						"type": "String"
+					},
+					{
+						"name": "HMD_INV_INVOICECOMPLETEVALIDATIONTYPE",
+						"type": "String"
+					},
+					{
+						"name": "HMD_AGR_INVOICEMETHODREFRECID",
+						"type": "String"
+					},
+					{
+						"name": "PARTITION",
+						"type": "String"
+					},
+					{
+						"name": "ECN_AGR_MONTHLYSTATEMENTSFORSMARTMETER",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGIusMpoMasterdata')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "IUS_MPO_MASTERDATA",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGLogisticsPostalAddress')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "LOGISTICSPOSTALADDRESS",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PKHASH",
+						"type": "String"
+					},
+					{
+						"name": "VALUEHASH",
+						"type": "String"
+					},
+					{
+						"name": "ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "COUNTRYREGIONID",
+						"type": "String"
+					},
+					{
+						"name": "ZIPCODE",
+						"type": "String"
+					},
+					{
+						"name": "STATE",
+						"type": "String"
+					},
+					{
+						"name": "COUNTY",
+						"type": "String"
+					},
+					{
+						"name": "CITY",
+						"type": "String"
+					},
+					{
+						"name": "STREET",
+						"type": "String"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "String"
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "String"
+					},
+					{
+						"name": "TIMEZONE",
+						"type": "String"
+					},
+					{
+						"name": "STREETNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "BUILDINGCOMPLIMENT",
+						"type": "String"
+					},
+					{
+						"name": "POSTBOX",
+						"type": "String"
+					},
+					{
+						"name": "CITYRECID",
+						"type": "String"
+					},
+					{
+						"name": "DISTRICT",
+						"type": "String"
+					},
+					{
+						"name": "LOCATION",
+						"type": "String"
+					},
+					{
+						"name": "ZIPCODERECID",
+						"type": "String"
+					},
+					{
+						"name": "VALIDTO",
+						"type": "String"
+					},
+					{
+						"name": "VALIDTOTZID",
+						"type": "String"
+					},
+					{
+						"name": "VALIDFROM",
+						"type": "String"
+					},
+					{
+						"name": "VALIDFROMTZID",
+						"type": "String"
+					},
+					{
+						"name": "DISTRICTNAME",
+						"type": "String"
+					},
+					{
+						"name": "STREETID_RU",
+						"type": "String"
+					},
+					{
+						"name": "HOUSEID_RU",
+						"type": "String"
+					},
+					{
+						"name": "FLATID_RU",
+						"type": "String"
+					},
+					{
+						"name": "APARTMENT_RU",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_LOTIDOFFICIAL",
+						"type": "String"
+					},
+					{
+						"name": "ISPRIVATE",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_COMMENT",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_EXTERNALID",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_NOCONTACT",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_HOUSENUMCHARACTER",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_NOHOUSENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_STREETREFRECID",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_STREETSECTIONREFRECID",
+						"type": "String"
+					},
+					{
+						"name": "BUILDING_RU",
+						"type": "String"
+					},
+					{
+						"name": "PRIVATEFORPARTY",
+						"type": "String"
+					},
+					{
+						"name": "CITYKANA_JP",
+						"type": "String"
+					},
+					{
+						"name": "STREETKANA_JP",
+						"type": "String"
+					},
+					{
+						"name": "IUS_ADR_FULLHOUSENUMBER",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDBY",
+						"type": "String"
+					},
+					{
+						"name": "RECVERSION",
+						"type": "String"
+					},
+					{
+						"name": "PARTITION",
+						"type": "String"
+					},
+					{
+						"name": "RECID",
+						"type": "String"
+					},
+					{
+						"name": "DEL_IUS_RUP_CUSTINVOICETABLERECID",
+						"type": "String"
+					},
+					{
+						"name": "DEL_BSI_CRM_ADDITIONALNAME",
+						"type": "String"
+					},
+					{
+						"name": "DEL_BSI_CRM_ADDITIONALNAME2",
+						"type": "String"
+					},
+					{
+						"name": "DEL_ADDRESSWITHOUTCOUNTRYRECID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTGMPODeliveryDirectionSetup')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "IUS_MPO_DeliveryDirectionSetup",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvSTG_ITPProcessStop')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ITP_PROCESSSTOP",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "PKHASH",
+						"type": "String"
+					},
+					{
+						"name": "VALUEHASH",
+						"type": "String"
+					},
+					{
+						"name": "ENDDATE",
+						"type": "String"
+					},
+					{
+						"name": "COMMENTS",
+						"type": "String"
+					},
+					{
+						"name": "ORIGIN",
+						"type": "String"
+					},
+					{
+						"name": "ORIGINREFERENCE",
+						"type": "String"
+					},
+					{
+						"name": "STARTDATE",
+						"type": "String"
+					},
+					{
+						"name": "REFTABLEID",
+						"type": "String"
+					},
+					{
+						"name": "REFRECID",
+						"type": "String"
+					},
+					{
+						"name": "REASONRECID",
+						"type": "String"
+					},
+					{
+						"name": "ICM_FIL_FILETYPEID",
+						"type": "String"
+					},
+					{
+						"name": "DEL_STATUS",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "MODIFIEDBY",
+						"type": "String"
+					},
+					{
+						"name": "CREATEDDATETIME",
+						"type": "String"
+					},
+					{
+						"name": "CREATEDBY",
+						"type": "String"
+					},
+					{
+						"name": "DATAAREAID",
+						"type": "String"
+					},
+					{
+						"name": "RECVERSION",
+						"type": "String"
+					},
+					{
+						"name": "RECID",
+						"type": "String"
+					},
+					{
+						"name": "STOPFILETYPEID",
+						"type": "String"
+					},
+					{
+						"name": "ENDDATEBYOFFSET",
+						"type": "String"
+					},
+					{
+						"name": "PARTITION",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvTables')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "BasicTables.csv",
+						"fileSystem": "synapse"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Unique tables ",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvTablesStaging')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@{item().TableName}",
+							"type": "Expression"
+						},
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/customerCurated')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "maverick-curated"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dlmtest')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "synapse"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/entCustomer')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "maverick-staging"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/maverick_staging')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@{item().TableName}",
+							"type": "Expression"
+						},
+						"fileSystem": "maverick-staging"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/vCURCustomer')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "eudbidl_adls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "vCustomer",
+						"fileSystem": "maverick-curated"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/eudbidl_adls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MaverickTest')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('MaverickTest_connectionString')]",
+					"userName": "[parameters('MaverickTest_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('MaverickTest_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "IRSQLOnPrem",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/IRSQLOnPrem')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SynapseSQLMaverickDBOnDemand')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('SynapseSQLMaverickDBOnDemand_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/eudbidl_adls')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('eudbidl_adls_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('eudbidl_adls_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/eudbisynws-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('eudbisynws-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/eudbisynws-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('eudbisynws-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/IRSQLOnPrem')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DFCleanITPProcessStop')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "csvSTG_ITPProcessStop",
+								"type": "DatasetReference"
+							},
+							"name": "StagingITPProcessstop"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "MaverickStagingFolder",
+								"type": "DatasetReference"
+							},
+							"name": "curTPPROCESSSTOP"
+						}
+					],
+					"transformations": [
+						{
+							"name": "RemoveDoubleQuotesfromCommentF"
+						},
+						{
+							"name": "RemoveLineBreaksFromComments"
+						}
+					],
+					"script": "source(output(\n\t\tPKHASH as string,\n\t\tVALUEHASH as string,\n\t\tENDDATE as string,\n\t\tCOMMENTS as string,\n\t\tORIGIN as string,\n\t\tORIGINREFERENCE as string,\n\t\tSTARTDATE as string,\n\t\tREFTABLEID as string,\n\t\tREFRECID as string,\n\t\tREASONRECID as string,\n\t\tICM_FIL_FILETYPEID as string,\n\t\tDEL_STATUS as string,\n\t\tMODIFIEDDATETIME as string,\n\t\tMODIFIEDBY as string,\n\t\tCREATEDDATETIME as string,\n\t\tCREATEDBY as string,\n\t\tDATAAREAID as string,\n\t\tRECVERSION as string,\n\t\tRECID as string,\n\t\tSTOPFILETYPEID as string,\n\t\tENDDATEBYOFFSET as string,\n\t\tPARTITION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> StagingITPProcessstop\nStagingITPProcessstop derive(cleanedCOMMENT = replace(COMMENTS,'\"','!')) ~> RemoveDoubleQuotesfromCommentF\nRemoveDoubleQuotesfromCommentF derive(curCOMMENTS = replace(cleanedCOMMENT,\"\\n\", \"\")) ~> RemoveLineBreaksFromComments\nRemoveLineBreaksFromComments sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['curITP_PROCESSSTOP'],\n\tmapColumn(\n\t\tPKHASH,\n\t\tVALUEHASH,\n\t\tENDDATE,\n\t\tCOMMENTS = curCOMMENTS,\n\t\tORIGIN,\n\t\tORIGINREFERENCE,\n\t\tSTARTDATE,\n\t\tREFTABLEID,\n\t\tREFRECID,\n\t\tREASONRECID,\n\t\tICM_FIL_FILETYPEID,\n\t\tDEL_STATUS,\n\t\tMODIFIEDDATETIME,\n\t\tMODIFIEDBY,\n\t\tCREATEDDATETIME,\n\t\tCREATEDBY,\n\t\tDATAAREAID,\n\t\tRECVERSION,\n\t\tRECID,\n\t\tSTOPFILETYPEID,\n\t\tENDDATEBYOFFSET,\n\t\tPARTITION\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> curTPPROCESSSTOP"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/csvSTG_ITPProcessStop')]",
+				"[concat(variables('workspaceId'), '/datasets/MaverickStagingFolder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DFCustomer')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Customer",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "customerCurated",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddDTModified"
+						}
+					],
+					"script": "source(output(\n\t\tCustomerKey as string,\n\t\tAccountNumber as string,\n\t\tCustomerName as string,\n\t\tCustomerLanguage as string,\n\t\tSocialSecurityNumber as string,\n\t\tOrganisationNumber as string,\n\t\tDUNSNumber as string,\n\t\tCustomerGroupDescription as string,\n\t\tCustomerGroupID as string,\n\t\tSegment as string,\n\t\tSubsegment as string,\n\t\tMainContactWorker as string,\n\t\tCustomerType as string,\n\t\tClassificationGroup as string,\n\t\tRecordType as string,\n\t\tAdres as string,\n\t\tAddressFull as string,\n\t\tAddressStreet as string,\n\t\tAdressNumber as string,\n\t\tAdressBus as string,\n\t\tAddressAdjective as string,\n\t\tAddressZipCode as string,\n\t\tAddressMunicipality as string,\n\t\tAddressMunicipalityName as string,\n\t\tAdressCountry as string,\n\t\tDuplicateCustomer as string,\n\t\tLineOfBusiness as string,\n\t\tMethodOfPaymentID as integer,\n\t\tMethodOfPaymentDescription as string,\n\t\tTermsOfPaymentID as string,\n\t\tTermsOfPaymentDescription as string,\n\t\tCustomerCreatedDateTime as string,\n\t\tActiveCustomer as string,\n\t\tProcesstopInfo as string,\n\t\tProcesstopsActiveInfo as string,\n\t\tBankAccountInformation as string,\n\t\tGroupedCustomerInfo as string,\n\t\tTelephone as string,\n\t\tMail as string,\n\t\tFax as string,\n\t\tMobile as string,\n\t\tNonBlockingReason as string,\n\t\tAddressLocation as string,\n\t\tCustomerValue as string,\n\t\tExternalCustomerNumber as string,\n\t\tVATNumber as string,\n\t\tPrintCollectionInfo as string,\n\t\tResponsibleInformation as long,\n\t\tContactPersonPresentInfo as integer,\n\t\tPrimaryPostalAddressPresentInfo as integer,\n\t\tPrimaryElectronicAddressPresentInfo as string,\n\t\tForeignKVKNumber as string,\n\t\tOnlineCustomer as string,\n\t\tMEZMeterrequestGroup as string,\n\t\tMEZDescriptionCustomerNameMasterContract as string,\n\t\tMEZNextRequestDate as string,\n\t\tMixCustomerSME as string,\n\t\tODAApprovalSignedReturn as string,\n\t\tOINNumber as string,\n\t\tPrinttype as string,\n\t\tCreatedDateAndTime as string,\n\t\tCreatedBy as string,\n\t\tModifiedDateAndTime as string,\n\t\tModifiedBy as string,\n\t\tPartyKey as string,\n\t\tPKHASH as string,\n\t\tVALUEHASH as string,\n\t\tDTCreated as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(DTChanged = currentUTC()) ~> AddDTModified\nAddDTModified sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Customer'],\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Customer')]",
+				"[concat(variables('workspaceId'), '/datasets/customerCurated')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Incremental_Load_Data')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Eneco"
+				},
+				"content": {
+					"query": "-- type your sql script here, we now have intellisense\n-- Create a db master key if one does not already exist, using your own password.\nCREATE TABLE TableNames  \nWITH (DISTRIBUTION = ROUND_ROBIN, CLUSTERED COLUMNSTORE INDEX)  \nAS  \nSELECT * FROM dbo.extTableNames;",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"name": "MaverickDB",
+						"type": "SqlOnDemand"
+					}
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Eneco"
+				},
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"name": "MaverickDB",
+						"type": "SqlOnDemand"
+					}
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		}
+	]
+}

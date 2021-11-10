@@ -1,0 +1,455 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "catest0715"
+		},
+		"catest0715-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'catest0715-WorkspaceDefaultSqlServer'"
+		},
+		"catest0715-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://catestgen2.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/catest0715-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('catest0715-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/catest0715-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('catest0715-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/catest2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus2"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dnet_change type')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "dnet change to python type, \nThen change to spark",
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "scala",
+				"jobProperties": {
+					"name": "dnet_change type",
+					"file": "abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/dnet_change%20type/wordcount.jar",
+					"className": "WordCount",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs"
+					},
+					"args": [
+						"abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/dnet_change%20type/shakespeare.txt",
+						"abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/dnet_change%20type/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/scala')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "scala",
+				"jobProperties": {
+					"name": "scala",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/wordcount.jar",
+					"className": "WordCount",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/scala_submit')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Update spark pool from catest to small2",
+				"targetBigDataPool": {
+					"referenceName": "small2",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "scala",
+				"jobProperties": {
+					"name": "scala_submit",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/wordcount.jar",
+					"className": "WordCount",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/scala_withdescription_rename')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "description",
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "scala",
+				"jobProperties": {
+					"name": "scala_withdescription_rename",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/wordcount.jar",
+					"className": "WordCount",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/scala/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/python')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "python",
+				"jobProperties": {
+					"name": "python",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/wordcount.py",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/python_addtopipeline')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "python",
+				"jobProperties": {
+					"name": "python_addtopipeline",
+					"file": "abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/python_addtopipeline/wordcount.py",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/python_addtopipeline/shakespeare.txt",
+						"abfss://catesteus2gen2-2020-05-11t07-20-48-099z@catestgen2.dfs.core.windows.net/synapse/workspaces/catest0715/batchjobs/python_addtopipeline/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/python_submit')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "python",
+				"jobProperties": {
+					"name": "python_submit",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/wordcount.py",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dnet_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "folder1"
+				},
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "csharp",
+				"jobProperties": {
+					"name": "dnet_Copy1",
+					"file": "local:///usr/hdp/current/spark2-client/jars/microsoft-spark.jar",
+					"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/dnet/wordcount.zip",
+						"WordCount",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/dnet/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/dnet/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"archives": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/dnet/wordcount.zip#udfs"
+					],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/PipelineSJD')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "python_addtopipeline",
+						"type": "SparkJob",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"sparkJob": {
+								"referenceName": "python_addtopipeline",
+								"type": "SparkJobDefinitionReference"
+							}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sparkJobDefinitions/python_addtopipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/python_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"targetBigDataPool": {
+					"referenceName": "catest",
+					"type": "BigDataPoolReference"
+				},
+				"requiredSparkVersion": "2.4",
+				"language": "python",
+				"jobProperties": {
+					"name": "python_Copy1",
+					"file": "abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/wordcount.py",
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					},
+					"args": [
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare.txt",
+						"abfss://sparkjob@hozhao0924gen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0602ws/batchjobs/python/shakespeare"
+					],
+					"jars": [],
+					"files": [],
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

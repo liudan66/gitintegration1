@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "gcs-iapp-desc-dev-syn"
+		},
+		"GenericDBName_connectionString": {
+			"value": ""
+		},
+		"gcs-iapp-desc-dev-syn-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"ACSKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://cscp-acs-dev-kv.vault.azure.net/"
+		},
+		"CADIE_properties_typeProperties_url": {
+			"value": "https://cscpdataestateametest.dfs.core.windows.net"
+		},
+		"CADIE_properties_typeProperties_tenant": {
+			"value": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"CADIE_properties_typeProperties_servicePrincipalId": {
+			"value": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+		},
+		"GenericDBName_properties_typeProperties_servicePrincipalId": {
+			"value": "@{linkedService().ServicePrincipalID}"
+		},
+		"GenericDBName_properties_typeProperties_tenant": {
+			"value": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"acsstoragegen2_properties_typeProperties_url": {
+			"value": "https://acsstoragegen2dev.dfs.core.windows.net"
+		},
+		"acsstoragegen2_properties_typeProperties_tenant": {
+			"value": "33e01921-4d64-4f8c-a055-5bdaffd5e33d"
+		},
+		"acsstoragegen2_properties_typeProperties_servicePrincipalId": {
+			"value": "2fd5b9ee-7822-4bf9-8bec-72e00d17d4bf"
+		},
+		"gcs-iapp-desc-dev-syn-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://acsstoragegen2dev.dfs.core.windows.net"
+		}
+	}
+}

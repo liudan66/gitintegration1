@@ -1,0 +1,166 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "mercurysynapsestaging"
+		},
+		"mercurysynapsestaging-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'mercurysynapsestaging-WorkspaceDefaultSqlServer'"
+		},
+		"FinanceDataLake_properties_description": {
+			"type": "string",
+			"defaultValue": "SPN used to connect to FDL storage accounts"
+		},
+		"FinanceDataLake_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string"
+		},
+		"FinanceDataLake_properties_typeProperties_servicePrincipalId": {
+			"type": "string"
+		},
+		"FinanceDataLake_properties_typeProperties_servicePrincipalKey_store_referenceName": {
+			"type": "string",
+			"defaultValue": "MercuryV2KeyVault"
+		},
+		"FinanceDataLake_properties_typeProperties_servicePrincipalKey_secretName": {
+			"type": "string",
+			"defaultValue": "SpnPassword"
+		},
+		"FinanceDataLake_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"MercuryEntitiesSqlDatabase_properties_typeProperties_connectionString_store_referenceName": {
+			"type": "string",
+			"defaultValue": "MercuryV2KeyVault"
+		},
+		"MercuryEntitiesSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "SynapseMercuryEntitiesConnectionString"
+		},
+		"MercuryV2KeyVault_properties_description": {
+			"type": "string",
+			"defaultValue": "Mercury V2 Key Vault"
+		},
+		"ReconSqlDatabase_properties_typeProperties_connectionString_store_referenceName": {
+			"type": "string",
+			"defaultValue": "MercuryV2KeyVault"
+		},
+		"ReconSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "SynapseReconSqlDatabaseConnectionString"
+		},
+		"mercurysynapsestaging-WorkspaceDefaultSqlServer_properties_typeProperties_connectionString": {
+			"type": "string"
+		},
+		"mercurysynapsestaging-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://mercuryv2devdatalake.dfs.core.windows.net"
+		},
+		"AutoResolveIntegrationRuntime_properties_typeProperties_computeProperties": {
+			"type": "object",
+			"defaultValue": {
+				"location": "AutoResolve",
+				"dataFlowProperties": {
+					"computeType": "General",
+					"coreCount": 8,
+					"timeToLive": 0
+				}
+			}
+		},
+		"DataProcessing_properties_targetBigDataPool_referenceName": {
+            "type": "string",
+            "defaultValue": "DataProcessing"
+        },
+        "DataProcessing_properties_requiredSparkVersion": {
+            "type": "string",
+            "defaultValue": "2.4"
+        },
+        "DataProcessing_properties_language": {
+            "type": "string",
+            "defaultValue": "scala"
+        },
+        "DataProcessing_properties_jobProperties_file": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_className": {
+            "type": "string",
+            "defaultValue": "com.microsoft.mercury.processing.Main"
+        },
+        "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.enabled": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.minExecutors": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.maxExecutors": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_args": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "DataProcessing_properties_jobProperties_jars": {
+            "type": "array"
+        },
+        "DataProcessing_properties_jobProperties_files": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "DataProcessing_properties_jobProperties_driverMemory": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_driverCores": {
+            "type": "int"
+        },
+        "DataProcessing_properties_jobProperties_executorMemory": {
+            "type": "string"
+        },
+        "DataProcessing_properties_jobProperties_executorCores": {
+            "type": "int"
+        },
+        "DataProcessing_properties_jobProperties_numExecutors": {
+            "type": "int"
+        }
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+            "name": "[concat(parameters('workspaceName'), '/DataProcessing')]",
+            "type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
+            "apiVersion": "2019-06-01-preview",
+            "properties": {
+                "targetBigDataPool": {
+                    "referenceName": "[parameters('DataProcessing_properties_targetBigDataPool_referenceName')]",
+                    "type": "BigDataPoolReference"
+                },
+                "requiredSparkVersion": "[parameters('DataProcessing_properties_requiredSparkVersion')]",
+                "language": "[parameters('DataProcessing_properties_language')]",
+                "jobProperties": {
+                    "name": "DataProcessing",
+                    "file": "[parameters('DataProcessing_properties_jobProperties_file')]",
+                    "className": "[parameters('DataProcessing_properties_jobProperties_className')]",
+                    "conf": {
+                        "spark.dynamicAllocation.enabled": "[parameters('DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.enabled')]",
+                        "spark.dynamicAllocation.minExecutors": "[parameters('DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.minExecutors')]",
+                        "spark.dynamicAllocation.maxExecutors": "[parameters('DataProcessing_properties_jobProperties_conf_spark.dynamicAllocation.maxExecutors')]"
+                    },
+                    "args": "[parameters('DataProcessing_properties_jobProperties_args')]",
+                    "jars": "[parameters('DataProcessing_properties_jobProperties_jars')]",
+                    "files": "[parameters('DataProcessing_properties_jobProperties_files')]",
+                    "driverMemory": "[parameters('DataProcessing_properties_jobProperties_driverMemory')]",
+                    "driverCores": "[parameters('DataProcessing_properties_jobProperties_driverCores')]",
+                    "executorMemory": "[parameters('DataProcessing_properties_jobProperties_executorMemory')]",
+                    "executorCores": "[parameters('DataProcessing_properties_jobProperties_executorCores')]",
+                    "numExecutors": "[parameters('DataProcessing_properties_jobProperties_numExecutors')]"
+                }
+            },
+            "dependsOn": []
+        }
+	]
+}

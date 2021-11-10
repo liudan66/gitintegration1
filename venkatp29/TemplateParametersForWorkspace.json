@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "xltestscus"
+		},
+		"MaverickTest_connectionString": {
+			"value": ""
+		},
+		"MaverickTest_password": {
+			"value": ""
+		},
+		"SynapseSQLMaverickDBOnDemand_connectionString": {
+			"value": ""
+		},
+		"eudbidl_adls_accountKey": {
+			"value": "master"
+		},
+		"eudbisynws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "SqlOnDemand"
+		},
+		"MaverickTest_properties_typeProperties_userName": {
+			"value": "SqlOnDemand"
+		},
+		"eudbidl_adls_properties_typeProperties_url": {
+			"value": ""
+		}
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"AutoResolveIntegrationRuntime_properties_typeProperties_computeProperties": {
+      		"value": {
+        		"dataFlowProperties": {
+          			"computeType": "General",
+          			"coreCount": 8,
+          			"timeToLive": 0
+        		},
+        		"location": "AutoResolve"
+      		}
+    	},
+		"workspaceName": {
+			"value": "ltianscusworkspace"
+		},
+		"Session_Properties": {
+			"value": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				}
+		}
+	}
+}
