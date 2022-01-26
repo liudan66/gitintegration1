@@ -1,0 +1,27 @@
+{
+	"name": "Trigger 1220",
+	"properties": {
+		"annotations": [
+			"TestPurpose"
+		],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "synapse_job_definition_pipeline1220",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 20,
+				"startTime": "2021-12-20T06:12:00",
+				"endTime": "2021-12-20T19:12:00",
+				"timeZone": "China Standard Time"
+			}
+		}
+	}
+}

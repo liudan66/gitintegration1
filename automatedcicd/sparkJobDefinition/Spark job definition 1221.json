@@ -1,0 +1,29 @@
+{
+	"name": "Spark job definition 1221",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "zhao",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "3.1",
+		"language": "python",
+		"jobProperties": {
+			"name": "Spark job definition 1221",
+			"file": "abfss://default@honghaigen2.dfs.core.windows.net/synapse/workspaces/bdbj20211220ws/batchjobs/Spark%20job%20definition%201221/copy_opendataset_to_spark_table.py",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "true",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "8b6d735c-2bc0-405b-8070-e467cdba6125"
+			},
+			"args": [],
+			"jars": [],
+			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		}
+	}
+}

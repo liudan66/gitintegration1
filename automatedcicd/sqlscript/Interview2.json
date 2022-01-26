@@ -1,0 +1,17 @@
+{
+	"name": "Interview2",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP 100 * FROM fhv\nGO\n--出租汽车（“FHV”）行程记录包括汽车牌照、上车日期、下车时间和出租车区域位置ID的字段\n--主意：考虑有数据重复\n-- # 1.求每天出车数量和车辆数量\n\n-- # 2.求每月（以每月一号为标识）车辆数量，添加一列是否超过500辆车\n\n-- # 3.求每周（以周日为标识）出车数量和车辆数量，按时间逆序\n\n-- # 4. 求2019年每个月的平均每辆车的出车率\n\n-- # 5. 连续出车3个月的车辆\n\n-- # 6. 运营行驶时间最长的的前100辆车,并显示行驶小时数\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "database1220",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

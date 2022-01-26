@@ -1,0 +1,17 @@
+{
+	"name": "testbiq",
+	"properties": {
+		"content": {
+			"query": "CREATE table testpowerbi\n(id int,name nvarchar(20),quarter int,number int)\ninsert into testpowerbi values(1,N'苹果',1,1000)\ninsert into testpowerbi values(1,N'苹果',2,2000)\ninsert into testpowerbi values(1,N'苹果',3,4000)\ninsert into testpowerbi values(1,N'苹果',4,5000)\ninsert into testpowerbi values(2,N'梨子',1,3000)\ninsert into testpowerbi values(2,N'梨子',2,3500)\ninsert into testpowerbi values(2,N'梨子',3,4200)\ninsert into testpowerbi values(2,N'梨子',4,5500)\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SampleSQL",
+				"poolName": "SampleSQL"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Input",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Sort1"
+				}
+			],
+			"script": "source(output(\n\t\tSaleKey as integer,\n\t\tCityKey as integer,\n\t\tCustomerKey as integer,\n\t\tBillToCustomerKey as integer,\n\t\tStockItemKey as integer,\n\t\tInvoiceDateKey as timestamp,\n\t\tDeliveryDateKey as timestamp,\n\t\tSalespersonKey as integer,\n\t\tWWIInvoicID as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\tUnitPrice as double,\n\t\tTaxRate as double,\n\t\tTotalExcludingTax as double,\n\t\tTaxAmount as double,\n\t\tProfit as double,\n\t\tTotalIncludingTax as double,\n\t\tTotalDryItems as integer,\n\t\tTotalChillerItems as integer,\n\t\tLineageKey as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> source1\nsource1 sort(asc(SaleKey, true),\n\tcaseInsensitive: true) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDateID as integer,\n\t\tMedallionID as integer,\n\t\tHackneyLicenseID as integer,\n\t\tPickupTimeID as integer,\n\t\tDropoffTimeID as integer,\n\t\tPickupGeographyID as integer,\n\t\tDropoffGeographyID as integer,\n\t\tPickupLatitude as double,\n\t\tPickupLongitude as double,\n\t\tPickupLatLong as string,\n\t\tDropoffLatitude as double,\n\t\tDropoffLongitude as double,\n\t\tDropoffLatLong as string,\n\t\tPassengerCount as integer,\n\t\tTripDurationSeconds as integer,\n\t\tTripDistanceMiles as double,\n\t\tPaymentType as string,\n\t\tFareAmount as decimal(19,4),\n\t\tSurchargeAmount as decimal(19,4),\n\t\tTaxAmount as decimal(19,4),\n\t\tTipAmount as decimal(19,4),\n\t\tTollsAmount as decimal(19,4),\n\t\tTotalAmount as decimal(19,4)\n\t),\n\tformat: 'parquet',\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

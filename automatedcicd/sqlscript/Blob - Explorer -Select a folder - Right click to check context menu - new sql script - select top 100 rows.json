@@ -1,0 +1,17 @@
+{
+	"name": "Blob - Explorer -Select a folder - Right click to check context menu - new sql script - select top 100 rows",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://bdbjblobstorageqingtest.blob.core.windows.net/container02/New folder 1220/New folder 122002/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
