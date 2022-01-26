@@ -1,10 +1,6 @@
 {
 	"name": "SourceDataset_rkp",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1105",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
