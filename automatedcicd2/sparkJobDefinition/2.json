@@ -1,0 +1,24 @@
+{
+	"name": "2",
+	"properties": {
+		"description": "poi",
+		"targetBigDataPool": {
+			"type": "BigDataPoolReference"
+		},
+		"language": "scala",
+		"jobProperties": {
+			"name": "2",
+			"file": "abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/donetdll/mySparkApp.zip",
+			"className": "WordCount",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			},
+			"args": [],
+			"jars": [],
+			"files": [],
+			"numExecutors": 2
+		}
+	}
+}

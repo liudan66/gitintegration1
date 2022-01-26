@@ -1,0 +1,16 @@
+{
+	"name": "CREATE PROC PROC_Read_SearchLogExtParquet_DBZ",
+	"properties": {
+		"content": {
+			"query": "CREATE PROC [dbo].[PROC_Read_ExtParquet_DBZ] AS\nBEGIN\nSELECT 100/(passengerCount-1) from dbo.extable2\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

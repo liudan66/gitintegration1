@@ -1,0 +1,16 @@
+{
+	"name": "alert-table",
+	"properties": {
+		"content": {
+			"query": "ALTER TABLE [dbo].[BigData]\n    ADD msg2 varchar(255)",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,20 +1,13 @@
 {
 	"name": "Getting Started with Delta Lake",
 	"properties": {
-		"folder": {
-			"name": "python"
-		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
-		"bigDataPool": {
-			"referenceName": "medium",
-			"type": "BigDataPoolReference"
-		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
@@ -23,24 +16,9 @@
 			}
 		},
 		"metadata": {
-			"saveOutput": true,
+			"noPermissionToViewOutput": true,
 			"language_info": {
 				"name": "python"
-			},
-			"a365ComputeOptions": {
-				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/medium",
-				"name": "medium",
-				"type": "Spark",
-				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/medium",
-				"auth": {
-					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net"
-				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
 			}
 		},
 		"cells": [
@@ -80,7 +58,7 @@
 					"\n",
 					"delta_table_path"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -98,7 +76,7 @@
 					"data.show()\n",
 					"data.write.format(\"delta\").save(delta_table_path)"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -113,7 +91,7 @@
 				"source": [
 					"[log_line.value for log_line in spark.read.text(delta_table_path + \"/_delta_log/\").collect()]"
 				],
-				"execution_count": 3
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -129,7 +107,7 @@
 					"df = spark.read.format(\"delta\").load(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 4
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -147,7 +125,7 @@
 					"data.write.format(\"delta\").mode(\"overwrite\").save(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -160,7 +138,7 @@
 				"source": [
 					"[log_line.value for log_line in spark.read.text(delta_table_path + \"/_delta_log/\").collect()]"
 				],
-				"execution_count": 6
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -176,7 +154,7 @@
 					"# Write data to a new managed catalog table.\n",
 					"data.write.format(\"delta\").saveAsTable(\"ManagedDeltaTable\")"
 				],
-				"execution_count": 7
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -184,7 +162,7 @@
 					"# Define an external catalog table that points to the existing Delta Lake data in storage.\n",
 					"spark.sql(\"CREATE TABLE ExternalDeltaTable USING DELTA LOCATION '{0}'\".format(delta_table_path))"
 				],
-				"execution_count": 8
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -196,7 +174,7 @@
 					"spark.sql(\"DESCRIBE EXTENDED ManagedDeltaTable\").show(truncate=False)\n",
 					"spark.sql(\"DESCRIBE EXTENDED ExternalDeltaTable\").show(truncate=False)"
 				],
-				"execution_count": 9
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
@@ -214,7 +192,7 @@
 					"\n",
 					"delta_table = DeltaTable.forPath(spark, delta_table_path)"
 				],
-				"execution_count": 10
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +203,7 @@
 					"  set = { \"id\": expr(\"id + 100\") })\n",
 					"delta_table.toDF().show()"
 				],
-				"execution_count": 11
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -234,7 +212,7 @@
 					"delta_table.delete(\"id % 2 == 0\")\n",
 					"delta_table.toDF().show()"
 				],
-				"execution_count": 12
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -250,7 +228,7 @@
 					"\n",
 					"delta_table.toDF().show(100)"
 				],
-				"execution_count": 13
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -264,7 +242,7 @@
 				"source": [
 					"delta_table.history().show(20, 1000, False)"
 				],
-				"execution_count": 14
+				"execution_count": 16
 			},
 			{
 				"cell_type": "markdown",
@@ -282,7 +260,7 @@
 					"df = spark.read.format(\"delta\").option(\"versionAsOf\", 0).load(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 15
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
@@ -313,7 +291,7 @@
 					"    .option(\"checkpointLocation\", \"/tmp/checkpoint-{0}\".format(session_id))\\\n",
 					"    .start(delta_table_path)"
 				],
-				"execution_count": 16
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -328,55 +306,28 @@
 				"source": [
 					"delta_table.toDF().sort(col(\"id\").desc()).show(100)"
 				],
-				"execution_count": 17
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(20, 1000, False)"
 				],
-				"execution_count": 18
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"stream.stop()"
 				],
-				"execution_count": 19
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(100, 1000, False)"
 				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "markdown",
-				"source": [
-					"## Compaction\n",
-					"\n",
-					"If a Delta Table is growing too large, you can compact it by repartitioning into a smaller number of files.\n",
-					"\n",
-					"The option `dataChange = false` is an optimization that tells Delta Lake to do the repartition without marking the underlying data as \"modified\". This ensures that any other concurrent operations (such as streaming reads/writes) aren't negatively impacted.\n",
-					""
-				]
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					"partition_count = 2\n",
-					"\n",
-					"spark.read\\\n",
-					"    .format(\"delta\")\\\n",
-					"    .load(delta_table_path)\\\n",
-					"    .repartition(partition_count)\\\n",
-					"    .write.option(\"dataChange\", \"false\")\\\n",
-					"    .format(\"delta\")\\\n",
-					"    .mode(\"overwrite\")\\\n",
-					"    .save(delta_table_path)    "
-				],
-				"execution_count": 21
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -396,7 +347,7 @@
 					"# Confirm that the data isn't in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 22
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -406,7 +357,7 @@
 					"# Confirm that the converted data is now in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 23
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
@@ -424,14 +375,14 @@
 				"source": [
 					"spark.sql(\"DESCRIBE HISTORY delta.`{0}`\".format(delta_table_path)).show()"
 				],
-				"execution_count": 24
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"VACUUM delta.`{0}`\".format(delta_table_path)).show()"
 				],
-				"execution_count": 25
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -450,7 +401,7 @@
 					"\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 26
+				"execution_count": 27
 			}
 		]
 	}

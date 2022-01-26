@@ -1,0 +1,27 @@
+{
+	"name": "scala",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "bigest",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "scala",
+		"jobProperties": {
+			"name": "scala",
+			"file": "abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/wordcount.jar",
+			"className": "WordCount",
+			"args": [
+				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/shakespeare.txt",
+				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/result"
+			],
+			"jars": [],
+			"files": [],
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "EXECUTE PROC_SELECT_1",
+	"properties": {
+		"content": {
+			"query": "\n -- TODO: Set parameter values here \n\n EXECUTE [dbo].[PROC_SELECT_1]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

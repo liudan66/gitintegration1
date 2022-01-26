@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "SampleSpark",
+			"referenceName": "MLPool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -20,22 +20,15 @@
 			}
 		},
 		"metadata": {
-			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
-			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
-			},
+			"noPermissionToViewOutput": true,
 			"language_info": {
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/SampleSpark",
-				"name": "SampleSpark",
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/MLPool",
+				"name": "MLPool",
 				"type": "Spark",
-				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SampleSpark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/MLPool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -43,18 +36,31 @@
 				"sparkVersion": "2.4",
 				"nodeCount": 3,
 				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
+				"memory": 56
 			}
 		},
 		"cells": [
 			{
 				"cell_type": "code",
+				"source": [],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
 				"source": [
-					"1+1"
+					"# Write a Spark DataFrame into a Cosmos DB container\n",
+					"# To select a preferred list of regions in a multi-region Cosmos DB account, add .option(\"spark.cosmos.preferredRegions\", \"<Region1>,<Region2>\")\n",
+					"\n",
+					"YOURDATAFRAME.write\\\n",
+					"    .format(\"cosmos.oltp\")\\\n",
+					"    .option(\"spark.synapse.linkedService\", \"SQLApi1105\")\\\n",
+					"    .option(\"spark.cosmos.container\", \"yuwwang-contatiner1\")\\\n",
+					"    .option(\"spark.cosmos.write.upsertEnabled\", \"true\")\\\n",
+					"    .mode('append')\\\n",
+					"    .save()"
 				],
 				"attachments": null,
-				"execution_count": 1
+				"execution_count": null
 			}
 		]
 	}

@@ -1,0 +1,135 @@
+{
+	"name": "Magictestee",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"noPermissionToViewOutput": true,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"%lsmagic"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"a = 1\n",
+					"def test():\n",
+					"    b = %time 2\n",
+					"    print(a, b)\n",
+					"test()\n",
+					"a"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%time\n",
+					"import time\n",
+					"time.sleep(.3)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%capture --no-stderr out\n",
+					"import sys\n",
+					"\n",
+					"def eprint(*args, **kwargs):\n",
+					"    print(*args, file=sys.stderr, **kwargs)\n",
+					"\n",
+					"print('std\\\\out')\n",
+					"eprint('std\\nerr')"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"out.stdout"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%writefile -a abc/test1.txt\n",
+					"test,1\n",
+					"map,2\n",
+					"cool,10\n",
+					"coolest,232"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df = spark.read.csv('abc/test1.csv')\n",
+					"df.show()"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.show()"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"display(df)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}

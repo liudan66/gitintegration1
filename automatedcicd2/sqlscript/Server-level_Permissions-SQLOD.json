@@ -1,0 +1,16 @@
+{
+	"name": "Server-level_Permissions-SQLOD",
+	"properties": {
+		"content": {
+			"query": "/*\nTitle: Grant access to a user at the server-level for SQL on-demand \n\nDescription: This sample shows how to creat a user and grant permissions using T-SQL.\n\nTags: Security, Login, Roles, SQL On Demand\n\n*/\n--To grant full access to a user to all SQL on-demand database for an Azure AD account\n\nCREATE LOGIN [v-weiszh@microsoft.com] FROM EXTERNAL PROVIDER;\nALTER SERVER ROLE  sysadmin  ADD MEMBER [v-weiszh@microsoft.com];\n\n--Grant full access to a user to all SQL on-demand database for SQl Auth account. To create a login, you must be connected to the master database.\nCREATE LOGIN [v-weiszh@bdbj.onmicrosoft.com] WITH PASSWORD = '';\n\nCREATE USER weishu FROM LOGIN [v-weiszh@bdbj.onmicrosoft.com]\n--Example to add the user to the sysadmin role\nALTER SERVER ROLE sysadmin ADD MEMBER weishu",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "test01",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

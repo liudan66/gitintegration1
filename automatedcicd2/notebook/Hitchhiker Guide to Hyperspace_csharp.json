@@ -1,0 +1,784 @@
+{
+	"name": "Hitchhiker Guide to Hyperspace_csharp",
+	"properties": {
+		"folder": {
+			"name": "New folder/sample"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "samll",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "csharp"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3/resourceGroups/bigdataqa/providers/Microsoft.Synapse/workspaces/bigdataqa0512ws2/bigDataPools/samll",
+				"name": "samll",
+				"type": "Spark",
+				"endpoint": "https://bigdataqa0512ws2.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/samll",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"var sessionId = (new Random()).Next(10000000);\r\n",
+					"var dataPath = $\"/hyperspace/data-{sessionId}\";\r\n",
+					"var indexLocation = $\"/hyperspace/indexes-{sessionId}\";\r\n",
+					"\r\n",
+					"// Please note that you DO NOT need to change this configuration in production.\r\n",
+					"// We store all indexes in the system folder within Synapse.\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.system.path\", indexLocation)"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Disable BroadcastHashJoin, so Spark™ will use standard SortMergeJoin. Currently hyperspace indexes utilize SortMergeJoin to speed up query.\r\n",
+					"spark.Conf().Set(\"spark.sql.autoBroadcastJoinThreshold\", -1);\r\n",
+					"\r\n",
+					"// Verify that BroadcastHashJoin is set correctly \r\n",
+					"Console.WriteLine(spark.Conf().Get(\"spark.sql.autoBroadcastJoinThreshold\"));\r\n",
+					"\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.explain.displayMode\", \"html\")"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"using Microsoft.Spark.Sql.Types;\r\n",
+					"\r\n",
+					"// Sample department records\r\n",
+					"var departments = new List<GenericRow>()\r\n",
+					"{\r\n",
+					"    new GenericRow(new object[] {10, \"Accounting\", \"New York\"}),\r\n",
+					"    new GenericRow(new object[] {20, \"Research\", \"Dallas\"}),\r\n",
+					"    new GenericRow(new object[] {30, \"Sales\", \"Chicago\"}),\r\n",
+					"    new GenericRow(new object[] {40, \"Operations\", \"Boston\"})\r\n",
+					"};\r\n",
+					"\r\n",
+					"// Sample employee records\r\n",
+					"var employees = new List<GenericRow>() {\r\n",
+					"      new GenericRow(new object[] {7369, \"SMITH\", 20}),\r\n",
+					"      new GenericRow(new object[] {7499, \"ALLEN\", 30}),\r\n",
+					"      new GenericRow(new object[] {7521, \"WARD\", 30}),\r\n",
+					"      new GenericRow(new object[] {7566, \"JONES\", 20}),\r\n",
+					"      new GenericRow(new object[] {7698, \"BLAKE\", 30}),\r\n",
+					"      new GenericRow(new object[] {7782, \"CLARK\", 10}),\r\n",
+					"      new GenericRow(new object[] {7788, \"SCOTT\", 20}),\r\n",
+					"      new GenericRow(new object[] {7839, \"KING\", 10}),\r\n",
+					"      new GenericRow(new object[] {7844, \"TURNER\", 30}),\r\n",
+					"      new GenericRow(new object[] {7876, \"ADAMS\", 20}),\r\n",
+					"      new GenericRow(new object[] {7900, \"JAMES\", 30}),\r\n",
+					"      new GenericRow(new object[] {7934, \"MILLER\", 10}),\r\n",
+					"      new GenericRow(new object[] {7902, \"FORD\", 20}),\r\n",
+					"      new GenericRow(new object[] {7654, \"MARTIN\", 30})\r\n",
+					"};\r\n",
+					"\r\n",
+					"// Save sample data in the Parquet format\r\n",
+					"var departmentSchema = new StructType(new List<StructField>()\r\n",
+					"{\r\n",
+					"    new StructField(\"deptId\", new IntegerType()),\r\n",
+					"    new StructField(\"deptName\", new StringType()),\r\n",
+					"    new StructField(\"location\", new StringType())\r\n",
+					"});\r\n",
+					"var employeeSchema = new StructType(new List<StructField>()\r\n",
+					"{\r\n",
+					"    new StructField(\"empId\", new IntegerType()),\r\n",
+					"    new StructField(\"empName\", new StringType()),\r\n",
+					"    new StructField(\"deptId\", new IntegerType())\r\n",
+					"});\r\n",
+					"\r\n",
+					"DataFrame empData = spark.CreateDataFrame(employees, employeeSchema); \r\n",
+					"DataFrame deptData = spark.CreateDataFrame(departments, departmentSchema); \r\n",
+					"\r\n",
+					"string empLocation = $\"{dataPath}/employees.parquet\";\r\n",
+					"string deptLocation = $\"{dataPath}/departments.parquet\";\r\n",
+					"empData.Write().Mode(\"overwrite\").Parquet(empLocation);\r\n",
+					"deptData.Write().Mode(\"overwrite\").Parquet(deptLocation);"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// empLocation and deptLocation are the user defined locations above to save parquet files\r\n",
+					"DataFrame empDF = spark.Read().Parquet(empLocation);\r\n",
+					"DataFrame deptDF = spark.Read().Parquet(deptLocation);\r\n",
+					"\r\n",
+					"// Verify the data is available and correct\r\n",
+					"empDF.Show();\r\n",
+					"deptDF.Show();"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"using Microsoft.Spark.Extensions.Hyperspace;\r\n",
+					"\r\n",
+					"Hyperspace hyperspace = new Hyperspace(spark);"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Create index configurations\r\n",
+					"using Microsoft.Spark.Extensions.Hyperspace.Index;\r\n",
+					"\r\n",
+					"var empIndexConfig = new IndexConfig(\"empIndex\", new string[] {\"deptId\"}, new string[] {\"empName\"});\r\n",
+					"var deptIndexConfig1 = new IndexConfig(\"deptIndex1\", new string[] {\"deptId\"}, new string[] {\"deptName\"});\r\n",
+					"var deptIndexConfig2 = new IndexConfig(\"deptIndex2\", new string[] {\"location\"}, new string[] {\"deptName\"});"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Create indexes from configurations\r\n",
+					"hyperspace.CreateIndex(empDF, empIndexConfig);\r\n",
+					"hyperspace.CreateIndex(deptDF, deptIndexConfig1);\r\n",
+					"hyperspace.CreateIndex(deptDF, deptIndexConfig2);"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"hyperspace.Indexes().Show();"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"hyperspace.DeleteIndex(\"deptIndex2\");\r\n",
+					"\r\n",
+					"hyperspace.Indexes().Show();"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"hyperspace.DeleteIndex(\"deptIndex1\");\r\n",
+					"\r\n",
+					"hyperspace.Indexes().Show();\r\n",
+					"\r\n",
+					"hyperspace.RestoreIndex(\"deptIndex1\");\r\n",
+					"\r\n",
+					"hyperspace.Indexes().Show();"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"hyperspace.VacuumIndex(\"deptIndex2\");\r\n",
+					"\r\n",
+					"hyperspace.Indexes().Show();"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Enable Hyperspace\r\n",
+					"spark.EnableHyperspace();\r\n",
+					"\r\n",
+					"// Disable Hyperspace\r\n",
+					"spark.DisableHyperspace();"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Enable Hyperspace\r\n",
+					"spark.EnableHyperspace();\r\n",
+					"\r\n",
+					"DataFrame empDFrame = spark.Read().Parquet(empLocation);\r\n",
+					"DataFrame deptDFrame = spark.Read().Parquet(deptLocation);\r\n",
+					"\r\n",
+					"empDFrame.Show(5);\r\n",
+					"deptDFrame.Show(5);"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Filter with equality predicate\r\n",
+					"DataFrame eqFilter = deptDFrame.Filter(\"deptId = 20\").Select(\"deptName\");\r\n",
+					"eqFilter.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(eqFilter, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Filter with range selection predicate\r\n",
+					"DataFrame rangeFilter = deptDFrame.Filter(\"deptId > 20\").Select(\"deptName\");\r\n",
+					"rangeFilter.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(rangeFilter, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Join\r\n",
+					"DataFrame eqJoin =\r\n",
+					"      empDFrame\r\n",
+					"      .Join(deptDFrame, empDFrame.Col(\"deptId\") == deptDFrame.Col(\"deptId\"))\r\n",
+					"      .Select(empDFrame.Col(\"empName\"), deptDFrame.Col(\"deptName\"));\r\n",
+					"\r\n",
+					"eqJoin.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(eqJoin, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"empDFrame.CreateOrReplaceTempView(\"EMP\");\r\n",
+					"deptDFrame.CreateOrReplaceTempView(\"DEPT\");\r\n",
+					"\r\n",
+					"var joinQuery = spark.Sql(\"SELECT EMP.empName, DEPT.deptName FROM EMP, DEPT WHERE EMP.deptId = DEPT.deptId\");\r\n",
+					"\r\n",
+					"joinQuery.Show();\r\n",
+					"hyperspace.Explain(joinQuery, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"spark.Conf().Set(\"spark.hyperspace.explain.displayMode\", \"html\");\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.explain.displayMode.highlight.beginTag\", \"<b style=\\\"background:LightGreen\\\">\");\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.explain.displayMode.highlight.endTag\", \"</b>\");\r\n",
+					"\r\n",
+					"hyperspace.Explain(eqJoin, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"var extraDepartments = new List<GenericRow>()\r\n",
+					"{\r\n",
+					"    new GenericRow(new object[] {50, \"Inovation\", \"Seattle\"}),\r\n",
+					"    new GenericRow(new object[] {60, \"Human Resources\", \"San Francisco\"})\r\n",
+					"};\r\n",
+					"\t  \r\n",
+					"DataFrame extraDeptData = spark.CreateDataFrame(extraDepartments, departmentSchema);\r\n",
+					"extraDeptData.Write().Mode(\"Append\").Parquet(deptLocation);\r\n",
+					"\r\n",
+					"DataFrame deptDFrameUpdated = spark.Read().Parquet(deptLocation);\r\n",
+					"\r\n",
+					"deptDFrameUpdated.Show(10);\r\n",
+					"\r\n",
+					"hyperspace.RefreshIndex(\"deptIndex1\");"
+				],
+				"attachments": null,
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"DataFrame newRangeFilter = deptDFrameUpdated.Filter(\"deptId > 20\").Select(\"deptName\");\r\n",
+					"newRangeFilter.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(newRangeFilter, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// GENERATE TEST DATA\r\n",
+					"using Microsoft.Spark.Sql.Types;\r\n",
+					"\r\n",
+					"var products = new List<GenericRow>() {\r\n",
+					"    new GenericRow(new object[] {\"orange\", 3, \"2020-10-01\"}),\r\n",
+					"    new GenericRow(new object[] {\"banana\", 1, \"2020-10-01\"}),\r\n",
+					"    new GenericRow(new object[] {\"carrot\", 5, \"2020-10-02\"}),\r\n",
+					"    new GenericRow(new object[] {\"beetroot\", 12, \"2020-10-02\"}),\r\n",
+					"    new GenericRow(new object[] {\"orange\", 2, \"2020-10-03\"}),\r\n",
+					"    new GenericRow(new object[] {\"banana\", 11, \"2020-10-03\"}),\r\n",
+					"    new GenericRow(new object[] {\"carrot\", 3, \"2020-10-03\"}),\r\n",
+					"    new GenericRow(new object[] {\"beetroot\", 2, \"2020-10-04\"}),\r\n",
+					"    new GenericRow(new object[] {\"cucumber\", 7, \"2020-10-05\"}),\r\n",
+					"    new GenericRow(new object[] {\"pepper\", 20, \"2020-10-06\"})\r\n",
+					"};\r\n",
+					"var productsSchema = new StructType(new List<StructField>()\r\n",
+					"{\r\n",
+					"    new StructField(\"name\", new StringType()),\r\n",
+					"    new StructField(\"qty\", new IntegerType()),\r\n",
+					"    new StructField(\"date\", new StringType())\r\n",
+					"});\r\n",
+					"\r\n",
+					"DataFrame testData = spark.CreateDataFrame(products, productsSchema); \r\n",
+					"string testDataLocation = $\"{dataPath}/productTable\";\r\n",
+					"testData.Write().Mode(\"overwrite\").Parquet(testDataLocation);"
+				],
+				"attachments": null,
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// CREATE INDEX\r\n",
+					"DataFrame testDF = spark.Read().Parquet(testDataLocation);\r\n",
+					"var productIndex2Config = new IndexConfig(\"productIndex1120\", new string[] {\"name\"}, new string[] {\"date\", \"qty\"});\r\n",
+					"hyperspace.CreateIndex(testDF, productIndex2Config);"
+				],
+				"attachments": null,
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"DataFrame filter1 = testDF.Filter(\"name = 'banana'\");\r\n",
+					"DataFrame filter2 = testDF.Filter(\"qty > 10\");\r\n",
+					"DataFrame query = filter1.Join(filter2, filter1.Col(\"name\") == filter2.Col(\"name\"));\r\n",
+					"\r\n",
+					"query.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Append new files.\r\n",
+					"var appendProducts = new List<GenericRow>()\r\n",
+					"{\r\n",
+					"    new GenericRow(new object[] {\"orange\", 13, \"2020-11-01\"}),\r\n",
+					"    new GenericRow(new object[] {\"banana\", 5, \"2020-11-01\"})\r\n",
+					"};\r\n",
+					"    \r\n",
+					"DataFrame appendData = spark.CreateDataFrame(appendProducts, productsSchema);\r\n",
+					"appendData.Write().Mode(\"Append\").Parquet(testDataLocation);"
+				],
+				"attachments": null,
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Hybrid Scan configs are false by default.\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.index.hybridscan.enabled\", \"false\");\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.index.hybridscan.delete.enabled\", \"false\");\r\n",
+					"\r\n",
+					"DataFrame testDFWithAppend = spark.Read().Parquet(testDataLocation);\r\n",
+					"DataFrame filter1 = testDFWithAppend.Filter(\"name = 'banana'\");\r\n",
+					"DataFrame filter2 = testDFWithAppend.Filter(\"qty > 10\");\r\n",
+					"DataFrame query = filter1.Join(filter2, filter1.Col(\"name\") == filter2.Col(\"name\"));\r\n",
+					"\r\n",
+					"query.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"// Enable Hybrid Scan config. \"delete\" config is not necessary.\r\n",
+					"spark.Conf().Set(\"spark.hyperspace.index.hybridscan.enabled\", \"true\");\r\n",
+					"// spark.Conf().Set(\"spark.hyperspace.index.hybridscan.delete.enabled\", \"true\");\r\n",
+					"spark.EnableHyperspace();\r\n",
+					"// Need to redefine query to recalculate the query plan.\r\n",
+					"DataFrame query = filter1.Join(filter2, filter1.Col(\"name\") == filter2.Col(\"name\"));\r\n",
+					"\r\n",
+					"query.Show();\r\n",
+					"\r\n",
+					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
+				],
+				"attachments": null,
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"using Microsoft.Spark.Extensions.Azure.Synapse.Analytics.Notebook.MSSparkUtils;\r\n",
+					"\r\n",
+					"FS.Rm(dataPath, true);\r\n",
+					"FS.Rm(indexLocation, true);"
+				],
+				"attachments": null,
+				"execution_count": 28
+			}
+		]
+	}
+}

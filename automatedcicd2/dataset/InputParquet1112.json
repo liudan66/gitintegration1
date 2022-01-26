@@ -1,0 +1,42 @@
+{
+	"name": "InputParquet1112",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1111",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "GB_Test.parquet",
+				"fileSystem": "hozhao"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "Prop_0",
+				"type": "UTF8"
+			},
+			{
+				"name": "Prop_1",
+				"type": "UTF8"
+			},
+			{
+				"name": "Prop_2",
+				"type": "UTF8"
+			},
+			{
+				"name": "Prop_3",
+				"type": "UTF8"
+			},
+			{
+				"name": "Prop_4",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

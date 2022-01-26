@@ -1,0 +1,17 @@
+{
+	"name": "SQL rename2",
+	"properties": {
+		"content": {
+			"query": "select 123456",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

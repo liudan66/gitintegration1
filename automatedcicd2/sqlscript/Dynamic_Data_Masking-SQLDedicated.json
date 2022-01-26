@@ -1,0 +1,16 @@
+{
+	"name": "Dynamic_Data_Masking-SQLDedicated",
+	"properties": {
+		"content": {
+			"query": "/*\nTitle: Dynamic Data Masking for SQL dedicated/provisioned Pools\n\nDescription: This sample shows how to implement Dynamic Data Masking to limit sensitive data exposure by masking it to non-privileged users.\n-- Lijing please use this link for DDM\n--https://docs.microsoft.com/en-us/sql/relational-databases/security/dynamic-data-masking?view=azure-sqldw-latest#examples\nTags: Security, Dynamic Data Masking, SQL Dedicated, SQL Pools\n\n*/\nCREATE TABLE Membership1  \n  (MemberID int IDENTITY,  \n   FirstName varchar(100) MASKED WITH (FUNCTION = 'partial(1,\"XXXXXXX\",0)') NULL,  \n   LastName varchar(100) NOT NULL,  \n   Phone varchar(12) MASKED WITH (FUNCTION = 'default()') NULL,  \n   Email varchar(100) MASKED WITH (FUNCTION = 'email()') NULL);  \n\n --Insert sample data in the table \nINSERT Membership VALUES (1,'Roberto', 'Tamburello', '555.123.4567', 'RTamburello@contoso.com');  \nINSERT Membership VALUES (2,'Janice', 'Galvin', '555.123.4568', 'JGalvin@contoso.com.co'); \nINSERT Membership VALUES (3,'Zheng', 'Mu', '555.123.4569', 'ZMu@contoso.net');  \nSELECT * FROM Membership;\n\n--A new user is created and granted SELECT permission on the table. Queries executed as the TestUser view masked data.\nCREATE USER TestUser WITHOUT LOGIN;  \nGRANT SELECT ON Membership TO TestUser;  \n \n --Test user permissions\nEXECUTE AS USER = 'TestUser';  \nSELECT * FROM Membership;  \nREVERT;\n\n--The following example adds a masking function to the LastName column\nALTER TABLE Membership  \nALTER COLUMN LastName ADD MASKED WITH (FUNCTION = 'partial(2,\"XXX\",0)');\n\n--The following example changes a masking function on the LastName column\nALTER TABLE Membership  \nALTER COLUMN LastName varchar(100) MASKED WITH (FUNCTION = 'default()');\n\n--Granting the UNMASK permission allows TestUser to see the data unmasked\nGRANT UNMASK TO TestUser;  \nEXECUTE AS USER = 'TestUser';  \nSELECT * FROM Membership;  \nREVERT;   \n  \n-- Removing the UNMASK permission  \nREVOKE UNMASK TO TestUser;\n\n--The following statement drops the mask on the LastName column created in the previous example\nALTER TABLE Membership   \nALTER COLUMN LastName DROP MASKED;",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

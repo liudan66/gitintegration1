@@ -1,0 +1,65 @@
+{
+	"name": "Notebook 29",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpoolnew",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"noPermissionToViewOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpoolnew",
+				"name": "sparkpoolnew",
+				"type": "Spark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpoolnew",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://hozhao@hozhao0924gen2.dfs.core.windows.net/New folder 1105/0vg001140vg001140vg001140vg001140vg001g001.parquet', format='parquet')\r\n",
+					"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
+				],
+				"attachments": null,
+				"execution_count": 1
+			}
+		]
+	}
+}

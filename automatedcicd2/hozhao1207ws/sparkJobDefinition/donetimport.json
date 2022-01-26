@@ -1,0 +1,40 @@
+{
+	"name": "donetimport",
+	"properties": {
+		"description": "change spark pool from zhao to zhao1",
+		"targetBigDataPool": {
+			"referenceName": "zhao1",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "3.1",
+		"language": "csharp",
+		"jobProperties": {
+			"name": "donetimport",
+			"file": "local:///usr/hdp/current/spark2-client/jars/microsoft-spark.jar",
+			"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
+			"conf": {
+				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs",
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "0c2c647d-9a1d-4063-9971-953ccbd1071d"
+			},
+			"args": [
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/donet/wordcount.zip",
+				"WordCount",
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/donet/shakespeare.txt",
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/donet/shakespeare"
+			],
+			"jars": [],
+			"files": [],
+			"archives": [
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/donet/wordcount.zip#udfs"
+			],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
+		}
+	}
+}

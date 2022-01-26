@@ -1,0 +1,17 @@
+{
+	"name": "SQL script for power bi",
+	"properties": {
+		"content": {
+			"query": "--Create Table\nCREATE TABLE [dbo].[personsxssc]\n(\nId_P INT NOT NULL,\nLastName varchar(255) NOT NULL,\nFirstName varchar(255) NOT NULL,\nAddress varchar(255) NOT NULL,\nCity varchar(255) NOT NULL\n)\nCREATE TABLE [dbo].[ordersxssc]\n(\nId_O INT NOT NULL,\nOrderNo INT NOT NULL,\nId_P INT NOT NULL,\nCompany varchar(255),\nSalary INT NOT NULL\n)\nGO\n--insert into dbo.persons--\nINSERT INTO [dbo].[personsxssc] VALUES ('3','Gates', 'Bill', 'Xuanwumen 10', 'Beijing')\nINSERT INTO [dbo].[personsxssc] VALUES ('2','xiaoqiang', 'wang', 'danlingjie', 'Beijing')\nINSERT INTO [dbo].[personsxssc] VALUES ('1','maomao', 'dou', 'folower', 'shenzhen')\nINSERT INTO [dbo].[personsxssc] VALUES ('4','mike', 'dou', 'folower', 'shenzhen')\nINSERT INTO [dbo].[personsxssc] VALUES ('5','jack', 'dou', '333', 'shenzhen2')\nINSERT INTO [dbo].[personsxssc] VALUES ('7','amy', 'dou', 'folower13', 'shenzhen')\nINSERT INTO [dbo].[personsxssc] VALUES ('6','Athena', 'dou', 'folower789', 'shenzhen')\n \n--insert into dbo.orders--\nINSERT INTO [dbo].[ordersxssc] VALUES ('1','77895','3','company1','150000')\nINSERT INTO [dbo].[ordersxssc] VALUES ('2','44678','3','company2','200000')\nINSERT INTO [dbo].[ordersxssc] VALUES ('3','22456','1','company3','185000')\nINSERT INTO [dbo].[ordersxssc] VALUES ('4','34765','1','company4','220000')\nINSERT INTO [dbo].[ordersxssc] VALUES ('5','42307','10','company4','120000')",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "sqlpool",
+				"databaseName": "sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

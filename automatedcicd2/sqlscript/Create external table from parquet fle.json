@@ -1,0 +1,16 @@
+{
+	"name": "Create external table from parquet fle",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \nWITH ( FORMAT_TYPE = PARQUET)\nGO\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'qingtest_zhaotestgen2_dfs_core_windows_net') \nCREATE EXTERNAL DATA SOURCE [qingtest_zhaotestgen2_dfs_core_windows_net] \nWITH \n(    LOCATION   = 'abfss://qingtest@zhaotestgen2.dfs.core.windows.net', \n      TYPE       = HADOOP \n)\nGO\nCREATE EXTERNAL TABLE extable2 \n(\n[vendorID] varchar(max),\n[tpepPickupDateTime] datetime2,\n[tpepDropoffDateTime] datetime2,\n[passengerCount] int,\n[tripDistance] float,\n[puLocationId] varchar(max),\n[doLocationId] varchar(max),\n[startLon] float,\n[startLat] float,\n[endLon] float,\n[endLat] float,\n[rateCodeId] int,\n[storeAndFwdFlag] varchar(max),\n[paymentType] varchar(max),\n[fareAmount] float,\n[extra] float,\n[mtaTax] float,\n[improvementSurcharge] varchar(max),\n[tipAmount] float,\n[tollsAmount] float,\n[totalAmount] float \n)\nWITH\n(\n LOCATION = 'part-00064-tid-5849318790271418554-257afbeb-bf9a-4847-a978-d1bf53c44882-77464.c000.snappy.parquet', \n DATA_SOURCE = qingtest_zhaotestgen2_dfs_core_windows_net, \n FILE_FORMAT = SynapseParquetFormat, \n REJECT_TYPE = VALUE, \n REJECT_VALUE = 0\n)\nGO\nSELECT TOP 100 * FROM extable2\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

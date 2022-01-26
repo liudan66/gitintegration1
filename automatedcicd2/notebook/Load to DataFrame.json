@@ -1,0 +1,78 @@
+{
+	"name": "Load to DataFrame",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"noPermissionToViewOutput": true,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"diagram": {
+						"activateDiagramType": 1,
+						"chartConfig": {
+							"category": "bar",
+							"keys": [
+								"TOWNNAME"
+							],
+							"values": [
+								"TOWNNAME"
+							],
+							"yLabel": "TOWNNAME",
+							"xLabel": "TOWNNAME",
+							"aggregation": "COUNT",
+							"aggByBackend": false
+						},
+						"aggData": "{\"TOWNNAME\":{\"Dannevirke\":1,\"Okere\":1,\"Stratford\":1}}",
+						"isSummary": false,
+						"previewData": {
+							"filter": null
+						},
+						"isSql": false
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://hozhao@hozhao0924gen2.dfs.core.windows.net/New folder 1105/0vg001140vg001140vg001140vg001140vg001g001.parquet', format='parquet')\r\n",
+					"display(df.limit(10))"
+				],
+				"attachments": null,
+				"execution_count": 1
+			}
+		]
+	}
+}

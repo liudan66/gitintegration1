@@ -1,0 +1,22 @@
+{
+	"name": "Excelfile12",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "file name",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "data",
+				"folderPath": "data4.1",
+				"container": "data4"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

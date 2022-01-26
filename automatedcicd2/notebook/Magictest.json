@@ -2,10 +2,10 @@
 	"name": "Magictest",
 	"properties": {
 		"folder": {
-			"name": "samples"
+			"name": "New folder"
 		},
-		"nbformat": 0,
-		"nbformat_minor": 0,
+		"nbformat": 4,
+		"nbformat_minor": 2,
 		"sessionProperties": {
 			"driverMemory": "28g",
 			"driverCores": 4,
@@ -20,13 +20,6 @@
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
-			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "python"
-			},
 			"language_info": {
 				"name": "python"
 			}

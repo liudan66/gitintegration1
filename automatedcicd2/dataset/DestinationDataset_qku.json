@@ -1,0 +1,22 @@
+{
+	"name": "DestinationDataset_qku",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1105",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "qingtest0924"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

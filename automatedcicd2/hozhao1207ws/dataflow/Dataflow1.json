@@ -1,0 +1,97 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Input",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Sort1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          vendorID as string,",
+				"          tpepPickupDateTime as timestamp,",
+				"          tpepDropoffDateTime as timestamp,",
+				"          passengerCount as integer,",
+				"          tripDistance as double,",
+				"          puLocationId as string,",
+				"          doLocationId as string,",
+				"          startLon as double,",
+				"          startLat as double,",
+				"          endLon as double,",
+				"          endLat as double,",
+				"          rateCodeId as integer,",
+				"          storeAndFwdFlag as string,",
+				"          paymentType as string,",
+				"          fareAmount as double,",
+				"          extra as double,",
+				"          mtaTax as double,",
+				"          improvementSurcharge as string,",
+				"          tipAmount as double,",
+				"          tollsAmount as double,",
+				"          totalAmount as double,",
+				"          puYear as integer,",
+				"          puMonth as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> source1",
+				"source1 sort(asc(tpepPickupDateTime, true),",
+				"     caseInsensitive: true) ~> Sort1",
+				"Sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          vendorID as string,",
+				"          tpepPickupDateTime as timestamp,",
+				"          tpepDropoffDateTime as timestamp,",
+				"          passengerCount as integer,",
+				"          tripDistance as double,",
+				"          puLocationId as string,",
+				"          doLocationId as string,",
+				"          startLon as double,",
+				"          startLat as double,",
+				"          endLon as double,",
+				"          endLat as double,",
+				"          rateCodeId as integer,",
+				"          storeAndFwdFlag as string,",
+				"          paymentType as string,",
+				"          fareAmount as double,",
+				"          extra as double,",
+				"          mtaTax as double,",
+				"          improvementSurcharge as string,",
+				"          tipAmount as double,",
+				"          tollsAmount as double,",
+				"          totalAmount as double,",
+				"          puYear as integer,",
+				"          puMonth as integer",
+				"     ),",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

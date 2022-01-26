@@ -1,0 +1,197 @@
+{
+	"name": "Notebook 3git-renmae2",
+	"properties": {
+		"folder": {
+			"name": "New folder"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "zhao1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "true",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "1",
+				"spark.autotune.trackingId": "5d51585a-3f28-4225-98d5-678b4b6f450e"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3/resourceGroups/bigdataqa/providers/Microsoft.Synapse/workspaces/hozhao1207ws/bigDataPools/zhao1",
+				"name": "zhao1",
+				"type": "Spark",
+				"endpoint": "https://hozhao1207ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"- git\r\n",
+					"# select spark pool"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"ms_comments": [
+						{
+							"threadId": "aa316efd-7b4f-4aee-b1c6-ac9e95761a38",
+							"text": "test123",
+							"status": "active",
+							"user": {
+								"name": "Mei Zhang (Beyondsoft)",
+								"idType": "aad"
+							},
+							"createdDateUTC": 1638936052871,
+							"modifiedDateUTC": 1638936052871,
+							"replies": []
+						}
+					],
+					"ms_comment_ranges": {
+						"aa316efd-7b4f-4aee-b1c6-ac9e95761a38": {
+							"text": "gitgit",
+							"start": {
+								"line": 1,
+								"column": 1
+							},
+							"end": {
+								"line": 1,
+								"column": 7
+							}
+						}
+					}
+				},
+				"source": [
+					"gitgit"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				]
+			}
+		]
+	}
+}

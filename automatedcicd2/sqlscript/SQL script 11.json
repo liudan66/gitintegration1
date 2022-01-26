@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 11",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.objects O JOIN sys.schemas S ON O.schema_id = S.schema_id WHERE O.NAME = 'bulk1' AND O.TYPE = 'U' AND S.NAME = 'dbo')\nCREATE TABLE dbo.bulk1\n\t(\n\t [vendorID] nvarchar(4000),\n\t [tpepPickupDateTime] datetime2(7),\n\t [tpepDropoffDateTime] datetime2(7),\n\t [passengerCount] int,\n\t [tripDistance] float,\n\t [puLocationId] nvarchar(4000),\n\t [doLocationId] nvarchar(4000),\n\t [startLon] float,\n\t [startLat] float,\n\t [endLon] float,\n\t [endLat] float,\n\t [rateCodeId] int,\n\t [storeAndFwdFlag] nvarchar(4000),\n\t [paymentType] nvarchar(4000),\n\t [fareAmount] float,\n\t [extra] float,\n\t [mtaTax] float,\n\t [improvementSurcharge] nvarchar(4000),\n\t [tipAmount] float,\n\t [tollsAmount] float,\n\t [totalAmount] float\n\t)\nWITH\n\t(\n\tDISTRIBUTION = ROUND_ROBIN,\n\t CLUSTERED COLUMNSTORE INDEX\n\t -- HEAP\n\t)\nGO\n\n--Uncomment the 4 lines below to create a stored procedure for data pipeline orchestration​\n--CREATE PROC bulk_load_bulk1\n--AS\n--BEGIN\nCOPY INTO dbo.bulk1\n(vendorID 1, tpepPickupDateTime 2, tpepDropoffDateTime 3, passengerCount 4, tripDistance 5, puLocationId 6, doLocationId 7, startLon 8, startLat 9, endLon 10, endLat 11, rateCodeId 12, storeAndFwdFlag 13, paymentType 14, fareAmount 15, extra 16, mtaTax 17, improvementSurcharge 18, tipAmount 19, tollsAmount 20, totalAmount 21)\nFROM 'https://honghaigen2.dfs.core.windows.net/default/part-00036-tid-210938564719836543-aea5b543-5e83-4a7d-8d31-69f72c50b05d-15156-1.c000.snappy.parquet'\nWITH\n(\n\tFILE_TYPE = 'PARQUET'\n\t,MAXERRORS = 0\n\t,IDENTITY_INSERT = 'OFF'\n)\n--END\nGO\n\nSELECT TOP 100 * FROM dbo.bulk1\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "123",
+				"databaseName": "123"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

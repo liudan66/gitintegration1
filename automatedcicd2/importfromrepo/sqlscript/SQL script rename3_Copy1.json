@@ -1,0 +1,16 @@
+{
+	"name": "SQL script rename3_Copy1",
+	"properties": {
+		"content": {
+			"query": "",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

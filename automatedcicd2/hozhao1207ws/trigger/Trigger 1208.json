@@ -1,0 +1,25 @@
+{
+	"name": "Trigger 1208",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "synapse_job_definition_pipeline1208",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 20,
+				"startTime": "2021-12-08T07:36:00",
+				"endTime": "2021-12-08T19:36:00",
+				"timeZone": "China Standard Time"
+			}
+		}
+	}
+}

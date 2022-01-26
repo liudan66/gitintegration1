@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_wzv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1105",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "CDT_1117.json",
+				"fileSystem": "hozhao"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

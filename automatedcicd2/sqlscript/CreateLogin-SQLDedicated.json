@@ -1,0 +1,16 @@
+{
+	"name": "CreateLogin-SQLDedicated",
+	"properties": {
+		"content": {
+			"query": "/*\nTitle: Grant access to a user at the server-level for SQL dedicated/provisioned Pools\n\nDescription: This sample shows how to creat a user and grant permissions using T-SQL.\n\nTags: Security, Login, Roles, SQL Dedicated, SQL Pools\n\n*/\n--1.a Create LOGIN for an Azure AD account.To create a login, you must be connected to the master database.\n\nCREATE LOGIN [v-weiszh@microsoft.com] FROM EXTERNAL PROVIDER;\ngo\n--1.b Create a Login for a user. To create a login, you must be connected to the master database.\nCREATE LOGIN v-weiszh@microsoft.com WITH PASSWORD = '*******';\n\n\n--2.a Create USER for the Azure AD account\nuse master -- Use your DB name\nCREATE USER weishu FROM LOGIN [v-weiszh@microsoft.com]\n\n--2.b Create USER for a SQL Auth account\nCREATE USER weishu FROM LOGIN v-weiszh@microsoft.com\n\n--Example to add the user to the db_owner role\n\nEXEC sp_addrolemember 'db_owner', 'weishu';\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"name": "05121604_python",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "bigest",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "python",
+		"jobProperties": {
+			"name": "05121604_python",
+			"file": "abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0512ws2/batchjobs/05121604_python/wordcount.py",
+			"args": [
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/shakespeare.txt",
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/result"
+			],
+			"jars": [],
+			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		}
+	}
+}

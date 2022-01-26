@@ -1,0 +1,55 @@
+{
+	"name": "Notebook 1rename",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "zhao",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"noPermissionToViewOutput": true,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/zhao",
+				"name": "zhao",
+				"type": "Spark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"a=1"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

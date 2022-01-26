@@ -1,0 +1,20 @@
+{
+	"name": "OutParquet1112",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1112",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "hozhao"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

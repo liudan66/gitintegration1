@@ -1,0 +1,114 @@
+{
+	"name": "Input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "hozhao1207ws-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "part-00000-f73013c3-94fd-4ee0-84fa-9cc84e51c2e9-c000.snappy.parquet",
+				"folderPath": "synapse/workspaces/hozhao1207ws/warehouse/nyc_taxi_synapse_notebook_pipeline1208_hello_world_20211208_035222",
+				"fileSystem": "default"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "vendorID",
+				"type": "UTF8"
+			},
+			{
+				"name": "tpepPickupDateTime",
+				"type": "INT96"
+			},
+			{
+				"name": "tpepDropoffDateTime",
+				"type": "INT96"
+			},
+			{
+				"name": "passengerCount",
+				"type": "INT32"
+			},
+			{
+				"name": "tripDistance",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "puLocationId",
+				"type": "UTF8"
+			},
+			{
+				"name": "doLocationId",
+				"type": "UTF8"
+			},
+			{
+				"name": "startLon",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "startLat",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "endLon",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "endLat",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "rateCodeId",
+				"type": "INT32"
+			},
+			{
+				"name": "storeAndFwdFlag",
+				"type": "UTF8"
+			},
+			{
+				"name": "paymentType",
+				"type": "UTF8"
+			},
+			{
+				"name": "fareAmount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "extra",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mtaTax",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "improvementSurcharge",
+				"type": "UTF8"
+			},
+			{
+				"name": "tipAmount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "tollsAmount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "totalAmount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "puYear",
+				"type": "INT32"
+			},
+			{
+				"name": "puMonth",
+				"type": "INT32"
+			}
+		]
+	}
+}

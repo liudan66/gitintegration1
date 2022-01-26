@@ -1,0 +1,343 @@
+{
+	"name": "Hitchhiker Guide to Delta Lake_Csharp",
+	"properties": {
+		"folder": {
+			"name": "New folder/sample"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "samll",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "csharp"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3/resourceGroups/bigdataqa/providers/Microsoft.Synapse/workspaces/bigdataqa0512ws2/bigDataPools/samll",
+				"name": "samll",
+				"type": "Spark",
+				"endpoint": "https://bigdataqa0512ws2.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/samll",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"var sessionId = (new Random()).Next(10000000);\n",
+					"var deltaTablePath = $\"/delta/delta-table-{sessionId}\";\n",
+					"\n",
+					"deltaTablePath"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var data = spark.Range(0,5);\n",
+					"data.Show();\n",
+					"data.Write().Format(\"delta\").Save(deltaTablePath);"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"using System.Linq;\n",
+					"spark.Read().Text($\"{deltaTablePath}/_delta_log/\").Collect().ToList().ForEach(x => Console.WriteLine(x.GetAs<string>(\"value\")));"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var df = spark.Read().Format(\"delta\").Load(deltaTablePath);\n",
+					"df.Show()"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var data = spark.Range(5,10);\n",
+					"data.Write().Format(\"delta\").Mode(\"overwrite\").Save(deltaTablePath);\n",
+					"df.Show();"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.Read().Text($\"{deltaTablePath}/_delta_log/\").Collect().ToList().ForEach(x => Console.WriteLine(x.GetAs<string>(\"value\")));"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Write data to a new managed catalog table.\n",
+					"data.Write().Format(\"delta\").SaveAsTable(\"ManagedDeltaTable\");"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Define an external catalog table that points to the existing Delta Lake data in storage.\n",
+					"spark.Sql($\"CREATE TABLE ExternalDeltaTable USING DELTA LOCATION '{deltaTablePath}'\");"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// List the 2 new tables.\n",
+					"spark.Sql(\"SHOW TABLES\").Show();\n",
+					"\n",
+					"// Explore their properties.\n",
+					"spark.Sql(\"DESCRIBE EXTENDED ManagedDeltaTable\").Show(truncate: 0);\n",
+					"spark.Sql(\"DESCRIBE EXTENDED ExternalDeltaTable\").Show(truncate: 0);"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"using Microsoft.Spark.Extensions.Delta;\n",
+					"using Microsoft.Spark.Extensions.Delta.Tables;\n",
+					"using Microsoft.Spark.Sql;\n",
+					"using static Microsoft.Spark.Sql.Functions;\n",
+					"\n",
+					"var deltaTable = DeltaTable.ForPath(deltaTablePath);"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Update every even value by adding 100 to it\n",
+					"deltaTable.Update(\n",
+					"  condition: Expr(\"id % 2 == 0\"),\n",
+					"  set: new Dictionary<string, Column>(){{ \"id\", Expr(\"id + 100\") }});\n",
+					"deltaTable.ToDF().Show();"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.Delete(condition: Expr(\"id % 2 == 0\"));\n",
+					"deltaTable.ToDF().Show();"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Upsert (merge) new data\n",
+					"var newData = spark.Range(20).As(\"newData\");\n",
+					"\n",
+					"deltaTable\n",
+					"    .As(\"oldData\")\n",
+					"    .Merge(newData, \"oldData.id = newData.id\")\n",
+					"    .WhenMatched()\n",
+					"        .Update(new Dictionary<string, Column>() {{\"id\", Lit(\"-1\")}})\n",
+					"    .WhenNotMatched()\n",
+					"        .Insert(new Dictionary<string, Column>() {{\"id\", Col(\"newData.id\")}})\n",
+					"    .Execute();\n",
+					"\n",
+					"deltaTable.ToDF().Show(100);"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.History().Show(20, 1000, false);"
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var df = spark.Read().Format(\"delta\").Option(\"versionAsOf\", 0).Load(deltaTablePath);\n",
+					"df.Show();"
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var streamingDf = spark.ReadStream().Format(\"rate\").Load();\n",
+					"var stream = streamingDf.SelectExpr(\"value as id\").WriteStream().Format(\"delta\").Option(\"checkpointLocation\", $\"/tmp/checkpoint-{sessionId}\").Start(deltaTablePath);"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.ToDF().Sort(Col(\"id\").Desc()).Show(100);"
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.History().Drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").Show(20, 1000, false);"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"stream.Stop();"
+				],
+				"attachments": null,
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.History().Drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").Show(100, 1000, false);"
+				],
+				"attachments": null,
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"int partitionCount = 2;\r\n",
+					"\r\n",
+					"spark.Read()\r\n",
+					"    .Format(\"delta\")\r\n",
+					"    .Load(deltaTablePath)\r\n",
+					"    .Repartition(partitionCount)\r\n",
+					"    .Write()\r\n",
+					"    .Option(\"dataChange\", \"false\")\r\n",
+					"    .Format(\"delta\")\r\n",
+					"    .Mode(\"overwrite\")\r\n",
+					"    .Save(deltaTablePath);"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var parquetPath = $\"/parquet/parquet-table-{sessionId}\";\n",
+					"\n",
+					"var data = spark.Range(0,5);\n",
+					"data.Write().Parquet(parquetPath);\n",
+					"\n",
+					"// Confirm that the data isn't in the Delta format\n",
+					"DeltaTable.IsDeltaTable(parquetPath)"
+				],
+				"attachments": null,
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"DeltaTable.ConvertToDelta(spark, $\"parquet.`{parquetPath}`\");\n",
+					"\n",
+					"//Confirm that the converted data is now in the Delta format\n",
+					"DeltaTable.IsDeltaTable(parquetPath)"
+				],
+				"attachments": null,
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.Sql($\"DESCRIBE HISTORY delta.`{deltaTablePath}`\").Show();"
+				],
+				"attachments": null,
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.Sql($\"VACUUM delta.`{deltaTablePath}`\").Show();"
+				],
+				"attachments": null,
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"var parquetId =  (new Random()).Next(10000000);\n",
+					"var parquetPath = $\"/parquet/parquet-table-{sessionId}-{parquetId}\";\n",
+					"\n",
+					"var data = spark.Range(0,5);\n",
+					"data.Write().Parquet(parquetPath);\n",
+					"\n",
+					"// Confirm that the data isn't in the Delta format\n",
+					"DeltaTable.IsDeltaTable(parquetPath);\n",
+					"\n",
+					"// Use SQL to convert the parquet table to Delta\n",
+					"spark.Sql($\"CONVERT TO DELTA parquet.`{parquetPath}`\");\n",
+					"\n",
+					"DeltaTable.IsDeltaTable(parquetPath);"
+				],
+				"attachments": null,
+				"execution_count": 26
+			}
+		]
+	}
+}

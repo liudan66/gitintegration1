@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense\nCREATE TABLE [DBO].[TEST](\n    ID INT,\n    MSG VARCHAR(255)\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

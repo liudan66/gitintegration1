@@ -1,0 +1,25 @@
+{
+	"name": "python",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "bigest",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "python",
+		"jobProperties": {
+			"name": "python",
+			"file": "abfss://sparkjob@yifsoadlsgen2westus2.dfs.core.windows.net/synapse/workspaces/yifso1202ws/batchjobs/FileExists_Python/fileexists.py",
+			"args": [],
+			"jars": [],
+			"files": [
+				"abfss://sparkjob@yifsoadlsgen2westus2.dfs.core.windows.net/synapse/workspaces/yifso1202ws/batchjobs/FileExists_Python/shakespeare.txt"
+			],
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2
+		}
+	}
+}

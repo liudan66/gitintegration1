@@ -1,0 +1,29 @@
+{
+	"name": "Spark job definition 30",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "pool1",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "scala",
+		"jobProperties": {
+			"name": "Spark job definition 30",
+			"file": "abfs://file@liud.dfs.core.windows.net/files",
+			"className": "liu.api",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "1"
+			},
+			"args": [],
+			"jars": [],
+			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		}
+	}
+}

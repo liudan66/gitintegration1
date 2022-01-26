@@ -1,0 +1,24 @@
+{
+	"name": "lanjunpythontest",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "lanjuntest",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "scala",
+		"jobProperties": {
+			"name": "lanjunpythontest",
+			"file": "abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0512ws2/batchjobs/05121604_python/wordcount.py",
+			"className": "abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/shakespeare.txt abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/result",
+			"args": [],
+			"jars": [],
+			"files": [],
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 3
+		}
+	}
+}

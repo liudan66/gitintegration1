@@ -1,0 +1,122 @@
+{
+	"name": "Notebook 24",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpoolaml",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"noPermissionToViewOutput": true,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpoolaml",
+				"name": "sparkpoolaml",
+				"type": "Spark",
+				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpoolaml",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import azureml.core\r\n",
+					"\r\n",
+					"from azureml.core import Experiment, Workspace, Dataset, Datastore, AutoMLRun\r\n",
+					"from azureml.train.automl import AutoMLConfig\r\n",
+					"\r\n",
+					"subscription_id = \"051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3\"\r\n",
+					"resource_group = \"chaxu-test\"\r\n",
+					"workspace_name = \"chaxuamleus\"\r\n",
+					"experiment_name = \"yifso1022scus-nyc_taxi-20201112092417\"\r\n",
+					"\r\n",
+					"ws = Workspace(subscription_id = subscription_id, resource_group = resource_group, workspace_name = workspace_name)\r\n",
+					"experiment = Experiment(ws, experiment_name)\r\n",
+					"\r\n",
+					"run = AutoMLRun(experiment, run_id = 'AutoML_7bc3d9e3-7f17-4109-8dda-9c2fb1281311')\r\n",
+					"\r\n",
+					"# If you want to register the best model, please uncomment the following codes\r\n",
+					"import onnxruntime\r\n",
+					"import mlflow\r\n",
+					"import mlflow.onnx\r\n",
+					"\r\n",
+					"from mlflow.models.signature import ModelSignature\r\n",
+					"from mlflow.types import DataType\r\n",
+					"from mlflow.types.schema import ColSpec, Schema\r\n",
+					"\r\n",
+					"# Get best model from automl run\r\n",
+					"best_run, onnx_model = run.get_output(return_onnx_model=True)\r\n",
+					"\r\n",
+					"# Define utility functions to infer the schema of ONNX model\r\n",
+					"def _infer_schema(data):\r\n",
+					"    res = []\r\n",
+					"    for _, col in enumerate(data):\r\n",
+					"        t = col.type.replace(\"tensor(\", \"\").replace(\")\", \"\")\r\n",
+					"        if t in [\"bool\"]:\r\n",
+					"            dt = DataType.boolean\r\n",
+					"        elif t in [\"int8\", \"uint8\", \"int16\", \"uint16\", \"int32\"]:\r\n",
+					"            dt = DateType.integer\r\n",
+					"        elif t in [\"uint32\", \"int64\"]:\r\n",
+					"            dt = DataType.long\r\n",
+					"        elif t in [\"float16\", \"bfloat16\", \"float\"]:\r\n",
+					"            dt = DataType.float\r\n",
+					"        elif t in [\"double\"]:\r\n",
+					"            dt = DataType.double\r\n",
+					"        elif t in [\"string\"]:\r\n",
+					"            dt = DataType.string\r\n",
+					"        else:\r\n",
+					"            raise Exception(\"Unsupported type: \" + t)\r\n",
+					"        res.append(ColSpec(type=dt, name=col.name))\r\n",
+					"    return Schema(res)\r\n",
+					"\r\n",
+					"def _infer_signature(onnx_model):\r\n",
+					"    onnx_model_bytes = onnx_model.SerializeToString()\r\n",
+					"    onnx_runtime = onnxruntime.InferenceSession(onnx_model_bytes)\r\n",
+					"    inputs = _infer_schema(onnx_runtime.get_inputs())\r\n",
+					"    outputs = _infer_schema(onnx_runtime.get_outputs())\r\n",
+					"    return ModelSignature(inputs, outputs)\r\n",
+					"\r\n",
+					"# Infer signature of ONNX model\r\n",
+					"signature = _infer_signature(onnx_model)\r\n",
+					"\r\n",
+					"artifact_path = experiment_name + \"_artifact\"\r\n",
+					"mlflow.set_tracking_uri(ws.get_mlflow_tracking_uri())\r\n",
+					"mlflow.set_experiment(experiment_name)\r\n",
+					"\r\n",
+					"with mlflow.start_run() as run:\r\n",
+					"    # Save the model to the outputs directory for capture\r\n",
+					"    mlflow.onnx.log_model(onnx_model, artifact_path, signature=signature)\r\n",
+					"\r\n",
+					"    # Register the model to AML model registry\r\n",
+					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"test-fixed-VHD-Best\")"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

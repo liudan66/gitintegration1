@@ -1,0 +1,299 @@
+{
+	"name": "HitchhikerGuide to Delta Lake_Scala",
+	"properties": {
+		"folder": {
+			"name": "New folder/sample"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "samll",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"language_info": {
+				"name": "scala"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3/resourceGroups/bigdataqa/providers/Microsoft.Synapse/workspaces/bigdataqa0512ws2/bigDataPools/samll",
+				"name": "samll",
+				"type": "Spark",
+				"endpoint": "https://bigdataqa0512ws2.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/samll",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"val sessionId = scala.util.Random.nextInt(1000000)\n",
+					"val deltaTablePath = s\"/delta/delta-table-$sessionId\";"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val data = spark.range(0, 5)\n",
+					"data.show\n",
+					"data.write.format(\"delta\").save(deltaTablePath)"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.read.text(s\"$deltaTablePath/_delta_log/\").collect.foreach(println)"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val df = spark.read.format(\"delta\").load(deltaTablePath)\n",
+					"df.show()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val data = spark.range(5, 10)\n",
+					"data.write.format(\"delta\").mode(\"overwrite\").save(deltaTablePath)\n",
+					"df.show()"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.read.text(s\"$deltaTablePath/_delta_log/\").collect.foreach(println)"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Write data to a new managed catalog table.\n",
+					"data.write.format(\"delta\").saveAsTable(\"ManagedDeltaTable\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Define an external catalog table that points to the existing Delta Lake data in storage.\n",
+					"spark.sql(s\"CREATE TABLE ExternalDeltaTable USING DELTA LOCATION '$deltaTablePath'\")"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// List the 2 new tables.\n",
+					"spark.sql(\"SHOW TABLES\").show\n",
+					"\n",
+					"// Explore their properties.\n",
+					"spark.sql(\"DESCRIBE EXTENDED ManagedDeltaTable\").show(truncate=false)\n",
+					"spark.sql(\"DESCRIBE EXTENDED ExternalDeltaTable\").show(truncate=false)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import io.delta.tables._\n",
+					"import org.apache.spark.sql.functions._\n",
+					"\n",
+					"val deltaTable = DeltaTable.forPath(deltaTablePath)"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Update every even value by adding 100 to it\n",
+					"deltaTable.update(\n",
+					"  condition = expr(\"id % 2 == 0\"),\n",
+					"  set = Map(\"id\" -> expr(\"id + 100\")))\n",
+					"deltaTable.toDF.show"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Delete every even value\n",
+					"deltaTable.delete(condition = expr(\"id % 2 == 0\"))\n",
+					"deltaTable.toDF.show"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"// Upsert (merge) new data\n",
+					"val newData = spark.range(0, 20).toDF\n",
+					"\n",
+					"deltaTable.as(\"oldData\").\n",
+					"  merge(\n",
+					"    newData.as(\"newData\"),\n",
+					"    \"oldData.id = newData.id\").\n",
+					"  whenMatched.\n",
+					"  update(Map(\"id\" -> lit(-1))).\n",
+					"  whenNotMatched.\n",
+					"  insert(Map(\"id\" -> col(\"newData.id\"))).\n",
+					"  execute()\n",
+					"\n",
+					"deltaTable.toDF.show()"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.history.show(false)"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val df = spark.read.format(\"delta\").option(\"versionAsOf\", 0).load(deltaTablePath)\n",
+					"df.show()"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val streamingDf = spark.readStream.format(\"rate\").load()\n",
+					"val stream = streamingDf.select($\"value\" as \"id\").writeStream.format(\"delta\").option(\"checkpointLocation\", s\"/tmp/checkpoint-$sessionId\").start(deltaTablePath)"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.toDF.sort($\"id\".desc).show"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.history.show"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"stream.stop"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"deltaTable.history.show"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val partitionCount = 2\n",
+					"\n",
+					"spark.\n",
+					"    read.\n",
+					"    format(\"delta\").\n",
+					"    load(deltaTablePath).\n",
+					"    repartition(partitionCount).\n",
+					"    write.\n",
+					"    option(\"dataChange\", \"false\").\n",
+					"    format(\"delta\").\n",
+					"    mode(\"overwrite\").\n",
+					"    save(deltaTablePath)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val parquetPath = s\"/parquet/parquet-table-$sessionId\"\n",
+					"\n",
+					"val data = spark.range(0,5)\n",
+					"data.write.parquet(parquetPath)\n",
+					"\n",
+					"// Confirm that the data isn't in the Delta format\n",
+					"DeltaTable.isDeltaTable(parquetPath)"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"DeltaTable.convertToDelta(spark, s\"parquet.`$parquetPath`\")\n",
+					"\n",
+					"// Confirm that the converted data is now in the Delta format\n",
+					"DeltaTable.isDeltaTable(parquetPath)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.sql(s\"DESCRIBE HISTORY delta.`$deltaTablePath`\").show()"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.sql(s\"VACUUM delta.`$deltaTablePath`\").show()"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"val parquetId = scala.util.Random.nextInt(1000)\n",
+					"val parquetPath = s\"/parquet/parquet-table-$sessionId-$parquetId\"\n",
+					"\n",
+					"val data = spark.range(0,5)\n",
+					"data.write.parquet(parquetPath)\n",
+					"\n",
+					"// Confirm that the data isn't in the Delta format\n",
+					"DeltaTable.isDeltaTable(parquetPath)\n",
+					"\n",
+					"// Use SQL to convert the parquet table to Delta\n",
+					"spark.sql(s\"CONVERT TO DELTA parquet.`$parquetPath`\")\n",
+					"\n",
+					"DeltaTable.isDeltaTable(parquetPath)"
+				],
+				"execution_count": 25
+			}
+		]
+	}
+}

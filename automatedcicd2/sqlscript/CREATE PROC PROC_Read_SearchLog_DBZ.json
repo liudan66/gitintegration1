@@ -1,0 +1,16 @@
+{
+	"name": "CREATE PROC PROC_Read_SearchLog_DBZ",
+	"properties": {
+		"content": {
+			"query": "CREATE PROC [dbo].[PROC_Read_SearchLog_DBZ]\nAS BEGIN\nSELECT 100/(latency-74) from dbo.SearchLog\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "CREATE PROC PROC_Read_SearchLogExtParquet",
+	"properties": {
+		"content": {
+			"query": "CREATE PROC [dbo].[PROC_ExtParquet]\nAS\nBEGIN\nSELECT * from dbo.extable2\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

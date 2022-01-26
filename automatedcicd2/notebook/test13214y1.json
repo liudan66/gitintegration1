@@ -1,0 +1,260 @@
+{
+	"name": "test13214y1",
+	"properties": {
+		"folder": {
+			"name": "New folder"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"language_info": {
+				"name": "python"
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"#display(DataFrame) sample:\n",
+					"\n",
+					"# import pyspark class Row from module sql\n",
+					"from pyspark.sql import *\n",
+					"# Create Example Data - Departments and Employees\n",
+					"# Create the Departments\n",
+					"department1 = Row(id='123456', name='Computer Science')\n",
+					"department2 = Row(id='789012', name='Mechanical Engineering')\n",
+					"department3 = Row(id='345678', name='Theater and Drama')\n",
+					"department4 = Row(id='901234', name='Indoor Recreation')\n",
+					"# Create the Employees\n",
+					"Employee = Row(\"firstName\", \"lastName\", \"email\", \"salary\")\n",
+					"employee1 = Employee('michael', 'armbrust', 'noreply@berkeley.edore', 130000)\n",
+					"employee2 = Employee('xiangrui', 'meng', 'no-reply@stanford.edu', 120000)\n",
+					"employee3 = Employee('matei', None, 'no-reply@waterloo.edu', 140000)\n",
+					"employee4 = Employee(None, 'wendell', 'no-reply@berkeley.edu', 160000)\n",
+					"# Create the DepartmentWithEmployees instances from Departments and Employees\n",
+					"departmentWithEmployees1 = Row(department=department1, employees=[employee1, employee2])\n",
+					"departmentWithEmployees2 = Row(department=department2, employees=[employee3, employee4])\n",
+					"departmentWithEmployees3 = Row(department=department3, employees=[employee1, employee4])\n",
+					"departmentWithEmployees4 = Row(department=department4, employees=[employee2, employee3])\n",
+					"\n",
+					"departmentsWithEmployeesSeq1 = [departmentWithEmployees1, departmentWithEmployees2]\n",
+					"departmentsWithEmployeesSeq2 = [departmentWithEmployees2, departmentWithEmployees3]\n",
+					"df1 = spark.createDataFrame(departmentsWithEmployeesSeq1)\n",
+					"\n",
+					"display(df1)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"tetst"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# display(List) sample:\n",
+					"students = [ ['jack', 34, '36'] ,\n",
+					"['Riti', 30, 'Delhi' ] ,\n",
+					"['Aadi', 16, 'New York'] ]\n",
+					"\n",
+					"display(students)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# display(pandas.DataFrame) sample:\n",
+					"import numpy as np\n",
+					"import pandas as pd\n",
+					"from pyspark.sql import *\n",
+					"d = {'col11': [1, 2, 3, 4, 5, 6, 7, 8], 'col12': [3, 4, 5, 6, 8, 3, 16, 20]}\n",
+					"pdf = pd.DataFrame(data=d)\n",
+					"\n",
+					"display(pdf)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark\n",
+					"display(spark.range(10))"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%spark\n",
+					"case class MapEntry(key: String, value: Int)\n",
+					"val largeSeries = for (x <- 1 to 5000) yield MapEntry(\"k_%04d\".format(x), x)\n",
+					"val largeDataFrame = sc.parallelize(largeSeries).toDF()\n",
+					"largeDataFrame.registerTempTable(\"largeTable\")\n",
+					"display(spark.sqlContext.sql(\"select * from largeTable\"))"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"displayHTML(\"\"\"\n",
+					"<!DOCTYPE html>\n",
+					" <meta charset=\"utf-8\">\n",
+					" <style>\n",
+					" path {\n",
+					" fill: white;\n",
+					" stroke: #000;\n",
+					" }\n",
+					" circle {\n",
+					" fill: #fff;\n",
+					" stroke: #000;\n",
+					" pointer-events: none;\n",
+					" }\n",
+					" .PiYG .q0-9{fill:rgb${colors(0)}}\n",
+					" .PiYG .q1-9{fill:rgb${colors(1)}}\n",
+					" .PiYG .q2-9{fill:rgb${colors(2)}}\n",
+					" .PiYG .q3-9{fill:rgb${colors(3)}}\n",
+					" .PiYG .q4-9{fill:rgb${colors(4)}}\n",
+					" .PiYG .q5-9{fill:rgb${colors(5)}}\n",
+					" .PiYG .q6-9{fill:rgb${colors(6)}}\n",
+					" .PiYG .q7-9{fill:rgb${colors(7)}}\n",
+					" .PiYG .q8-9{fill:rgb${colors(8)}}\n",
+					" </style>\n",
+					" <body>\n",
+					" <script src=\"https://d3js.org/d3.v3.min.js\"></script>\n",
+					" <script>\n",
+					" var width = 960,\n",
+					" height = 500;\n",
+					" var vertices = d3.range(100).map(function(d) {\n",
+					" return [Math.random() * width, Math.random() * height];\n",
+					" });\n",
+					" var svg = d3.select(\"body\").append(\"svg\")\n",
+					" .attr(\"width\", width)\n",
+					" .attr(\"height\", height)\n",
+					" .attr(\"class\", \"PiYG\")\n",
+					" .on(\"mousemove\", function() { vertices[0] = d3.mouse(this); redraw(); });\n",
+					" var path = svg.append(\"g\").selectAll(\"path\");\n",
+					" svg.selectAll(\"circle\")\n",
+					" .data(vertices.slice(1))\n",
+					" .enter().append(\"circle\")\n",
+					" .attr(\"transform\", function(d) { return \"translate(\" + d + \")\"; })\n",
+					" .attr(\"r\", 2);\n",
+					" redraw();\n",
+					" function redraw() {\n",
+					" path = path.data(d3.geom.delaunay(vertices).map(function(d) { return \"M\" + d.join(\"L\") + \"Z\"; }), String);\n",
+					" path.exit().remove();\n",
+					" path.enter().append(\"path\").attr(\"class\", function(d, i) { return \"q\" + (i % 9) + \"-9\"; }).attr(\"d\", String);\n",
+					" }\n",
+					" </script>\n",
+					"\"\"\")"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from bokeh.plotting import figure\n",
+					"from bokeh.embed import components, file_html\n",
+					"from bokeh.resources import CDN\n",
+					"# prepare some data\n",
+					"x = [1, 2, 3, 4, 5]\n",
+					"y = [6, 7, 2, 4, 5]\n",
+					"# create a new plot with a title and axis labels\n",
+					"p = figure(title=\"simple line example\", x_axis_label='x', y_axis_label='y')\n",
+					"# add a line renderer with legend and line thickness\n",
+					"p.line(x, y, legend=\"Temp.\", line_width=2)\n",
+					"# create an html document that embeds the Bokeh plot\n",
+					"html = file_html(p, CDN, \"my plot1\")\n",
+					"# display this html\n",
+					"displayHTML(html)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"#display(List) sample: \n",
+					"students = [ ['jack', 34,4,3154284,304,'10.0', '36','Delhi','Delhi','Delhi','Delhi','Delhi','Delhi','Delhi','Delhi','Delhi','100.0123','New York','New York','New York','New York','1248700.01','New York','New York','New York','New York','1248700.01', '1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01' ] , \n",
+					"['Riti', 30,369864,3244,3424525, '20.01', 'Delhi','New York','New York','New York','New York','New York','New York','New York','New York','New York','1248700.01','New York','New York','New York','New York','1248700.01','New York','New York','New York','New York','1248700.01', '1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01'] , \n",
+					"['Aadi', 16,34745,3414,3000004, '30.02', 'New York','New York','Riti','Riti','Riti','Riti','Riti','Riti','Riti','Riti','100000.021','New York','New York','New York','New York','1248700.01','New York','New York','New York','New York','1248700.01', '1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01','1248700.01'] ] \n",
+					"\n",
+					"display(students)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"displayHTML(\"\"\" \n",
+					"<!DOCTYPE html>\n",
+					"<head lang=\"en\">\n",
+					"  <meta charset=\"utf-8\">\n",
+					"  <title></title>\n",
+					"  <style type=\"text/css\">\n",
+					"         div {\n",
+					"              width: 100px;\n",
+					"              height: 2200px;\n",
+					"              background-color: white;\n",
+					"              margin-top: 20px;\n",
+					"              padding-top: 20px;\n",
+					"              border: 20px solid red;\n",
+					"              border: 5px dashed red;/*虚线*/\n",
+					"             }\n",
+					"  </style>\n",
+					" \n",
+					"</head>\n",
+					"<body>\n",
+					" <div>Test</div>\n",
+					" <div>测试</div>\n",
+					"</body>\n",
+					"</html>\n",
+					" \n",
+					"\"\"\")\n",
+					"\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

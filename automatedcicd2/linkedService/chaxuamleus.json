@@ -1,0 +1,20 @@
+{
+	"name": "chaxuamleus",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureMLService",
+		"typeProperties": {
+			"subscriptionId": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3",
+			"resourceGroupName": "chaxu-test",
+			"mlWorkspaceName": "chaxuamleus",
+			"servicePrincipalId": "a82dd51d-9e81-4835-ae78-dae1b3ffae64",
+			"tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIllJRlNPMTAyMlNDVVNfMmUxMGU0NjYtNmIxNS00YjUwLWE3ZDQtMjMzNTQ2ZThhODdiIg0KfQ=="
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

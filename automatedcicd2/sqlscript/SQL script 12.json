@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 12",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'default_honghaigen2_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [default_honghaigen2_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://default@honghaigen2.dfs.core.windows.net', \n\t\tTYPE     = HADOOP \n\t)\nGO\n\nCREATE EXTERNAL TABLE exter1 (\n\t[vendorID] varchar(8000),\n\t[tpepPickupDateTime] datetime2(7),\n\t[tpepDropoffDateTime] datetime2(7),\n\t[passengerCount] int,\n\t[tripDistance] float,\n\t[puLocationId] varchar(8000),\n\t[doLocationId] varchar(8000),\n\t[startLon] float,\n\t[startLat] float,\n\t[endLon] float,\n\t[endLat] float,\n\t[rateCodeId] int,\n\t[storeAndFwdFlag] varchar(8000),\n\t[paymentType] varchar(8000),\n\t[fareAmount] float,\n\t[extra] float,\n\t[mtaTax] float,\n\t[improvementSurcharge] varchar(8000),\n\t[tipAmount] float,\n\t[tollsAmount] float,\n\t[totalAmount] float\n\t)\n\tWITH (\n\tLOCATION = 'part-00036-tid-210938564719836543-aea5b543-5e83-4a7d-8d31-69f72c50b05d-15156-1.c000.snappy.parquet',\n\tDATA_SOURCE = [default_honghaigen2_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat],\n\tREJECT_TYPE = VALUE,\n\tREJECT_VALUE = 0\n\t)\nGO\n\nSELECT TOP 150 * FROM exter1\nGO\n\nSELECT 2/([passengerCount]-1) FROM exter1 WHERE [passengerCount] = 1\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "123",
+				"databaseName": "123"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

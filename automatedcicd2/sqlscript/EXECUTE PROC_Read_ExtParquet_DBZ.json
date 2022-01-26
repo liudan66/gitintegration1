@@ -1,0 +1,16 @@
+{
+	"name": "EXECUTE PROC_Read_ExtParquet_DBZ",
+	"properties": {
+		"content": {
+			"query": "\n -- TODO: Set parameter values here \n\n EXECUTE [dbo].[PROC_Read_ExtParquet_DBZ]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

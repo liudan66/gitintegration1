@@ -1,0 +1,16 @@
+{
+	"name": "CREATE PROC PROC_SELECT_1",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense\nCREATE PROC [dbo].[PROC_SELECT_1]\nAS BEGIN\nSELECT 1\nEND",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"name": "scalaimport",
+	"properties": {
+		"description": "my scala",
+		"targetBigDataPool": {
+			"referenceName": "zhao",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "3.1",
+		"language": "scala",
+		"jobProperties": {
+			"name": "scalaimport",
+			"file": "abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/scala/wordcount.jar",
+			"className": "WordCount",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9877be64-f427-4302-8b80-50de27134ec7"
+			},
+			"args": [
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/scala/shakespeare.txt",
+				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/scala/shakespeare"
+			],
+			"jars": [],
+			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2
+		}
+	}
+}

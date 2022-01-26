@@ -1,0 +1,35 @@
+{
+	"name": "05121552",
+	"properties": {
+		"targetBigDataPool": {
+			"referenceName": "catest",
+			"type": "BigDataPoolReference"
+		},
+		"requiredSparkVersion": "2.4",
+		"language": "csharp",
+		"jobProperties": {
+			"name": "05121552",
+			"file": "local:///usr/hdp/current/spark2-client/jars/microsoft-spark.jar",
+			"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
+			"conf": {
+				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs"
+			},
+			"args": [
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa1105ws/batchjobs/Spark_DotNet/wordcount.zip",
+				"WordCount",
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/dotnet/wordcount/shakespeare.txt",
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/dotnet/wordcount/result"
+			],
+			"jars": [],
+			"files": [],
+			"archives": [
+				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa1105ws/batchjobs/Spark_DotNet/wordcount.zip#udfs"
+			],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 1
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "Database-level_Permissions-SQLDedicated",
+	"properties": {
+		"content": {
+			"query": "/*\nTitle: Grant access to a user to a single SQL dedicated/provisioned database\n\nDescription: This sample shows how to creat a user and grant permissions using T-SQL.\n\nTags: Security, Login, Roles, SQL Dedicated, SQL Pools\n\n*/\n--db_datareader and db_datawriter can work for read/write permissions if granting db_owner permission is undesired. \n--For a Spark user to read and write directly from Spark into/from a SQL pool, db_owner permission is required.\n\n--Create the user in the database by running the following command targeting the desired database in the context selector (dropdown to select databases)  for an Azure AD account:\n\nCREATE USER [v-weiszh@microsoft.com] FROM EXTERNAL PROVIDER;\n\n--Grant the user a role to access the database:\n\nEXEC sp_addrolemember 'db_owner', 'v-weiszh@microsoft.com';",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
