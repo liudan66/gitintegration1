@@ -47,15 +47,8 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"validateDataConsistency": false
+					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "SourceDataset_n80",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
 						"referenceName": "DestinationDataset_n80",
