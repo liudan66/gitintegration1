@@ -1,0 +1,12 @@
+{
+	"name": "KQL script 1",
+	"properties": {
+		"content": {
+			"query": "| where timestamp > ago(7d)\n| where name == \"PBI.Navigation.RouteChange\"\n| extend toPath = tostring(customDimensions.toPath)\n| where toPath has \"manageembed\" \n| summarize count() by toPath\n",
+			"metadata": {
+				"language": "kql"
+			}
+		},
+		"type": "KqlQuery"
+	}
+}

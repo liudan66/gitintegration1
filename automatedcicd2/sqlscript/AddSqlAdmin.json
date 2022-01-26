@@ -1,0 +1,17 @@
+{
+	"name": "AddSqlAdmin",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense\nCREATE USER [v-weiszh@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER;\nEXEC sp_addrolemember 'db_owner', 'v-weiszh@bdbj.onmicrosoft.com'\n\nCREATE USER [v-qingqz@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER;\nEXEC sp_addrolemember 'db_owner', 'v-qingqz@bdbj.onmicrosoft.com'\n\nCREATE USER [v-mzh@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER;\nEXEC sp_addrolemember 'db_owner', 'v-mzh@bdbj.onmicrosoft.com'\n\nCREATE USER [v-yajing@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER;\nEXEC sp_addrolemember 'db_owner', 'v-yajing@bdbj.onmicrosoft.com'\n\nCREATE USER [v-shtong@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER; \nEXEC sp_addrolemember 'db_owner', 'v-shtong@bdbj.onmicrosoft.com'\n\nCREATE USER [v-hozhao@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER; \nEXEC sp_addrolemember 'db_owner', 'v-hozhao@bdbj.onmicrosoft.com'\n\nCREATE USER [v-yayan6@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER; \nEXEC sp_addrolemember 'db_owner', 'v-yayan6@bdbj.onmicrosoft.com'\n\nCREATE USER [powerbiTest@bdbj.onmicrosoft.com] FROM EXTERNAL PROVIDER; \nEXEC sp_addrolemember 'db_owner', 'powerbiTest@bdbj.onmicrosoft.com'\n\n    ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

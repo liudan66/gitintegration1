@@ -1,0 +1,81 @@
+{
+	"name": "scala",
+	"properties": {
+		"activities": [
+			{
+				"name": "Creating a managed Spark Table_acd",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Creating a managed Spark Table_acd",
+						"type": "NotebookReference"
+					}
+				}
+			},
+			{
+				"name": "unmanaged",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Creating a managed Spark Table_acd",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Creating an unmanaged Spark Table_9ln",
+						"type": "NotebookReference"
+					}
+				}
+			},
+			{
+				"name": "Getting Started with Delta Lake_faw",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "unmanaged",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Getting Started with Delta Lake_faw",
+						"type": "NotebookReference"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-03-08T06:12:35Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

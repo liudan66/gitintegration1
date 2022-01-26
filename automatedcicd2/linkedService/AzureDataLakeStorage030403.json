@@ -1,0 +1,26 @@
+{
+	"name": "AzureDataLakeStorage030403",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://bdbjgen2qingtest.dfs.core.windows.net",
+			"tenant": "72bfe100-a448-4f25-af39-5b36c7bb62ef",
+			"servicePrincipalId": "8f6caa4c-31d9-4562-8084-bcbf13bb0068",
+			"servicePrincipalCredentialType": "ServicePrincipalKey",
+			"servicePrincipalCredential": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault_bdbjqingtest",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "bdbjkeyvaultsecretqingtest"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

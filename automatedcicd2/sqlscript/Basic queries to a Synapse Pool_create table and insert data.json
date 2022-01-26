@@ -1,0 +1,16 @@
+{
+	"name": "Basic queries to a Synapse Pool_create table and insert data",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE DimEmployee\n(\nLastName VARCHAR(16),\nFirstName VARCHAR(16),\nStartDate VARCHAR(16),\nFirstDay VARCHAR(16),\nEndDate VARCHAR(16),\nMaritalStatus VARCHAR(16),\nTitle VARCHAR(16)\n)\n\nINSERT INTO DimEmployee (LastName, FirstName, StartDate, FirstDay, EndDate, MaritalStatus, Title) VALUES ('Cardinal','Tom B. Erichsen','2021','0305', '1231','Norway','test');\nINSERT INTO DimEmployee (LastName, FirstName, StartDate, FirstDay, EndDate, MaritalStatus, Title) VALUES ('Cardinal','Tom B. Erichsen','2020','0405', '1130','Norway','test01');\nINSERT INTO DimEmployee (LastName, FirstName, StartDate, FirstDay, EndDate, MaritalStatus, Title) VALUES ('Cardinal','Tom B. Erichsen','2019','0505', '1031','Norway','test02');\n\n\n\n\nCREATE TABLE FactInternetSales\n(\nOrderDateKey VARCHAR(16),\nPromotionKey VARCHAR(16),\nSalesAmount INT\n)\n\nINSERT INTO FactInternetSales (OrderDateKey, PromotionKey, SalesAmount) VALUES ('2021','Tom B. Erichsen','20212021');\nINSERT INTO FactInternetSales (OrderDateKey, PromotionKey, SalesAmount) VALUES ('2020','Tom B. Erichsen','200000');\nINSERT INTO FactInternetSales (OrderDateKey, PromotionKey, SalesAmount) VALUES ('2019','Tom B. Erichsen','222222');\nINSERT INTO FactInternetSales (OrderDateKey, PromotionKey, SalesAmount) VALUES ('2018','Tom B. Erichsen','969969');\nINSERT INTO FactInternetSales (OrderDateKey, PromotionKey, SalesAmount) VALUES ('20212021','Tom B. Erichsen','969969');\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "sqlpool",
+				"poolName": "sqlpool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

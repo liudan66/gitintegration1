@@ -1,0 +1,11 @@
+{
+	"name": "AzureKeyVault_bdbjqingtest",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://bdbjkeyvaultqingtest.vault.azure.net/"
+		}
+	}
+}

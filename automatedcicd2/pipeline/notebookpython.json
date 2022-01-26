@@ -1,0 +1,81 @@
+{
+	"name": "notebookpython",
+	"properties": {
+		"activities": [
+			{
+				"name": "WASB",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Read and write data from Azure Blob Storage WASB",
+						"type": "NotebookReference"
+					}
+				}
+			},
+			{
+				"name": "Gen2",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "WASB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Read and write data from Azure Data Lake Storage Gen2",
+						"type": "NotebookReference"
+					}
+				}
+			},
+			{
+				"name": "Using Azure Open Datasets in Synapse",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Gen2",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Using Azure Open Datasets in Synapse",
+						"type": "NotebookReference"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-03-08T05:43:29Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

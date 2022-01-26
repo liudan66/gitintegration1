@@ -1,0 +1,19 @@
+{
+	"name": "AzureDataLakeStorage030404",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://bdbjgen2qingtest.dfs.core.windows.net",
+			"credential": {
+				"referenceName": "Credential_bdbjqingtest",
+				"type": "CredentialReference"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
