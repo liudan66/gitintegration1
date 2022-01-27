@@ -1,6 +1,9 @@
 {
 	"name": "Notebook 4",
 	"properties": {
+		"folder": {
+			"name": "New folder"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {

@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "zhao2",
+			"referenceName": "zhao",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "e5232157-37d5-43be-98ce-914c03b43f1b"
+				"spark.autotune.trackingId": "5c23cfb7-4cb8-46c1-97e3-165ed38da884"
 			}
 		},
 		"metadata": {
@@ -31,10 +31,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao2",
-				"name": "zhao2",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+				"name": "zhao",
 				"type": "Spark",
-				"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao2",
+				"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -43,8 +43,9 @@
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
-			}
+				"automaticScaleJobs": true
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -68,7 +69,6 @@
 					"pipeline_name = 'pipeline_name'\r\n",
 					"tag = 'tag'"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -76,7 +76,6 @@
 				"source": [
 					"source_df = spark.sql(\"SELECT * FROM default.NYC_Taxi\")"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -97,7 +96,6 @@
 					"import time\r\n",
 					"a = time.strftime(\"%Y%m%d_%H%M%S\", time.localtime())"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -117,7 +115,6 @@
 				"source": [
 					"source_df.write.mode(\"overwrite\").saveAsTable(\"default.NYC_Taxi_\" + pipeline_name + \"_\" + tag + \"_\" + a)"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]

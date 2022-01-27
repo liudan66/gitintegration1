@@ -1,6 +1,9 @@
 {
 	"name": "Notebook 5",
 	"properties": {
+		"folder": {
+			"name": "New folder"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
