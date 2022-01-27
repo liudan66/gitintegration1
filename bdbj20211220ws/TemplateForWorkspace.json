@@ -117,6 +117,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/chen')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/zhao')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/zhao1')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/zhao2')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -146,6 +182,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "New folder"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-12-20T07:12:07Z"
@@ -413,6 +452,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "New folder"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-12-22T06:27:55Z"
@@ -1251,7 +1293,7 @@
 							"name": "Sort1"
 						}
 					],
-					"script": "source(output(\n\t\tSaleKey as integer,\n\t\tCityKey as integer,\n\t\tCustomerKey as integer,\n\t\tBillToCustomerKey as integer,\n\t\tStockItemKey as integer,\n\t\tInvoiceDateKey as timestamp,\n\t\tDeliveryDateKey as timestamp,\n\t\tSalespersonKey as integer,\n\t\tWWIInvoicID as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\tUnitPrice as double,\n\t\tTaxRate as double,\n\t\tTotalExcludingTax as double,\n\t\tTaxAmount as double,\n\t\tProfit as double,\n\t\tTotalIncludingTax as double,\n\t\tTotalDryItems as integer,\n\t\tTotalChillerItems as integer,\n\t\tLineageKey as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> source1\nsource1 sort(asc(SaleKey, true),\n\tcaseInsensitive: true) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDateID as integer,\n\t\tMedallionID as integer,\n\t\tHackneyLicenseID as integer,\n\t\tPickupTimeID as integer,\n\t\tDropoffTimeID as integer,\n\t\tPickupGeographyID as integer,\n\t\tDropoffGeographyID as integer,\n\t\tPickupLatitude as double,\n\t\tPickupLongitude as double,\n\t\tPickupLatLong as string,\n\t\tDropoffLatitude as double,\n\t\tDropoffLongitude as double,\n\t\tDropoffLatLong as string,\n\t\tPassengerCount as integer,\n\t\tTripDurationSeconds as integer,\n\t\tTripDistanceMiles as double,\n\t\tPaymentType as string,\n\t\tFareAmount as decimal(19,4),\n\t\tSurchargeAmount as decimal(19,4),\n\t\tTaxAmount as decimal(19,4),\n\t\tTipAmount as decimal(19,4),\n\t\tTollsAmount as decimal(19,4),\n\t\tTotalAmount as decimal(19,4)\n\t),\n\tformat: 'parquet',\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "source(output(\n\t\tSaleKey as integer,\n\t\tCityKey as integer,\n\t\tCustomerKey as integer,\n\t\tBillToCustomerKey as integer,\n\t\tStockItemKey as integer,\n\t\tInvoiceDateKey as timestamp,\n\t\tDeliveryDateKey as timestamp,\n\t\tSalespersonKey as integer,\n\t\tWWIInvoicID as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\tUnitPrice as double,\n\t\tTaxRate as double,\n\t\tTotalExcludingTax as double,\n\t\tTaxAmount as double,\n\t\tProfit as double,\n\t\tTotalIncludingTax as double,\n\t\tTotalDryItems as integer,\n\t\tTotalChillerItems as integer,\n\t\tLineageKey as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> source1\nsource1 sort(asc(SaleKey, true),\n\tcaseInsensitive: true) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDateID as integer,\n\t\tMedallionID as integer,\n\t\tHackneyLicenseID as integer,\n\t\tPickupTimeID as integer,\n\t\tDropoffTimeID as integer,\n\t\tPickupGeographyID as integer,\n\t\tDropoffGeographyID as integer,\n\t\tPickupLatitude as double,\n\t\tPickupLongitude as double,\n\t\tPickupLatLong as string,\n\t\tDropoffLatitude as double,\n\t\tDropoffLongitude as double,\n\t\tDropoffLatLong as string,\n\t\tPassengerCount as integer,\n\t\tTripDurationSeconds as integer,\n\t\tTripDistanceMiles as double,\n\t\tPaymentType as string,\n\t\tFareAmount as decimal(19,4),\n\t\tSurchargeAmount as decimal(19,4),\n\t\tTaxAmount as decimal(19,4),\n\t\tTipAmount as decimal(19,4),\n\t\tTollsAmount as decimal(19,4),\n\t\tTotalAmount as decimal(19,4)\n\t),\n\tformat: 'parquet',\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -1541,6 +1583,21 @@
 					"resultLimit": 5000
 				},
 				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/KQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/kqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "| where timestamp > ago(7d)\n| where name == \"PBI.Navigation.RouteChange\"\n| extend toPath = tostring(customDimensions.toPath)\n| where toPath has \"manageembed\" \n| summarize count() by toPath\n",
+					"metadata": {
+						"language": "kql"
+					}
+				},
+				"type": "KqlQuery"
 			},
 			"dependsOn": []
 		},
@@ -4085,7 +4142,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao1",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -4098,7 +4155,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "3adbd0c8-01a3-4963-8312-e4cb983ca701"
+						"spark.autotune.trackingId": "52fc197f-787f-4650-83e2-f30f412a4e63"
 					}
 				},
 				"metadata": {
@@ -4112,10 +4169,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao1",
-						"name": "zhao1",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -4123,15 +4180,12 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": true
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"%%pyspark\n",
 							"blob_account_name = \"bdbjblobstorageqingtest\"\n",
@@ -4176,380 +4230,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "aa649b61-24a7-4fad-a8a1-4a1310d795a2"
+						"spark.autotune.trackingId": "e5a9996d-c672-4e5e-b9e9-a4c7e2ecfe10"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1",
-						"state": {
-							"87d8b59e-85a8-4c65-9159-6f8effdcf903": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "SaleKey",
-												"1": "CityKey",
-												"2": "CustomerKey",
-												"3": "BillToCustomerKey",
-												"4": "StockItemKey",
-												"5": "InvoiceDateKey",
-												"6": "DeliveryDateKey",
-												"7": "SalespersonKey",
-												"8": "WWIInvoicID",
-												"9": "Description",
-												"10": "Package",
-												"11": "Quantity",
-												"12": "UnitPrice",
-												"13": "TaxRate",
-												"14": "TotalExcludingTax",
-												"15": "TaxAmount",
-												"16": "Profit",
-												"17": "TotalIncludingTax",
-												"18": "TotalDryItems",
-												"19": "TotalChillerItems",
-												"20": "LineageKey"
-											},
-											{
-												"0": "7216441",
-												"1": "64853",
-												"2": "302",
-												"3": "202",
-												"4": "192",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "9",
-												"8": "242",
-												"9": "DBA joke mug - two types of DBAs (White)",
-												"10": "Each",
-												"11": "2",
-												"12": "13",
-												"13": "15",
-												"14": "26",
-												"15": "3.9",
-												"16": "17",
-												"17": "29.9",
-												"18": "2",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7230122",
-												"1": "56883",
-												"2": "0",
-												"3": "0",
-												"4": "188",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "19",
-												"8": "1527",
-												"9": "Developer joke mug - that's a hardware problem (White)",
-												"10": "Each",
-												"11": "4",
-												"12": "13",
-												"13": "15",
-												"14": "52",
-												"15": "7.8",
-												"16": "34",
-												"17": "59.8",
-												"18": "4",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7213683",
-												"1": "41081",
-												"2": "380",
-												"3": "202",
-												"4": "96",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "21",
-												"8": "263",
-												"9": "Ogre battery-powered slippers (Green) L",
-												"10": "Each",
-												"11": "4",
-												"12": "32",
-												"13": "15",
-												"14": "128",
-												"15": "19.2",
-												"16": "96",
-												"17": "147.2",
-												"18": "4",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7214884",
-												"1": "38886",
-												"2": "0",
-												"3": "0",
-												"4": "150",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "12",
-												"8": "262",
-												"9": "Ride on toy sedan car (Green) 1/12 scale",
-												"10": "Each",
-												"11": "7",
-												"12": "230",
-												"13": "15",
-												"14": "1610",
-												"15": "241.5",
-												"16": "595",
-												"17": "1851.5",
-												"18": "7",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7236965",
-												"1": "66773",
-												"2": "299",
-												"3": "202",
-												"4": "180",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "7",
-												"8": "482",
-												"9": "Developer joke mug - (hip, hip, array) (White)",
-												"10": "Each",
-												"11": "1",
-												"12": "13",
-												"13": "15",
-												"14": "13",
-												"15": "1.95",
-												"16": "8.5",
-												"17": "14.95",
-												"18": "1",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7315206",
-												"1": "46801",
-												"2": "0",
-												"3": "0",
-												"4": "83",
-												"5": "2000-03-14T00:00:00",
-												"6": "2000-03-15T00:00:00",
-												"7": "12",
-												"8": "444",
-												"9": "Animal with big feet slippers (Brown) XL",
-												"10": "Each",
-												"11": "10",
-												"12": "32",
-												"13": "15",
-												"14": "320",
-												"15": "48",
-												"16": "235",
-												"17": "368",
-												"18": "10",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7205287",
-												"1": "65982",
-												"2": "0",
-												"3": "0",
-												"4": "124",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "21",
-												"8": "186",
-												"9": "\"\"\"\"\"\"\"The Gu\"\"\"\" red shirt XML tag t-shirt (Black) XXL\"\"\"",
-												"10": "Each",
-												"11": "24",
-												"12": "18",
-												"13": "15",
-												"14": "432",
-												"15": "64.8",
-												"16": "252",
-												"17": "496.8",
-												"18": "24",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7317068",
-												"1": "46564",
-												"2": "181",
-												"3": "1",
-												"4": "132",
-												"5": "2000-03-14T00:00:00",
-												"6": "2000-03-15T00:00:00",
-												"7": "25",
-												"8": "783",
-												"9": "\"\"\"\"\"\"\"The Gu\"\"\"\" red shirt XML tag t-shirt (White) 7XL\"\"\"",
-												"10": "Each",
-												"11": "36",
-												"12": "18",
-												"13": "15",
-												"14": "648",
-												"15": "97.2",
-												"16": "342",
-												"17": "745.2",
-												"18": "36",
-												"19": "0",
-												"20": "11"
-											},
-											{
-												"0": "7211349",
-												"1": "41981",
-												"2": "0",
-												"3": "0",
-												"4": "185",
-												"5": "2000-03-13T00:00:00",
-												"6": "2000-03-14T00:00:00",
-												"7": "12",
-												"8": "506",
-												"9": "Developer joke mug - fun was unexpected at this time (Black)",
-												"10": "Each",
-												"11": "4",
-												"12": "13",
-												"13": "15",
-												"14": "52",
-												"15": "7.8",
-												"16": "34",
-												"17": "59.8",
-												"18": "4",
-												"19": "0",
-												"20": "11"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "_c0",
-												"type": "string"
-											},
-											{
-												"key": "1",
-												"name": "_c1",
-												"type": "string"
-											},
-											{
-												"key": "2",
-												"name": "_c2",
-												"type": "string"
-											},
-											{
-												"key": "3",
-												"name": "_c3",
-												"type": "string"
-											},
-											{
-												"key": "4",
-												"name": "_c4",
-												"type": "string"
-											},
-											{
-												"key": "5",
-												"name": "_c5",
-												"type": "string"
-											},
-											{
-												"key": "6",
-												"name": "_c6",
-												"type": "string"
-											},
-											{
-												"key": "7",
-												"name": "_c7",
-												"type": "string"
-											},
-											{
-												"key": "8",
-												"name": "_c8",
-												"type": "string"
-											},
-											{
-												"key": "9",
-												"name": "_c9",
-												"type": "string"
-											},
-											{
-												"key": "10",
-												"name": "_c10",
-												"type": "string"
-											},
-											{
-												"key": "11",
-												"name": "_c11",
-												"type": "string"
-											},
-											{
-												"key": "12",
-												"name": "_c12",
-												"type": "string"
-											},
-											{
-												"key": "13",
-												"name": "_c13",
-												"type": "string"
-											},
-											{
-												"key": "14",
-												"name": "_c14",
-												"type": "string"
-											},
-											{
-												"key": "15",
-												"name": "_c15",
-												"type": "string"
-											},
-											{
-												"key": "16",
-												"name": "_c16",
-												"type": "string"
-											},
-											{
-												"key": "17",
-												"name": "_c17",
-												"type": "string"
-											},
-											{
-												"key": "18",
-												"name": "_c18",
-												"type": "string"
-											},
-											{
-												"key": "19",
-												"name": "_c19",
-												"type": "string"
-											},
-											{
-												"key": "20",
-												"name": "_c20",
-												"type": "string"
-											}
-										]
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "count",
-											"categoryFieldKeys": [
-												"0"
-											],
-											"seriesFieldKeys": [
-												"0"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							}
-						}
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4570,8 +4255,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -4599,7 +4283,6 @@
 							")\n",
 							"display(df.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -4615,7 +4298,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao1",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -4628,14 +4311,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "391c15c9-3dff-437f-88cd-323c3eb7cc3c"
+						"spark.autotune.trackingId": "4052d33d-108c-4d87-9144-51eeeeb39a75"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4645,10 +4325,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao1",
-						"name": "zhao1",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -4656,8 +4336,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -4682,7 +4361,6 @@
 							")\n",
 							"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -4698,7 +4376,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao1",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -4711,7 +4389,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "8079cdc1-6694-4f93-9689-fe25e78f9448"
+						"spark.autotune.trackingId": "45085683-6e05-46df-a72a-47c877a9ea59"
 					}
 				},
 				"metadata": {
@@ -4725,10 +4403,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao1",
-						"name": "zhao1",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -4736,8 +4414,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -4762,7 +4439,6 @@
 							"pipeline_name = 'pipeline_name'\r\n",
 							"tag = 'tag'"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4771,7 +4447,6 @@
 						"source": [
 							"source_df = spark.sql(\"SELECT * FROM default.NYC_Taxi\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4793,7 +4468,6 @@
 							"import time\r\n",
 							"a = time.strftime(\"%Y%m%d_%H%M%S\", time.localtime())"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4814,7 +4488,6 @@
 						"source": [
 							"source_df.write.mode(\"overwrite\").saveAsTable(\"default.NYC_Taxi_\" + pipeline_name + \"_\" + tag + \"_\" + a)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4830,7 +4503,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao2",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -4843,7 +4516,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "e5232157-37d5-43be-98ce-914c03b43f1b"
+						"spark.autotune.trackingId": "5c23cfb7-4cb8-46c1-97e3-165ed38da884"
 					}
 				},
 				"metadata": {
@@ -4857,10 +4530,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao2",
-						"name": "zhao2",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao2",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -4868,8 +4541,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -4894,7 +4566,6 @@
 							"pipeline_name = 'pipeline_name'\r\n",
 							"tag = 'tag'"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4903,7 +4574,6 @@
 						"source": [
 							"source_df = spark.sql(\"SELECT * FROM default.NYC_Taxi\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4925,7 +4595,6 @@
 							"import time\r\n",
 							"a = time.strftime(\"%Y%m%d_%H%M%S\", time.localtime())"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4946,7 +4615,6 @@
 						"source": [
 							"source_df.write.mode(\"overwrite\").saveAsTable(\"default.NYC_Taxi_\" + pipeline_name + \"_\" + tag + \"_\" + a)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4962,7 +4630,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "chen",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -4970,19 +4638,16 @@
 					"driverCores": 4,
 					"executorMemory": "28g",
 					"executorCores": 4,
-					"numExecutors": 9,
+					"numExecutors": 1,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "9",
-						"spark.dynamicAllocation.maxExecutors": "9",
-						"spark.autotune.trackingId": "fa2d9972-960a-4e04-b44c-77be20457ff1"
+						"spark.dynamicAllocation.enabled": "true",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "fe9c71c5-3550-446d-9997-9c644dbbd27b"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4992,10 +4657,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/chen",
-						"name": "chen",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/chen",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -5003,8 +4668,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -5034,7 +4698,6 @@
 							"#出租汽车（“FHV”）行程记录包括汽车牌照、上车日期、下车时间和出租车区域位置ID的字段\n",
 							"#注意考虑数据重复"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 38
 					},
@@ -5059,7 +4722,6 @@
 							"%%pyspark\r\n",
 							"display(df.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5079,7 +4741,6 @@
 						"source": [
 							"df=df.sample(False,0.01,0).unionAll(df.sample(False,0.001,0))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 39
 					},
@@ -5099,7 +4760,6 @@
 						"source": [
 							"from pyspark.sql.functions import *"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 40
 					},
@@ -5114,8 +4774,7 @@
 						},
 						"source": [
 							"# 1.求每天出车数量和车辆数量"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5133,7 +4792,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -5148,8 +4806,7 @@
 						},
 						"source": [
 							"# 2.求每月（以每月一号为标识）车辆数量，添加一列是否超过500辆车"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5167,7 +4824,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					},
@@ -5182,8 +4838,7 @@
 						},
 						"source": [
 							"# 3.求每周（以周日为标识）出车数量和车辆数量，按时间逆序"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5201,7 +4856,6 @@
 						"source": [
 							"from pyspark.sql.types import *"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 27
 					},
@@ -5221,7 +4875,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 33
 					},
@@ -5241,7 +4894,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 34
 					},
@@ -5257,8 +4909,7 @@
 						"source": [
 							"# 4. 求2019年每个月的平均每辆车出车率\r\n",
 							""
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5276,7 +4927,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 44
 					},
@@ -5291,8 +4941,7 @@
 						},
 						"source": [
 							"# 5. 求连续出车3个月的车辆"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5310,7 +4959,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 53
 					},
@@ -5325,8 +4973,7 @@
 						},
 						"source": [
 							"# 6. 求行驶时间最长的的前100辆车,并显示行驶小时数"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5344,7 +4991,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 58
 					}
@@ -5360,7 +5006,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "chen",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -5368,19 +5014,16 @@
 					"driverCores": 4,
 					"executorMemory": "28g",
 					"executorCores": 4,
-					"numExecutors": 9,
+					"numExecutors": 1,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "9",
-						"spark.dynamicAllocation.maxExecutors": "9",
-						"spark.autotune.trackingId": "6faaa645-6863-489b-b4ae-af808905eaa0"
+						"spark.dynamicAllocation.enabled": "true",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "562b33fb-6c3c-4cc5-b529-a813244c45e8"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -5390,10 +5033,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/chen",
-						"name": "chen",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/chen",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -5401,8 +5044,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -5432,7 +5074,6 @@
 							"#出租汽车（“FHV”）行程记录包括汽车牌照、上车日期、下车时间和出租车区域位置ID的字段\n",
 							"#注意考虑数据重复"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 38
 					},
@@ -5457,7 +5098,6 @@
 							"%%pyspark\r\n",
 							"display(df.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5477,7 +5117,6 @@
 						"source": [
 							"df=df.sample(False,0.01,0).unionAll(df.sample(False,0.001,0))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 39
 					},
@@ -5497,7 +5136,6 @@
 						"source": [
 							"from pyspark.sql.functions import *"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 40
 					},
@@ -5512,8 +5150,7 @@
 						},
 						"source": [
 							"# 1.求每天出车数量和车辆数量"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5531,7 +5168,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -5546,8 +5182,7 @@
 						},
 						"source": [
 							"# 2.求每月（以每月一号为标识）车辆数量，添加一列是否超过500辆车"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5565,7 +5200,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					},
@@ -5580,8 +5214,7 @@
 						},
 						"source": [
 							"# 3.求每周（以周日为标识）出车数量和车辆数量，按时间逆序"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5599,7 +5232,6 @@
 						"source": [
 							"from pyspark.sql.types import *"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 27
 					},
@@ -5619,7 +5251,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 33
 					},
@@ -5639,7 +5270,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 34
 					},
@@ -5655,8 +5285,7 @@
 						"source": [
 							"# 4. 求2019年每个月的平均每辆车出车率\r\n",
 							""
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5674,7 +5303,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 44
 					},
@@ -5689,8 +5317,7 @@
 						},
 						"source": [
 							"# 5. 求连续出车3个月的车辆"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5708,7 +5335,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 53
 					},
@@ -5723,8 +5349,7 @@
 						},
 						"source": [
 							"# 6. 求行驶时间最长的的前100辆车,并显示行驶小时数"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5742,7 +5367,6 @@
 						"source": [
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 58
 					}
@@ -5758,7 +5382,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao1",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -5771,14 +5395,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "b987ef6c-d84d-4d77-add4-d72563383556"
+						"spark.autotune.trackingId": "c5834627-f1df-42e8-b773-5e70fdaf2e9d"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -5788,10 +5409,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao1",
-						"name": "zhao1",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -5799,8 +5420,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -5822,7 +5442,6 @@
 							"    .save()\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -6356,7 +5975,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao1",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -6369,359 +5988,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "7fadabaf-560a-41bb-9681-4de3d8730c4d"
+						"spark.autotune.trackingId": "c1fcc19f-cca3-4658-a2b4-9411756833b3"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1",
-						"state": {
-							"6a7bdbba-b685-4eaf-b529-adb0b2846d1b": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 00:00:00",
-												"2": "2592",
-												"3": "13208",
-												"4": "NORTH CAROLINA",
-												"5": "Thunderstorm Wind",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "0",
-												"11": "0",
-												"12": "Public",
-												"13": "CASAR",
-												"14": "CASAR",
-												"15": "35.52",
-												"16": "-81.63",
-												"17": "35.52",
-												"18": "-81.63",
-												"19": "A small cluster of thunderstorms moved rapidly across the foothills and piedmont of western North Carolina, producing scattered wind damage.",
-												"20": "Several trees down.",
-												"21": "{\"TotalDamages\":0,\"Details\":{\"Description\":\"Several trees down.\",\"Location\":\"NORTH CAROLINA\"},\"EndTime\":\"2007-01-01T00:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 05:00:00",
-												"2": "4171",
-												"3": "23358",
-												"4": "WISCONSIN",
-												"5": "Winter Storm",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "0",
-												"11": "0",
-												"12": "COOP Observer",
-												"13": "",
-												"14": "",
-												"19": "A powerful storm system moved from the southern plains through eastern Wisconsin, bringing copious amounts of precipitation to northwest Wisconsin from December 30th through the morning of January 1st. Deep tropical moisture out ahead of the storm brought heavy rains to the area on December 30th and 31st. Many areas saw over 1 inch of rain. Cold air wrapped around the system and changed the rain over to snow New Year's Eve. The snow finally ended during the early morning hours of New Year's Day, with the heaviest amounts of 6 to 12 inches reported across Ashland and Iron counties.",
-												"20": "",
-												"21": "{\"TotalDamages\":0,\"Details\":{\"Description\":\"\",\"Location\":\"WISCONSIN\"},\"EndTime\":\"2007-01-01T05:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 05:00:00",
-												"2": "4171",
-												"3": "23357",
-												"4": "WISCONSIN",
-												"5": "Winter Storm",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "0",
-												"11": "0",
-												"12": "COOP Observer",
-												"13": "",
-												"14": "",
-												"19": "A powerful storm system moved from the southern plains through eastern Wisconsin, bringing copious amounts of precipitation to northwest Wisconsin from December 30th through the morning of January 1st. Deep tropical moisture out ahead of the storm brought heavy rains to the area on December 30th and 31st. Many areas saw over 1 inch of rain. Cold air wrapped around the system and changed the rain over to snow New Year's Eve. The snow finally ended during the early morning hours of New Year's Day, with the heaviest amounts of 6 to 12 inches reported across Ashland and Iron counties.",
-												"20": "",
-												"21": "{\"TotalDamages\":0,\"Details\":{\"Description\":\"\",\"Location\":\"WISCONSIN\"},\"EndTime\":\"2007-01-01T05:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9494",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "2000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":2000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9488",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "2000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":2000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9487",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "2000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":2000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9485",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "3000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":3000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9486",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "3000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":3000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9493",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "2000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":2000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											},
-											{
-												"0": "2007-01-01 00:00:00",
-												"1": "2007-01-01 06:00:00",
-												"2": "1930",
-												"3": "9489",
-												"4": "NEW YORK",
-												"5": "Winter Weather",
-												"6": "0",
-												"7": "0",
-												"8": "0",
-												"9": "0",
-												"10": "2000",
-												"11": "0",
-												"12": "Department of Highways",
-												"13": "",
-												"14": "",
-												"19": "A weak area of low pressure moved across Ontario and Quebec provinces in Canada during the morning and afternoon of the 1st. Mild, moist air traveled over a seasonably cool airmass across New York and this resulted in a period of freezing rain from around Midnight to just before dawn. Freezing rain accumulated up to 1/4 of an inch across northern New York resulting in slick roads and several vehicle accidents.",
-												"20": "",
-												"21": "{\"TotalDamages\":2000,\"Details\":{\"Description\":\"\",\"Location\":\"NEW YORK\"},\"EndTime\":\"2007-01-01T06:00:00.0000000Z\",\"StartTime\":\"2007-01-01T00:00:00.0000000Z\"}"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "StartTime",
-												"type": "timestamp"
-											},
-											{
-												"key": "1",
-												"name": "EndTime",
-												"type": "timestamp"
-											},
-											{
-												"key": "2",
-												"name": "EpisodeId",
-												"type": "int"
-											},
-											{
-												"key": "3",
-												"name": "EventId",
-												"type": "int"
-											},
-											{
-												"key": "4",
-												"name": "State",
-												"type": "string"
-											},
-											{
-												"key": "5",
-												"name": "EventType",
-												"type": "string"
-											},
-											{
-												"key": "6",
-												"name": "InjuriesDirect",
-												"type": "int"
-											},
-											{
-												"key": "7",
-												"name": "InjuriesIndirect",
-												"type": "int"
-											},
-											{
-												"key": "8",
-												"name": "DeathsDirect",
-												"type": "int"
-											},
-											{
-												"key": "9",
-												"name": "DeathsIndirect",
-												"type": "int"
-											},
-											{
-												"key": "10",
-												"name": "DamageProperty",
-												"type": "int"
-											},
-											{
-												"key": "11",
-												"name": "DamageCrops",
-												"type": "int"
-											},
-											{
-												"key": "12",
-												"name": "Source",
-												"type": "string"
-											},
-											{
-												"key": "13",
-												"name": "BeginLocation",
-												"type": "string"
-											},
-											{
-												"key": "14",
-												"name": "EndLocation",
-												"type": "string"
-											},
-											{
-												"key": "15",
-												"name": "BeginLat",
-												"type": "double"
-											},
-											{
-												"key": "16",
-												"name": "BeginLon",
-												"type": "double"
-											},
-											{
-												"key": "17",
-												"name": "EndLat",
-												"type": "double"
-											},
-											{
-												"key": "18",
-												"name": "EndLon",
-												"type": "double"
-											},
-											{
-												"key": "19",
-												"name": "EpisodeNarrative",
-												"type": "string"
-											},
-											{
-												"key": "20",
-												"name": "EventNarrative",
-												"type": "string"
-											},
-											{
-												"key": "21",
-												"name": "StormSummary",
-												"type": "string"
-											}
-										]
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "sum",
-											"categoryFieldKeys": [
-												"0"
-											],
-											"seriesFieldKeys": [
-												"2"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							}
-						}
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -6731,10 +6002,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao1",
-						"name": "zhao1",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao1",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -6742,8 +6013,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -6771,7 +6041,6 @@
 							"display(kustoDf)\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -6799,7 +6068,6 @@
 							"    .mode(\"Append\") \\\r\n",
 							"    .save()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -6845,7 +6113,6 @@
 							"\r\n",
 							"kustoQ.start().awaitTermination(60*8)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					}
@@ -6861,7 +6128,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "chen",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -6869,233 +6136,16 @@
 					"driverCores": 4,
 					"executorMemory": "28g",
 					"executorCores": 4,
-					"numExecutors": 2,
+					"numExecutors": 1,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "babbe581-cb76-45ef-9bb2-e70cf83f8f2a"
+						"spark.dynamicAllocation.enabled": "true",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "8c049941-04d6-4c74-8911-9eb5238e75a0"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1",
-						"state": {
-							"edf75975-fc82-4d04-8001-da6476949953": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "338995",
-												"1": "2020-01-21",
-												"2": "262",
-												"4": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "338996",
-												"1": "2020-01-22",
-												"2": "313",
-												"3": "51",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "338997",
-												"1": "2020-01-23",
-												"2": "578",
-												"3": "265",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "338998",
-												"1": "2020-01-24",
-												"2": "841",
-												"3": "263",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "338999",
-												"1": "2020-01-25",
-												"2": "1320",
-												"3": "479",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "339000",
-												"1": "2020-01-26",
-												"2": "2014",
-												"3": "694",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "339001",
-												"1": "2020-01-27",
-												"2": "2798",
-												"3": "784",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "339002",
-												"1": "2020-01-28",
-												"2": "4593",
-												"3": "1795",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "339003",
-												"1": "2020-01-29",
-												"2": "6065",
-												"3": "1472",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											},
-											{
-												"0": "339004",
-												"1": "2020-01-30",
-												"2": "7818",
-												"3": "1753",
-												"4": "0",
-												"5": "0",
-												"12": "Worldwide",
-												"16": "2021-12-20 00:06:20.444"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "id",
-												"type": "int"
-											},
-											{
-												"key": "1",
-												"name": "updated",
-												"type": "date"
-											},
-											{
-												"key": "2",
-												"name": "confirmed",
-												"type": "int"
-											},
-											{
-												"key": "3",
-												"name": "confirmed_change",
-												"type": "int"
-											},
-											{
-												"key": "4",
-												"name": "deaths",
-												"type": "int"
-											},
-											{
-												"key": "5",
-												"name": "deaths_change",
-												"type": "smallint"
-											},
-											{
-												"key": "6",
-												"name": "recovered",
-												"type": "int"
-											},
-											{
-												"key": "7",
-												"name": "recovered_change",
-												"type": "int"
-											},
-											{
-												"key": "8",
-												"name": "latitude",
-												"type": "double"
-											},
-											{
-												"key": "9",
-												"name": "longitude",
-												"type": "double"
-											},
-											{
-												"key": "10",
-												"name": "iso2",
-												"type": "string"
-											},
-											{
-												"key": "11",
-												"name": "iso3",
-												"type": "string"
-											},
-											{
-												"key": "12",
-												"name": "country_region",
-												"type": "string"
-											},
-											{
-												"key": "13",
-												"name": "admin_region_1",
-												"type": "string"
-											},
-											{
-												"key": "14",
-												"name": "iso_subdivision",
-												"type": "string"
-											},
-											{
-												"key": "15",
-												"name": "admin_region_2",
-												"type": "string"
-											},
-											{
-												"key": "16",
-												"name": "load_time",
-												"type": "timestamp"
-											}
-										]
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "sum",
-											"categoryFieldKeys": [
-												"1"
-											],
-											"seriesFieldKeys": [
-												"0"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							}
-						}
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -7105,10 +6155,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/chen",
-						"name": "chen",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/chen",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -7116,8 +6166,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -7141,7 +6190,6 @@
 							"df = spark.read.parquet(wasbs_path)\n",
 							"display(df.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -7157,7 +6205,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "chen",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -7165,19 +6213,16 @@
 					"driverCores": 4,
 					"executorMemory": "28g",
 					"executorCores": 4,
-					"numExecutors": 2,
+					"numExecutors": 1,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d8bcb1eb-282c-4c2a-8cc7-8d2988b39941"
+						"spark.dynamicAllocation.enabled": "true",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "561c99f9-7eb3-4e62-8350-f27d4159bc61"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -7187,10 +6232,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/chen",
-						"name": "chen",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/chen",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -7199,12 +6244,14 @@
 						"nodeCount": 10,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
-					}
+						"automaticScaleJobs": true
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"%%pyspark\n",
 							"blob_account_name = \"pandemicdatalake\"\n",
@@ -7220,7 +6267,6 @@
 							"df = spark.read.parquet(wasbs_path)\n",
 							"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -7233,6 +6279,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -7300,6 +6349,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"sessionProperties": {
@@ -7372,6 +6424,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -7441,6 +6496,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -7585,57 +6643,6 @@
 					"executorCores": 4,
 					"numExecutors": 1
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/chen')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/zhao')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/zhao1')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/zhao2')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/KQL script 1')]",
-			"type": "Microsoft.Synapse/workspaces/kqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "\n| where timestamp > ago(7d)\n| where name == \"PBI.Navigation.RouteChange\"\n| extend toPath = tostring(customDimensions.toPath)\n| where toPath has \"manageembed\" \n| summarize count() by toPath\n",
-					"metadata": {
-						"language": "kql"
-					}
-				},
-				"type": "KqlQuery"
 			},
 			"dependsOn": []
 		}
