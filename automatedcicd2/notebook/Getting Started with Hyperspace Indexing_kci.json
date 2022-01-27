@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "SampleSpark",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -16,14 +16,13 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9224513e-7eb3-4f61-96b8-cf76cf67c6cd"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -32,20 +31,21 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/SampleSpark",
-				"name": "SampleSpark",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
 				"type": "Spark",
-				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SampleSpark",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 3,
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
-			}
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -66,8 +66,7 @@
 					"  2. Queries contain a join that requires heavy-shuffles (e.g., you want to join a 100 GB dataset with a 10 GB dataset)\n",
 					"\n",
 					"You may want to carefully monitor your workloads and determine whether indexing is helping you on a case-by-case basis."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -76,8 +75,7 @@
 					"To begin with, let's start a new Spark™ session. Since this notebook is a tutorial merely to illustrate what Hyperspace can offer, we will make a configuration change that allow us to highlight what Hyperspace is doing on small datasets. By default, Spark™ uses *broadcast join* to optimize join queries when the data size for one side of join is small (which is the case for the sample data we use in this tutorial). Therefore, we disable broadcast joins so that later when we run join queries, Spark™ uses *sort-merge* join. This is mainly to show how Hyperspace indexes would be used at scale for accelerating join queries.\n",
 					"\n",
 					"The output of running the cell below shows a reference to the successfully created Spark™ session and prints out '-1' as the value for the modified join config which indicates that broadcast join is successfully disabled."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +90,6 @@
 					"# We store all indexes in the system folder within Synapse.\n",
 					"spark.conf.set(\"spark.hyperspace.system.path\", index_location)"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -108,7 +105,6 @@
 					"print(spark.conf.get(\"spark.sql.autoBroadcastJoinThreshold\"))\n",
 					"spark.conf.set(\"spark.hyperspace.explain.displayMode\", \"html\")"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -121,8 +117,7 @@
 					"Our example records correspond to two datasets: *department* and *employee*. You should configure \"empLocation\" and \"deptLocation\" paths so that on the storage account they point to your desired location to save generated data files. \n",
 					"\n",
 					"The output of running below cell shows contents of our datasets as lists of triplets followed by references to dataFrames created to save the content of each dataset in our preferred location."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -148,7 +143,6 @@
 					"employees_df.write.mode(\"overwrite\").parquet(emp_Location)\n",
 					"departments_df.write.mode(\"overwrite\").parquet(dept_Location)"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -157,8 +151,7 @@
 					"Let's verify the contents of parquet files we created above to make sure they contain expected records in correct format. We later use these data files to create Hyperspace indexes and run sample queries.\n",
 					"\n",
 					"Running below cell, the output displays the rows in employee and department dataframes in a tabular form. There should be 14 employees and 4 departments, each matching with one of triplets we created in the previous cell."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -171,7 +164,6 @@
 					"emp_DF.show()\n",
 					"dept_DF.show()"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -190,8 +182,7 @@
 					"First, we need to import the required libraries and create an instance of Hyperspace. We later use this instance to invoke different Hyperspace APIs to create indexes on our sample data and modify those indexes.\n",
 					"\n",
 					"Output of running below cell shows a reference to the created instance of Hyperspace."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -201,7 +192,6 @@
 					"# Create an instance of Hyperspace\n",
 					"hyperspace = Hyperspace(spark)"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -226,8 +216,7 @@
 					"WHERE Y = 2\n",
 					"```\n",
 					"X can be an *index column* and Y can be an *included column*."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +227,6 @@
 					"dept_IndexConfig1 = IndexConfig(\"deptIndex1\", [\"deptId\"], [\"deptName\"])\n",
 					"dept_IndexConfig2 = IndexConfig(\"deptIndex2\", [\"location\"], [\"deptName\"])"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -247,8 +235,7 @@
 					"Now, we create three indexes using our index configurations. For this purpose, we invoke \"createIndex\" command on our Hyperspace instance. This command requires an index configuration and the dataFrame containing rows to be indexed.\n",
 					"Running below cell creates three indexes.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -259,7 +246,6 @@
 					"hyperspace.createIndex(dept_DF, dept_IndexConfig1)\n",
 					"hyperspace.createIndex(dept_DF, dept_IndexConfig2)"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -277,15 +263,13 @@
 					"  - `dfSignature` is automatically generated by Hyperspace and is unique for each index. Hyperspace uses this signature internally to maintain the index and exploit it at query time. \n",
 					"  \n",
 					"In the output below, all three indexes should have \"ACTIVE\" as status and their name, indexed columns, and included columns should match with what we defined in index configurations above."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"hyperspace.indexes().show()"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -297,8 +281,7 @@
 					"Index deletion is a **soft-delete** operation i.e., only the index's status in the Hyperspace metadata from is changed from \"ACTIVE\" to \"DELETED\". This will exclude the deleted index from any future query optimization and Hyperspace no longer picks that index for any query. However, index files for a deleted index still remain available (since it is a soft-delete), so if you accidentally deleted the index, you could still restore it.\n",
 					"\n",
 					"The cell below deletes index with name \"deptIndex2\" and lists Hyperspace metadata after that. The output should be similar to above cell for \"List Indexes\" except for \"deptIndex2\" which now should have its status changed into \"DELETED\"."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -307,7 +290,6 @@
 					"\n",
 					"hyperspace.indexes().show()"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -317,8 +299,7 @@
 					"A user can use the `restoreIndex` API to restore a deleted index. This will bring back the latest version of index into ACTIVE status and makes it usable again for queries. \n",
 					"\n",
 					"The cell below shows an example of `restoreIndex` API. We delete \"deptIndex1\" and restore it. The output shows \"deptIndex1\" first went into the \"DELETED\" status after invoking \"deleteIndex\" command and came back to the \"ACTIVE\" status after calling \"restoreIndex\"."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -331,7 +312,6 @@
 					"\n",
 					"hyperspace.indexes().show()"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -341,8 +321,7 @@
 					"The user can perform a **hard-delete** i.e., fully remove files and the metadata entry for a deleted index using the `vacuumIndex` API. Once done, this action is **irreversible** as it physically deletes all the index files associated with the index.\n",
 					"\n",
 					"The cell below vacuums the \"deptIndex2\" index and shows Hyperspace metadata after vaccuming. You should see metadata entries for two indexes \"deptIndex1\" and \"empIndex\" both with \"ACTIVE\" status and no entry for \"deptIndex2\"."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -350,7 +329,6 @@
 					"hyperspace.vacuumIndex(\"deptIndex2\")\n",
 					"hyperspace.indexes().show()"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -364,8 +342,7 @@
 					"  - By using `disableHyperspace` command, Hyperspace rules no longer apply during query optimization. You should note that disabling Hyperspace has no impact on created indexes as they remain intact.\n",
 					"\n",
 					"Below cell shows how you can use these commands to enable or disable hyperspace. The output simply shows a reference to the existing Spark™ session whose configuration is updated."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -376,7 +353,6 @@
 					"# Disable Hyperspace\n",
 					"Hyperspace.disable(spark)"
 				],
-				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -386,8 +362,7 @@
 					"In order to make Spark use Hyperspace indexes during query processing, the user needs to make sure that Hyperspace is enabled. \n",
 					"\n",
 					"The cell below enables Hyperspace and creates two DataFrames containing our sample data records which we use for running example queries. For each DataFrame, a few sample rows are printed."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -401,7 +376,6 @@
 					"emp_DF.show(5)\n",
 					"dept_DF.show(5)"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -412,8 +386,7 @@
 					"Currently, Hyperspace can exploit indexes for two groups of queries: \n",
 					"* Selection queries with lookup or range selection filtering predicates.\n",
 					"* Join queries with an equality join predicate (i.e. Equi-joins)."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -434,8 +407,7 @@
 					"\n",
 					"In the query plan, the \"FileScan\" operator at the bottom of the plan shows the datasource where the records were read from. The location of this file indicates the path to the latest version of the \"deptIndex1\" index. This shows  that according to the query and using Hyperspace optimization rules, Spark™ decided to exploit the proper index at runtime.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -447,7 +419,6 @@
 					"\n",
 					"hyperspace.explain(eqFilter, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -462,8 +433,7 @@
 					"```\n",
 					"Similar to our first example, the output of the cell below shows the query results (names of two departments) and the query plan. The location of data file in the FileScan operator shows that 'deptIndex1\" was used to run the query.   \n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -475,7 +445,6 @@
 					"\n",
 					"hyperspace.explain(rangeFilter, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -491,8 +460,7 @@
 					"\n",
 					"The output of running the cell below shows the query results which are the names of 14 employees and the name of department each employee works in. The query plan is also included in the output. Notice how the file locations for two FileScan operators shows that Spark used \"empIndex\" and \"deptIndex1\" indexes to run the query.   \n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -505,7 +473,6 @@
 					"\n",
 					"hyperspace.explain(eqJoin, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -514,8 +481,7 @@
 					"## Support for SQL Semantics\n",
 					"\n",
 					"The index usage is transparent to whether the user uses DataFrame API or Spark™ SQL. The following example shows the same join example as before but using Spark SQL, showing the use of indexes if applicable."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -530,7 +496,6 @@
 					"joinQuery.show()\n",
 					"hyperspace.explain(joinQuery, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -541,8 +506,7 @@
 					"So far, you might have observed we have been using the explain API provided by Hyperspace. The `explain` API from Hyperspace is very similar to Spark's `df.explain` API but allows users to compare their original plan vs the updated index-dependent plan before running their query. You have an option to choose from html/plaintext/console mode to display the command output. \n",
 					"\n",
 					"The following cell shows an example with HTML. The highlighted section represents the difference between original and updated plans along with the indexes being used."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -552,7 +516,6 @@
 					"spark.conf.set(\"spark.hyperspace.explain.displayMode\", \"html\")\n",
 					"hyperspace.explain(eqJoin, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 18
 			},
 			{
@@ -566,8 +529,7 @@
 					"The two cells below show an example for this scenario:\n",
 					"- First cell adds two more departments to the original departments data. It reads and prints list of departments to verify new departments are added correctly. The output shows 6 departments in total: four old ones and two new. Invoking \"refreshIndex\" updates \"deptIndex1\" so index captures new departments.\n",
 					"- Second cell runs our range selection query example. The results should now contain four departments: two are the ones, seen before when we ran the query above, and two are the new departments we just added."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -584,7 +546,6 @@
 					"\n",
 					"hyperspace.refreshIndex(\"deptIndex1\")"
 				],
-				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -595,7 +556,6 @@
 					"\n",
 					"hyperspace.explain(newRangeFilter, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -603,7 +563,6 @@
 				"source": [
 					"hyperspace.indexes().show()"
 				],
-				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -616,7 +575,6 @@
 					"hyperspace.vacuumIndex(\"empIndex1\")\n",
 					"hyperspace.vacuumIndex(\"deptIndex1\")"
 				],
-				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -645,8 +603,7 @@
 					"You can check the transformation of the query plan in below examples.\n",
 					"\n",
 					"    Note: Hybrid scan is only supported for non-partitioned data. Support for partitioned data is currently being worked upon."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -661,8 +618,7 @@
 					"### Hybrid Scan for appended files - non-partitioned data\n",
 					"\n",
 					"Non-partitioned data is used in below example. In this example, we expect Join index can be used for the query and `BucketUnion` is introduced for appended files."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -705,7 +661,6 @@
 					"test_df.write.mode(\"overwrite\").parquet(testdata_location)\n",
 					"test_df = spark.read.parquet(testdata_location)"
 				],
-				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -734,7 +689,6 @@
 					"# Check Join index rule is applied properly.\n",
 					"hyperspace.explain(query, True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -760,7 +714,6 @@
 					"append_df = spark.createDataFrame(append_data, testdata_schema)\r\n",
 					"append_df.write.mode(\"append\").parquet(testdata_location)"
 				],
-				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -769,8 +722,7 @@
 					"Hybrid scan is disabled by default. Therefore, you will see that since we appended new data, Hyperspace will decide NOT to use the index.\n",
 					"\n",
 					"In the output, you will see no plan differences (hence no highlighting)."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -798,7 +750,6 @@
 					"hyperspace.explain(query, True, displayHTML)\n",
 					"query.show()"
 				],
-				"attachments": null,
 				"execution_count": 26
 			},
 			{
@@ -815,8 +766,7 @@
 					"\r\n",
 					"In plan with indexes, you can see\r\n",
 					"`Exchange hashpartitioning` required only for appended files so that we could still utilize the \"shuffled\" index data with appended files. `BucketUnion` is used to merge \"shuffled\" appended files with the index data."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -842,7 +792,6 @@
 					"hyperspace.explain(query, True, displayHTML)\n",
 					"query.show()"
 				],
-				"attachments": null,
 				"execution_count": 27
 			},
 			{
@@ -854,8 +803,7 @@
 					"Of course, please be sure to use the complementary `optimizeIndex` API (shown below) periodically to make sure you do not see performance regressions. We recommend calling `optimize` at least once for every 10 times you call `refreshIndex(..., \"incremental\")`, assuming the data you added/removed is < 10% of the original dataset. For instance, if your original dataset is 100 GB, and you've added/removed data in increments/decrements of 1 GB, you can call `refreshIndex` 10 times before calling `optimizeIndex`. Please note that this example is simply used for illustration and you have to adapt this for your workloads.\n",
 					"\n",
 					"In the example below, notice the addition of a `Sort` node in the query plan when indexes are used. This is because partial indexes are created on the appended data files, causing Spark to introduce a `Sort`. Please also note that `Shuffle` i.e. `Exchange` is still eliminated from the plan, giving you the appropriate acceleration."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -866,7 +814,6 @@
 					"    filter2 = test_df_with_append.filter(\"qty > 10\")\n",
 					"    return filter1.join(filter2, \"name\")"
 				],
-				"attachments": null,
 				"execution_count": 28
 			},
 			{
@@ -877,7 +824,6 @@
 					"hyperspace.explain(query(), True, displayHTML)\n",
 					"query().show()"
 				],
-				"attachments": null,
 				"execution_count": 29
 			},
 			{
@@ -887,8 +833,7 @@
 					"After calling incremental refreshes multiple times on newly appended data (e.g. if the user writes to data in small batches or in case of streaming scenarios), the number of index files tend to become large affecting the performance of the index (large number of small files problem). Hyperspace provides `hyperspace.optimizeIndex(\"indexName\")` API to optimize the index layout and reduce the large files problem.\n",
 					"\n",
 					"In the plan below, notice that Hyperspace has removed the additional `Sort` node in the query plan. Optimize can help avoiding sorting for any index bucket which contains only one file. However, this will only be true if ALL the index buckets have at most 1 file per bucket, after `optimizeIndex`."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -903,7 +848,6 @@
 					"\n",
 					"hyperspace.refreshIndex(\"productIndex2\", \"incremental\")"
 				],
-				"attachments": null,
 				"execution_count": 30
 			},
 			{
@@ -914,7 +858,6 @@
 					"\n",
 					"hyperspace.explain(query(), True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 31
 			},
 			{
@@ -924,8 +867,7 @@
 					"\n",
 					"The default mode for optimization is \"quick\" mode where files smaller than a predefined threshold are picked for optmization. To maximize the effect of optimization, Hyperspace allows another optimize mode \"full\" as shown below. This mode picks ALL index files for optimization irrespective of their file size and creates the best possible layout of the index. This is also slower than the default optimize mode because more data is being processed here.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -934,7 +876,6 @@
 					"\n",
 					"hyperspace.explain(query(), True, displayHTML)"
 				],
-				"attachments": null,
 				"execution_count": 32
 			},
 			{
@@ -942,8 +883,7 @@
 				"source": [
 					"## Clean Up\n",
 					"To make this notebook self-contained and not leave any dangling data, we have some small clean-up code below. "
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -951,7 +891,6 @@
 					"mssparkutils.fs.rm(data_path, True)\n",
 					"mssparkutils.fs.rm(index_location, True)"
 				],
-				"attachments": null,
 				"execution_count": 33
 			}
 		]

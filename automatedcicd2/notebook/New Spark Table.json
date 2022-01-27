@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "MLPool",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -14,13 +14,15 @@
 			"executorCores": 8,
 			"numExecutors": 2,
 			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "428f9668-8551-4a23-b583-ccbb7b898856"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"noPermissionToViewOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -29,19 +31,21 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/MLPool",
-				"name": "MLPool",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
 				"type": "Spark",
-				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/MLPool",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 3,
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
 				"cores": 8,
-				"memory": 56
-			}
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -56,7 +60,6 @@
 					"df = spark.read.load('abfss://hozhao@hozhao0924gen2.dfs.core.windows.net/New folder 1105/0vg001140vg001140vg001140vg001140vg001g001.parquet', format='parquet')\r\n",
 					"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 				],
-				"attachments": null,
 				"execution_count": 1
 			}
 		]
