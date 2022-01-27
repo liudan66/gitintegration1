@@ -52,6 +52,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "New folder"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-12-22T06:27:55Z"
 	},
