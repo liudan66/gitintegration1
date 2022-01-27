@@ -1511,6 +1511,9 @@
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"content": {
 					"query": "CREATE TABLE [dbo].[TABLE2]\n(\n    Id INT NOT NULL,\n    created_time DATETIME NOT NULL\n)\n--add msg column\nALTER TABLE [dbo].[TABLE2]\n    ADD msg varchar(255)\n\n--insert some test data\nDECLARE @i int = 1;\nDECLARE @alphabet varchar(36) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'\nWHILE @i <= 500\nBegin\nDECLARE @stamp datetime = CURRENT_TIMESTAMP;\nDECLARE @msg varchar(36)=\nsubstring(@alphabet, convert(int, rand()*36), 1) +\nsubstring(@alphabet, convert(int, rand()*36), 1) +\nsubstring(@alphabet, convert(int, rand()*36), 1) +\nsubstring(@alphabet, convert(int, rand()*36), 1) +\nsubstring(@alphabet, convert(int, rand()*36), 1);\nINSERT INTO [dbo].[TABLE2] VALUES(@i,@stamp,@msg);\nSET @i+=1;\nEND\n\n--select\nSELECT * FROM TABLE2 ORDER BY [TABLE2].[Id] \nSELECT Id,msg FROM TABLE2 WHERE Id=10 OR Id=20\nSELECT * FROM TABLE2 WHERE Id>=200 ORDER BY Id\nSELECT * FROM TABLE2 WHERE Id>=10 AND Id<240 ORDER BY Id\n",
 					"metadata": {
@@ -1531,6 +1534,9 @@
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"content": {
 					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'default_honghaigen2_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [default_honghaigen2_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://default@honghaigen2.dfs.core.windows.net' \n\t)\nGO\n--drop EXTERNAL TABLE fhv\n \nCREATE EXTERNAL TABLE fhv (\n\t[dispatchBaseNum] nvarchar(4000),\n\t[pickupDateTime] datetime2(7),\n\t[dropOffDateTime] datetime2(7),\n\t[puLocationId] nvarchar(4000),\n\t[doLocationId] nvarchar(4000),\n\t[srFlag] nvarchar(4000),\n\t[puYear] int,\n\t[puMonth] int\n\t)\n\tWITH (\n\tLOCATION = 'Guest/fhv/*.parquet',\n\tDATA_SOURCE = [default_honghaigen2_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.fhv\nGO",
 					"metadata": {
@@ -1571,6 +1577,9 @@
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "New folder"
+				},
 				"content": {
 					"query": "CREATE table testpowerbi\n(id int,name nvarchar(20),quarter int,number int)\ninsert into testpowerbi values(1,N'苹果',1,1000)\ninsert into testpowerbi values(1,N'苹果',2,2000)\ninsert into testpowerbi values(1,N'苹果',3,4000)\ninsert into testpowerbi values(1,N'苹果',4,5000)\ninsert into testpowerbi values(2,N'梨子',1,3000)\ninsert into testpowerbi values(2,N'梨子',2,3500)\ninsert into testpowerbi values(2,N'梨子',3,4200)\ninsert into testpowerbi values(2,N'梨子',4,5500)\n",
 					"metadata": {
@@ -6218,7 +6227,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "561c99f9-7eb3-4e62-8350-f27d4159bc61"
+						"spark.autotune.trackingId": "ec12c5f0-4bd6-4107-ba0c-d77c722506b5"
 					}
 				},
 				"metadata": {
@@ -6243,15 +6252,12 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": true
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"%%pyspark\n",
 							"blob_account_name = \"pandemicdatalake\"\n",
@@ -6285,7 +6291,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "zhao2",
+					"referenceName": "zhao",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -6298,14 +6304,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "5b7a3470-0be4-4b23-998b-2d2ec80a3915"
+						"spark.autotune.trackingId": "be22b35d-73ef-440f-9155-46e404e2981e"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -6315,10 +6318,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao2",
-						"name": "zhao2",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj20211220ws/bigDataPools/zhao",
+						"name": "zhao",
 						"type": "Spark",
-						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao2",
+						"endpoint": "https://bdbj20211220ws.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/zhao",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -6326,8 +6329,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"memory": 28
 					}
 				},
 				"cells": [
@@ -6336,7 +6338,6 @@
 						"source": [
 							"print(1+1)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -6515,14 +6516,11 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "0eb90d3b-2c64-41d0-acbc-ecceb7b27aab"
+						"spark.autotune.trackingId": "c72b72f4-8fda-440f-ac60-ff8b1d2deb4c"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -6544,17 +6542,18 @@
 						"nodeCount": 10,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
-					}
+						"automaticScaleJobs": true
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import time\r\n",
 							"a = time.strftime(\"%Y%m%d_%H%M%S\", time.localtime())"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6574,7 +6573,6 @@
 						"source": [
 							"print(a)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
