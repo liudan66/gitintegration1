@@ -7,7 +7,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "samll",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -19,32 +19,36 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "fc61ae91-2e41-4fcf-8027-c86a93ca6f68"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_sparkdotnet",
+				"display_name": "csharp"
 			},
 			"language_info": {
 				"name": "csharp"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3/resourceGroups/bigdataqa/providers/Microsoft.Synapse/workspaces/bigdataqa0512ws2/bigDataPools/samll",
-				"name": "samll",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
 				"type": "Spark",
-				"endpoint": "https://bigdataqa0512ws2.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/samll",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
+				"sparkVersion": "3.1",
 				"nodeCount": 10,
 				"cores": 8,
-				"memory": 56
-			}
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -53,7 +57,6 @@
 					"// Simple assignments should just work \n",
 					"var x = 1 + 25;"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -65,7 +68,6 @@
 					"// ... or just type it and execute a cell\n",
 					"256"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -74,7 +76,6 @@
 					"// You can even play with built-in libraries/functions\n",
 					"Enumerable.Range(1, 5)"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -85,7 +86,6 @@
 					"// https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-8\n",
 					"1..4"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -104,7 +104,6 @@
 					"        (_, _) => \"tie\"\n",
 					"    };"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -112,7 +111,6 @@
 				"source": [
 					"RockPaperScissors(\"rock\", \"paper\")"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -128,7 +126,6 @@
 					"    )\n",
 					");"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -165,7 +162,6 @@
 					"var df = spark.CreateDataFrame(data, schema);\n",
 					"df.Show();"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -207,7 +203,6 @@
 					"    writer.Write(t);\n",
 					"}, \"text/html\");"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -221,7 +216,6 @@
 					"// ... and just typing df (so it invokes the formatter we just defined)\n",
 					"display(df);"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -230,7 +224,6 @@
 					"// ... and just typing df (equivalent to \"display(df);\")\n",
 					"df"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -242,7 +235,6 @@
 					"    public static readonly string s = \"The person named \";\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -258,7 +250,6 @@
 					"    }\n",
 					"}"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -274,7 +265,6 @@
 					"// you should re-execute this cell (i.e., the cell that defines the UDF)\n",
 					"var udf = Udf<string, string>(str => $\"{A.s} - {str} - is {B.GetMood()}!\");"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -286,7 +276,6 @@
 					"    .Select(\n",
 					"        udf((Microsoft.Spark.Sql.Column)df[\"name\"])));"
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -306,7 +295,6 @@
 					"lineChart.WithYTitle(\"Y axis\");\n",
 					"display(lineChart);"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -348,7 +336,6 @@
 					"var chart = Chart.Plot(new[] {bar});\n",
 					"display(chart);"
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -373,7 +360,6 @@
 					"var histogramDf = spark.CreateDataFrame(data, schema);\n",
 					"histogramDf.Show()"
 				],
-				"attachments": null,
 				"execution_count": 18
 			},
 			{
@@ -396,7 +382,6 @@
 					"var sample2 = histogramDf.Sample(0.3, false).Collect().ToArray().Select(x => x.GetAs<double>(\"number\"));\n",
 					"var sample3 = histogramDf.Sample(0.6, true).Collect().ToArray().Select(x => x.GetAs<double>(\"number\"));"
 				],
-				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -407,7 +392,6 @@
 					"var hist2 = new Graph.Histogram{x = sample2, opacity = 0.75};\n",
 					"var hist3 = new Graph.Histogram{x = sample3, opacity = 0.75};"
 				],
-				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -415,7 +399,6 @@
 				"source": [
 					"Chart.Plot(new[] {hist1})"
 				],
-				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -423,7 +406,6 @@
 				"source": [
 					"Chart.Plot(new[] {hist2})"
 				],
-				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -431,7 +413,6 @@
 				"source": [
 					"Chart.Plot(new[] {hist3})"
 				],
-				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -444,7 +425,6 @@
 					"histogram.WithLayout(layout);\n",
 					"histogram"
 				],
-				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -460,7 +440,6 @@
 					"\n",
 					"histogram"
 				],
-				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -504,7 +483,6 @@
 					"\n",
 					"Func<Column, Column, Column> vectorUdf1 = VectorUdf(arrowUdf);"
 				],
-				"attachments": null,
 				"execution_count": 26
 			},
 			{
@@ -512,7 +490,6 @@
 				"source": [
 					"df.Select(vectorUdf1(df[\"id\"], df[\"name\"]))"
 				],
-				"attachments": null,
 				"execution_count": 27
 			},
 			{
@@ -531,7 +508,6 @@
 					"\n",
 					"Func<Column, Column, Column> vectorUdf2 = VectorUdf(msftDfFunc);"
 				],
-				"attachments": null,
 				"execution_count": 28
 			},
 			{
@@ -539,7 +515,6 @@
 				"source": [
 					"df.Select(vectorUdf2(df[\"id\"], df[\"name\"]))"
 				],
-				"attachments": null,
 				"execution_count": 29
 			},
 			{
@@ -553,7 +528,6 @@
 					"// Installs specified version\n",
 					"#r \"nuget: NumSharp,0.20.5\""
 				],
-				"attachments": null,
 				"execution_count": 30
 			},
 			{
@@ -578,7 +552,6 @@
 					"    return $\"{nd[1].ToString()} - {str} - {nd[5].ToString()}!\";\n",
 					"});"
 				],
-				"attachments": null,
 				"execution_count": 31
 			},
 			{
@@ -595,7 +568,6 @@
 					"// We can also chain udfs.\n",
 					"df.Select(mathNetUdf(numSharpUdf(df[\"name\"])))"
 				],
-				"attachments": null,
 				"execution_count": 32
 			},
 			{
@@ -608,7 +580,6 @@
 					"// Note that the help message is the help message returned by the Scala implementation. This needs to be updated and addressed in a future version.\n",
 					"Console.WriteLine($\"Help:\\n{Credentials.Help()}\");"
 				],
-				"attachments": null,
 				"execution_count": 33
 			},
 			{
@@ -625,7 +596,6 @@
 					"// Note that the help message is the help message returned by the Scala implementation. This needs to be updated and addressed in a future version.\n",
 					"Console.WriteLine($\"Help:\\n{Env.Help()}\");"
 				],
-				"attachments": null,
 				"execution_count": 34
 			},
 			{
@@ -638,7 +608,6 @@
 					"// Note that the help message is the help message returned by the Scala implementation. This needs to be updated and addressed in a future version.\n",
 					"FS.Help(\"\");"
 				],
-				"attachments": null,
 				"execution_count": 35
 			},
 			{
@@ -650,7 +619,6 @@
 					"// Note that the help message is the help message returned by the Scala implementation. This needs to be updated and addressed in a future version.\n",
 					"Notebook.Help(\"\");"
 				],
-				"attachments": null,
 				"execution_count": 36
 			},
 			{
@@ -661,7 +629,6 @@
 					"// based on user-input html content.\n",
 					"DisplayHTML(\"<h1>Hello World</h1>\");"
 				],
-				"attachments": null,
 				"execution_count": 37
 			},
 			{
@@ -673,7 +640,6 @@
 					"// TODO: Methodname needs to be uppercase.\n",
 					"Console.WriteLine($\"Help:\\n{TokenLibrary.help()}\");"
 				],
-				"attachments": null,
 				"execution_count": 38
 			},
 			{
@@ -684,7 +650,6 @@
 					"using Microsoft.Spark.Experimental.Sql;\n",
 					"spark.GetAssemblyInfo()"
 				],
-				"attachments": null,
 				"execution_count": 40
 			},
 			{
@@ -693,7 +658,6 @@
 					"// Current version of the dotnet-interactive REPL.\n",
 					"#!about"
 				],
-				"attachments": null,
 				"execution_count": 41
 			},
 			{
@@ -703,7 +667,6 @@
 					"#!pwsh\n",
 					"cat /etc/hosts"
 				],
-				"attachments": null,
 				"execution_count": 42
 			},
 			{
@@ -714,7 +677,6 @@
 					"open System\n",
 					"printfn \"Hello World from F#!\""
 				],
-				"attachments": null,
 				"execution_count": 43
 			},
 			{
@@ -723,7 +685,6 @@
 					"// Whatever code is deemed invalid by the C# Compiler, is invalid here too \n",
 					"var z = 12345"
 				],
-				"attachments": null,
 				"execution_count": 44
 			},
 			{
@@ -732,7 +693,6 @@
 					"// You could write code that throws exceptions and they bubble up to the notebook\n",
 					"throw new Exception(\"watzzz\");"
 				],
-				"attachments": null,
 				"execution_count": 45
 			}
 		]
