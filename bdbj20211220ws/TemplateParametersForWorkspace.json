@@ -59,9 +59,6 @@
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"value": "https://lanjlgen2.dfs.core.windows.net"
-		},
 		"AzureDataLakeStorage1220_properties_typeProperties_url": {
 			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
 		},

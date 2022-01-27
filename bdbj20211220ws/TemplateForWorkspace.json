@@ -79,10 +79,6 @@
 			"type": "string",
 			"defaultValue": "https://bdbjgen2qingtest.dfs.core.windows.net"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://lanjlgen2.dfs.core.windows.net"
-		},
 		"AzureDataLakeStorage1220_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://bdbjgen2qingtest.dfs.core.windows.net"
@@ -846,30 +842,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/AzureDataLakeStorage1')]",
-			"type": "Microsoft.Synapse/workspaces/linkedServices",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
-					"credential": {
-						"referenceName": "Credential1",
-						"type": "CredentialReference"
-					}
-				},
-				"connectVia": {
-					"referenceName": "AutoResolveIntegrationRuntime",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/credentials/Credential1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/AzureDataLakeStorage1220')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1300,18 +1272,6 @@
 				"[concat(variables('workspaceId'), '/datasets/Input')]",
 				"[concat(variables('workspaceId'), '/datasets/Output')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Credential1')]",
-			"type": "Microsoft.Synapse/workspaces/credentials",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"type": "ManagedIdentity",
-				"typeProperties": {
-					"resourceId": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.ManagedIdentity/userAssignedIdentities/lanjliidentity"
-				}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
@@ -6516,11 +6476,14 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "c72b72f4-8fda-440f-ac60-ff8b1d2deb4c"
+						"spark.autotune.trackingId": "0eb90d3b-2c64-41d0-acbc-ecceb7b27aab"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -6542,18 +6505,17 @@
 						"nodeCount": 10,
 						"cores": 4,
 						"memory": 28,
-						"automaticScaleJobs": true
-					},
-					"sessionKeepAliveTimeout": 30
+						"extraHeader": null
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import time\r\n",
 							"a = time.strftime(\"%Y%m%d_%H%M%S\", time.localtime())"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6573,6 +6535,7 @@
 						"source": [
 							"print(a)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
