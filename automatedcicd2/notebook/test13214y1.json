@@ -15,14 +15,21 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "5a417f9e-1c28-49fc-a5ec-0aeac6f58755"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -56,7 +63,6 @@
 					"\n",
 					"display(df1)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -76,7 +82,6 @@
 				"source": [
 					"tetst"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -89,7 +94,6 @@
 					"\n",
 					"display(students)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -105,20 +109,28 @@
 					"display(pdf)\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
 				"source": [
 					"%%spark\n",
 					"display(spark.range(10))"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
 				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
 				"source": [
 					"%%spark\n",
 					"case class MapEntry(key: String, value: Int)\n",
@@ -127,7 +139,6 @@
 					"largeDataFrame.registerTempTable(\"largeTable\")\n",
 					"display(spark.sqlContext.sql(\"select * from largeTable\"))"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -184,7 +195,6 @@
 					" </script>\n",
 					"\"\"\")"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -205,7 +215,6 @@
 					"# display this html\n",
 					"displayHTML(html)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -218,7 +227,6 @@
 					"\n",
 					"display(students)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -252,7 +260,6 @@
 					"\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
