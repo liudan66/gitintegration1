@@ -1,6 +1,9 @@
 {
 	"name": "SQL script 4",
 	"properties": {
+		"folder": {
+			"name": "New folder"
+		},
 		"content": {
 			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'default_honghaigen2_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [default_honghaigen2_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://default@honghaigen2.dfs.core.windows.net' \n\t)\nGO\n--drop EXTERNAL TABLE fhv\n \nCREATE EXTERNAL TABLE fhv (\n\t[dispatchBaseNum] nvarchar(4000),\n\t[pickupDateTime] datetime2(7),\n\t[dropOffDateTime] datetime2(7),\n\t[puLocationId] nvarchar(4000),\n\t[doLocationId] nvarchar(4000),\n\t[srFlag] nvarchar(4000),\n\t[puYear] int,\n\t[puMonth] int\n\t)\n\tWITH (\n\tLOCATION = 'Guest/fhv/*.parquet',\n\tDATA_SOURCE = [default_honghaigen2_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.fhv\nGO",
 			"metadata": {
