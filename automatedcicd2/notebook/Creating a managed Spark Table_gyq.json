@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "sparkpoolnew",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -16,30 +16,36 @@
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "3bc120d8-a9ce-4934-87ea-318d8195e9f3"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"noPermissionToViewOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_spark",
+				"display_name": "scala"
+			},
 			"language_info": {
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpoolnew",
-				"name": "sparkpoolnew",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
 				"type": "Spark",
-				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpoolnew",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
+				"sparkVersion": "3.1",
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
-			}
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -49,15 +55,13 @@
 					"This notebook describes how to create a managed table from Spark. \n",
 					"The table is created in the Synapse warehouse folder in your primary storage account. The table will be synchronized and available in Synapse SQL Pools. \n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"CREATE TABLE cities (name STRING, population INT) USING PARQUET\")"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -65,15 +69,13 @@
 				"source": [
 					"Insert a few rows into the table using a list of values.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"INSERT INTO cities VALUES ('Seattle', 730400), ('San Francisco', 881549), ('Beijing', 21540000), ('Bangalore', 10540000)\")"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -81,8 +83,7 @@
 				"source": [
 					"* Retrieve values back. Click on 'Chart' below to review the visualization.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -102,7 +103,7 @@
 							"aggregation": "SUM",
 							"aggByBackend": false
 						},
-						"aggData": "\"{\\\"population\\\":{\\\"Bangalore\\\":10540000,\\\"Beijing\\\":21540000,\\\"San Francisco\\\":881549,\\\"Seattle\\\":730400}}\"",
+						"aggData": "{\"population\":{\"Bangalore\":10540000,\"Beijing\":21540000,\"San Francisco\":881549,\"Seattle\":730400}}",
 						"isSummary": false,
 						"previewData": {
 							"filter": null
@@ -113,7 +114,6 @@
 				"source": [
 					"display(spark.sql(\"SELECT * FROM cities ORDER BY name\"))"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -121,15 +121,13 @@
 				"source": [
 					"Drop the table. Please note the data will get deleted from the primary storage account associated with this workspace.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"DROP TABLE cities\")"
 				],
-				"attachments": null,
 				"execution_count": 7
 			}
 		]

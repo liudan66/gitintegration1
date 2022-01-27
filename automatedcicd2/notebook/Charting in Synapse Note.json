@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "sparkpool1",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -14,12 +14,15 @@
 			"executorCores": 8,
 			"numExecutors": 2,
 			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "dca13433-2497-4640-b304-8f0989bb40e5"
 			}
 		},
 		"metadata": {
-			"noPermissionToViewOutput": true,
+			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -28,19 +31,21 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/8b3b8a60-1dd0-4824-8770-2ed6a55d8e27/resourceGroups/yifso-synapse-rg/providers/Microsoft.Synapse/workspaces/yifso1022scus/bigDataPools/sparkpool1",
-				"name": "sparkpool1",
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
 				"type": "Spark",
-				"endpoint": "https://yifso1022scus.dev.azuresynapse-dogfood.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 3,
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
 				"cores": 8,
-				"memory": 56
-			}
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -50,8 +55,7 @@
 					"\n",
 					"Synapse has common used data visualization packages pre installed, such as **matplotlib**, **bokeh**, **seaborn**, **altair**, **plotly**. This notebook provides examples to do data visualization using charts in Synapse notebook. \n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -65,8 +69,7 @@
 				"source": [
 					"## Matplotlib\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -88,7 +91,6 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -124,7 +126,6 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -151,7 +152,6 @@
 					"plt.title(\"Cumulative Histogram\")\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -177,7 +177,6 @@
 					"plt.show()\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -202,7 +201,6 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -225,7 +223,6 @@
 					"plt.title('Pie Chart Example')\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -245,7 +242,6 @@
 					"plt.title(\"Fills and Alpha Example\")\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -290,7 +286,6 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -324,7 +319,6 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -355,7 +349,6 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -376,7 +369,6 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -384,8 +376,7 @@
 				"source": [
 					"## Seaborn\n",
 					"Seaborn is a library layered on top of Matplotlib that you can use."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -405,7 +396,6 @@
 					"sns.regplot(x, y)\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -427,7 +417,6 @@
 					"sns.heatmap(data)\n",
 					"plt.show()"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -436,8 +425,7 @@
 					"## Bokeh\n",
 					"You can render HTML or interactive libraries, like **bokeh**, using the **displayHTML()**.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -464,7 +452,6 @@
 					"# display this html\n",
 					"displayHTML(html)"
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -499,7 +486,6 @@
 					"# display this html\n",
 					"displayHTML(html)"
 				],
-				"attachments": null,
 				"execution_count": 16
 			}
 		]

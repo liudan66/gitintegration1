@@ -3,30 +3,49 @@
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "small",
+			"type": "BigDataPoolReference"
+		},
 		"sessionProperties": {
-			"driverMemory": "28g",
-			"driverCores": 4,
-			"executorMemory": "28g",
-			"executorCores": 4,
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "5a9f0d81-41b5-47b5-ba74-01543ba3f155"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_sparkdotnet",
 				"display_name": "csharp"
 			},
 			"language_info": {
 				"name": "csharp"
-			}
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+				"name": "small",
+				"type": "Spark",
+				"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -46,16 +65,14 @@
 					"* Read older versions of data using Time Travel\n",
 					"* Write a stream of data to a table\n",
 					"* Read a stream of changes from a table"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"## Configuration\n",
 					"Make sure you modify this as appropriate."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -65,7 +82,6 @@
 					"\n",
 					"deltaTablePath"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -75,8 +91,7 @@
 					"To create a Delta Lake table, write a DataFrame out in the **delta** format. You can use existing Spark SQL code and change the format from parquet, csv, json, and so on, to delta.\n",
 					"\n",
 					"These operations create a new Delta Lake table using the schema that was inferred from your DataFrame. For the full set of options available when you create a new Delta Lake table, see Create a table and Write to a table (subsequent cells in this notebook)."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +100,6 @@
 					"data.Show();\n",
 					"data.Write().Format(\"delta\").Save(deltaTablePath);"
 				],
-				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -94,8 +108,7 @@
 					"## Understanding Meta-data\n",
 					"\n",
 					"In Delta Lake, meta-data is no different from data i.e., it is stored next to the data. Therefore, an interesting side-effect here is that you can peek into meta-data using regular Spark APIs. "
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +116,6 @@
 					"using System.Linq;\n",
 					"spark.Read().Text($\"{deltaTablePath}/_delta_log/\").Collect().ToList().ForEach(x => Console.WriteLine(x.GetAs<string>(\"value\")));"
 				],
-				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -112,8 +124,7 @@
 					"## Read data\n",
 					"\n",
 					"You read data in your Delta Lake table by specifying the path to the files."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +132,6 @@
 					"var df = spark.Read().Format(\"delta\").Load(deltaTablePath);\n",
 					"df.Show()"
 				],
-				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -131,8 +141,7 @@
 					"\n",
 					"Delta Lake supports several operations to modify tables using standard DataFrame APIs. This example runs a batch job to overwrite the data in the table.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -141,22 +150,19 @@
 					"data.Write().Format(\"delta\").Mode(\"overwrite\").Save(deltaTablePath);\n",
 					"df.Show();"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"When you now inspect the meta-data, what you will notice is that the original data is over-written. Well, not in a true sense but appropriate entries are added to Delta's transaction log so it can provide an \"illusion\" that the original data was deleted. We can verify this by re-inspecting the meta-data. You will see several entries indicating reference removal to the original data."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.Read().Text($\"{deltaTablePath}/_delta_log/\").Collect().ToList().ForEach(x => Console.WriteLine(x.GetAs<string>(\"value\")));"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -166,8 +172,7 @@
 					"\n",
 					"Delta Lake can write to managed or external catalog tables.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -175,7 +180,6 @@
 					"// Write data to a new managed catalog table.\n",
 					"data.Write().Format(\"delta\").SaveAsTable(\"ManagedDeltaTable\");"
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -184,7 +188,6 @@
 					"// Define an external catalog table that points to the existing Delta Lake data in storage.\n",
 					"spark.Sql($\"CREATE TABLE ExternalDeltaTable USING DELTA LOCATION '{deltaTablePath}'\");"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -197,7 +200,6 @@
 					"spark.Sql(\"DESCRIBE EXTENDED ManagedDeltaTable\").Show(truncate: 0);\n",
 					"spark.Sql(\"DESCRIBE EXTENDED ExternalDeltaTable\").Show(truncate: 0);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -206,8 +208,7 @@
 					"## Conditional update without overwrite\n",
 					"\n",
 					"Delta Lake provides programmatic APIs to conditional update, delete, and merge (upsert) data into tables. For more information on these operations, see [Table Deletes, Updates, and Merges](https://docs.delta.io/latest/delta-update.html)."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -219,7 +220,6 @@
 					"\n",
 					"var deltaTable = DeltaTable.ForPath(deltaTablePath);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -231,7 +231,6 @@
 					"  set: new Dictionary<string, Column>(){{ \"id\", Expr(\"id + 100\") }});\n",
 					"deltaTable.ToDF().Show();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -241,7 +240,6 @@
 					"deltaTable.Delete(condition: Expr(\"id % 2 == 0\"));\n",
 					"deltaTable.ToDF().Show();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -261,7 +259,6 @@
 					"\n",
 					"deltaTable.ToDF().Show(100);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -269,15 +266,13 @@
 				"source": [
 					"## History\n",
 					"Delta's most powerful feature is the ability to allow looking into history i.e., the changes that were made to the underlying Delta Table. The cell below shows how simple it is to inspect the history."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"deltaTable.History().Show(20, 1000, false);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -288,8 +283,7 @@
 					"You can query previous snapshots of your Delta Lake table by using a feature called Time Travel. If you want to access the data that you overwrote, you can query a snapshot of the table before you overwrote the first set of data using the versionAsOf option.\n",
 					"\n",
 					"Once you run the cell below, you should see the first set of data, from before you overwrote it. Time Travel is an extremely powerful feature that takes advantage of the power of the Delta Lake transaction log to access data that is no longer in the table. Removing the version 0 option (or specifying version 1) would let you see the newer data again. For more information, see [Query an older snapshot of a table (time travel)](https://docs.delta.io/latest/delta-batch.html#deltatimetravel)."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -297,7 +291,6 @@
 					"var df = spark.Read().Format(\"delta\").Option(\"versionAsOf\", 0).Load(deltaTablePath);\n",
 					"df.Show();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -316,8 +309,7 @@
 					"3. *Cell 31* Inspect history\n",
 					"4. *Cell 32* Stop the structured streaming job\n",
 					"5. *Cell 33* Inspect history <-- You'll notice appends have stopped"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -325,7 +317,6 @@
 					"var streamingDf = spark.ReadStream().Format(\"rate\").Load();\n",
 					"var stream = streamingDf.SelectExpr(\"value as id\").WriteStream().Format(\"delta\").Option(\"checkpointLocation\", $\"/tmp/checkpoint-{sessionId}\").Start(deltaTablePath);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -334,15 +325,13 @@
 					"## Read a stream of changes from a table\n",
 					"\n",
 					"While the stream is writing to the Delta Lake table, you can also read from that table as streaming source. For example, you can start another streaming query that prints all the changes made to the Delta Lake table."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"deltaTable.ToDF().Sort(Col(\"id\").Desc()).Show(100);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -350,7 +339,6 @@
 				"source": [
 					"deltaTable.History().Drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").Show(20, 1000, false);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -358,7 +346,6 @@
 				"source": [
 					"stream.Stop();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -366,7 +353,6 @@
 				"source": [
 					"deltaTable.History().Drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").Show(100, 1000, false);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -378,8 +364,7 @@
 					"\n",
 					"The option `dataChange = false` is an optimization that tells Delta Lake to do the repartition without marking the underlying data as \"modified\". This ensures that any other concurrent operations (such as streaming reads/writes) aren't negatively impacted.\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -396,7 +381,6 @@
 					"    .Mode(\"overwrite\")\n",
 					"    .Save(deltaTablePath);"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -404,8 +388,7 @@
 				"source": [
 					"## Convert Parquet to Delta\n",
 					"You can do an in-place conversion from the Parquet format to Delta."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -418,7 +401,6 @@
 					"// Confirm that the data isn't in the Delta format\n",
 					"DeltaTable.IsDeltaTable(parquetPath)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -429,7 +411,6 @@
 					"//Confirm that the converted data is now in the Delta format\n",
 					"DeltaTable.IsDeltaTable(parquetPath)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -441,15 +422,13 @@
 					"* Vacuum a DeltaTable\n",
 					"* Convert a Parquet file to Delta\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.Sql($\"DESCRIBE HISTORY delta.`{deltaTablePath}`\").Show();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -457,7 +436,6 @@
 				"source": [
 					"spark.Sql($\"VACUUM delta.`{deltaTablePath}`\").Show();"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -477,7 +455,6 @@
 					"\n",
 					"DeltaTable.IsDeltaTable(parquetPath);"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
