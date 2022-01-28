@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -60,14 +59,16 @@
 					"- read Azure Open Dataset\n",
 					"- manipulate the data to prepare for further analysis, including column projection, filtering, grouping and joins etc. \n",
 					"- create a Spark table to be used in other notebooks for modeling training"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"## Data loading \n",
 					"Let's first load the [NYC green taxi trip records](https://azure.microsoft.com/en-us/services/open-datasets/catalog/nyc-taxi-limousine-commission-green-taxi-trip-records/). The Open Datasets package contains a class representing each data source (NycTlcGreen for example) to easily filter date parameters before downloading."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -82,6 +83,7 @@
 					"nyc_tlc = NycTlcGreen(start_date=start_date, end_date=end_date)\n",
 					"nyc_tlc_df = nyc_tlc.to_spark_dataframe()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -91,6 +93,7 @@
 					"\n",
 					"nyc_tlc_df.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -99,7 +102,8 @@
 					"Now that the initial data is loaded. Let's do some projection on the data to \n",
 					"- create new columns for the month number, day of month, day of week, and hour of day. These info is going to be used in the training model to factor in time-based seasonality.\n",
 					"- add a static feature for the country code to join holiday data. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -115,6 +119,7 @@
 					"                .withColumn('hour_of_day',f.hour(nyc_tlc_df.lpepPickupDatetime))\\\n",
 					"                .withColumn('country_code',f.lit('US'))"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -124,7 +129,8 @@
 					"\n",
 					"\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -139,6 +145,7 @@
 					"\n",
 					"nyc_tlc_df_clean = nyc_tlc_df_expand.select([column for column in nyc_tlc_df_expand.columns if column not in columns_to_remove])"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -147,6 +154,7 @@
 					"# Display 5 rows\n",
 					"nyc_tlc_df_clean.show(5)"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -157,7 +165,8 @@
 					"\n",
 					"Let's load the [public holidays](https://azure.microsoft.com/en-us/services/open-datasets/catalog/public-holidays/) from Azure Open datasets.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -170,13 +179,15 @@
 					"# Display data\n",
 					"hol_df.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"Rename the countryRegionCode and date columns to match the respective field names from the taxi data, and also normalize the time so it can be used as a key. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -186,13 +197,15 @@
 					"\n",
 					"hol_df_clean.show(5)"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"Next, join the holiday data with the taxi data by performing a left-join. This will preserve all records from taxi data, but add in holiday data where it exists for the corresponding datetime and country_code, which in this case is always \"US\". Preview the data to verify that they were merged correctly."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -202,6 +215,7 @@
 					"\n",
 					"nyc_taxi_holiday_df.show(5)"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -212,6 +226,7 @@
 					"nyc_taxi_holiday_df.createOrReplaceTempView(\"nyc_taxi_holiday_df\")\n",
 					"spark.sql(\"SELECT * from nyc_taxi_holiday_df WHERE holidayName is NOT NULL \").show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -220,7 +235,8 @@
 					"## Enrich with weather data¶\n",
 					"\n",
 					"Now we append NOAA surface weather data to the taxi and holiday data. Use a similar approach to fetch the [NOAA weather history data](https://azure.microsoft.com/en-us/services/open-datasets/catalog/noaa-integrated-surface-data/) from Azure Open Datasets. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -230,6 +246,7 @@
 					"isd = NoaaIsdWeather(start_date, end_date)\n",
 					"isd_df = isd.to_spark_dataframe()"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -237,6 +254,7 @@
 				"source": [
 					"isd_df.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -252,6 +270,7 @@
 					"                        .withColumnRenamed('datetime','datetime_full')\n",
 					"                         "
 				],
+				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -265,6 +284,7 @@
 					"\n",
 					"weather_df_clean.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -272,7 +292,8 @@
 				"source": [
 					"Next group the weather data so that you have daily aggregated weather values. \n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -282,6 +303,7 @@
 					"aggregations = {\"snowDepth\": \"mean\", \"precipTime\": \"max\", \"temperature\": \"mean\", \"precipDepth\": \"max\"}\n",
 					"weather_df_grouped = weather_df_clean.groupby(\"datetime\").agg(aggregations)"
 				],
+				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -289,6 +311,7 @@
 				"source": [
 					"weather_df_grouped.show(5)"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -301,13 +324,15 @@
 					"                                       .withColumnRenamed('max(precipTime)','max_precipTime')\\\n",
 					"                                       .withColumnRenamed('max(precipDepth)','max_precipDepth')"
 				],
+				"attachments": null,
 				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"Merge the taxi and holiday data you prepared with the new weather data. This time you only need the datetime key, and again perform a left-join of the data. Run the describe() function on the new dataframe to see summary statistics for each field."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -316,6 +341,7 @@
 					"nyc_taxi_holiday_weather_df = nyc_taxi_holiday_df.join(weather_df_grouped, on = 'datetime' , how = 'left')\n",
 					"nyc_taxi_holiday_weather_df.cache()"
 				],
+				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -323,6 +349,7 @@
 				"source": [
 					"nyc_taxi_holiday_weather_df.show(5)"
 				],
+				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -332,6 +359,7 @@
 					"\n",
 					"display(nyc_taxi_holiday_weather_df.describe())"
 				],
+				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -340,7 +368,8 @@
 					"The summary statistics shows that the totalAmount field has negative values, which don't make sense in the context.\n",
 					"\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -349,6 +378,7 @@
 					"final_df = nyc_taxi_holiday_weather_df.filter(nyc_taxi_holiday_weather_df.tipAmount > 0)\\\n",
 					"                                      .filter(nyc_taxi_holiday_weather_df.totalAmount > 0)"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -359,13 +389,15 @@
 					"First we need to drop the tables since Spark requires that a database is empty before we can drop the Database.\n",
 					"\n",
 					"Then we recreate the database and set the default database context to it."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"DROP TABLE IF EXISTS NYCTaxi.nyc_taxi_holiday_weather\"); "
 				],
+				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -375,6 +407,7 @@
 					"spark.sql(\"CREATE DATABASE NYCTaxi\"); \n",
 					"spark.sql(\"USE NYCTaxi\");"
 				],
+				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -383,7 +416,8 @@
 					"## Creating a new table\n",
 					"We create a nyc_taxi_holiday_weather table from the nyc_taxi_holiday_weather dataframe.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -394,6 +428,7 @@
 					"final_df.write.saveAsTable(\"nyc_taxi_holiday_weather\");\n",
 					"spark.sql(\"SELECT COUNT(*) FROM nyc_taxi_holiday_weather\").show();"
 				],
+				"attachments": null,
 				"execution_count": 25
 			}
 		]

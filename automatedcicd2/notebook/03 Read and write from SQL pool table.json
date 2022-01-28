@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -70,7 +69,8 @@
 					"\n",
 					"    \n",
 					"    EXEC sp_addrolemember 'db_owner', 'AAD@contoso.com'"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -79,7 +79,8 @@
 					"\n",
 					"Let's first load the [Public Holidays](https://azure.microsoft.com/en-us/services/open-datasets/catalog/public-holidays/) of last 6 months from Azure Open datasets as a sample.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -106,6 +107,7 @@
 					"print('Register the DataFrame as a SQL temporary view: source')\n",
 					"hol_df.createOrReplaceTempView('source')"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -115,6 +117,7 @@
 					"val holiday_nodate = spark.sql(\"SELECT countryOrRegion, holidayName, normalizeHolidayName,isPaidTimeOff,countryRegionCode FROM source\")\n",
 					"holiday_nodate.show(5,truncate = false)"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -122,7 +125,8 @@
 				"source": [
 					"## Write a Spark dataframe into your sql pool\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -137,13 +141,15 @@
 					"    .sqlanalytics(s\"$sql_pool_name.dbo.PublicHoliday\", Constants.INTERNAL)\n",
 					""
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"Now open Synapse object explorer and go to **Data**->**Databases**->**<your sql pool name>**->**Tables**, you will see the new **dbo.PublicHoliday** table show up there."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -151,7 +157,8 @@
 					"## Read from a SQL Pool table with Spark\n",
 					"\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -161,6 +168,7 @@
 					"    sqlanalytics(s\"$sql_pool_name.dbo.PublicHoliday\")\n",
 					"spark_read.show(5, truncate = false)"
 				],
+				"attachments": null,
 				"execution_count": 10
 			}
 		]

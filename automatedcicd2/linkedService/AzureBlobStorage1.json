@@ -5,11 +5,11 @@
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=accessibilitytest;EndpointSuffix=core.windows.net;",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBTkNJQ0RURVNUX2NiYzA3ZGIyLTZiOWMtNGFiNy1iNjQ0LWJlMTliYTNjNTJlZiINCn0="
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=bdbjblobstorageqingtest;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkJEQkowMzAyV1MtR0lUXzY5ZWY3YTg5LTFlMmMtNDE0Ny1hZjVhLTcxOTBiZjkwMmRkZiINCn0="
 		},
 		"connectVia": {
-			"referenceName": "IntegrationRuntime11",
+			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
 	}

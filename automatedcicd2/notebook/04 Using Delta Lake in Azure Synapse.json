@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -62,7 +61,8 @@
 					"## Pre-requisites\n",
 					"In this notebook you will save your tables in Delta Lake format to your workspace's primary storage account. You are required to be a **Blob Storage Contributor** in the ADLS Gen2 account (or folder) you will access.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -71,7 +71,8 @@
 					"\n",
 					"First you will load the [public holidays](https://azure.microsoft.com/en-us/services/open-datasets/catalog/public-holidays/) data from last 6 months via Azure Open datasets.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -88,6 +89,7 @@
 					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\n",
 					"hol_df = hol.to_spark_dataframe()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -95,6 +97,7 @@
 				"source": [
 					"display(hol_df)"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -102,7 +105,8 @@
 				"source": [
 					"## Write data to the Delta Lake table\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -120,6 +124,7 @@
 					"delta_relative_path = adls_path + 'delta/holiday/'\n",
 					"print('Delta Lake path: ' + delta_relative_path)"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -129,6 +134,7 @@
 					"hol_df_IN = hol_df[(hol_df.countryRegionCode == \"IN\")]\n",
 					"hol_df_IN.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -137,6 +143,7 @@
 					"#Let's write the data in the Delta Lake table. \n",
 					"hol_df_IN.write.mode(\"overwrite\").format(\"delta\").partitionBy(\"holidayName\").save(delta_relative_path)"
 				],
+				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -145,6 +152,7 @@
 					"delta_data = spark.read.format(\"delta\").load(delta_relative_path)\n",
 					"delta_data.show()"
 				],
+				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -152,7 +160,8 @@
 				"source": [
 					"## Overwrite the entire Delta Lake table\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -162,6 +171,7 @@
 					"hol_df_JP= hol_df[(hol_df.countryRegionCode == \"JP\")]\n",
 					"hol_df_JP.write.format(\"delta\").mode(\"overwrite\").save(delta_relative_path)"
 				],
+				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -170,13 +180,15 @@
 					"delta_data = spark.read.format(\"delta\").load(delta_relative_path)\n",
 					"delta_data.show()"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"## Merge new data based on given merge condition "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -208,6 +220,7 @@
 					"\n",
 					"deltaTable.toDF().show()"
 				],
+				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -215,7 +228,8 @@
 				"source": [
 					"## Update table on the rows that match the given condition\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -229,6 +243,7 @@
 					"\n",
 					"deltaTable.toDF().show()"
 				],
+				"attachments": null,
 				"execution_count": 71
 			},
 			{
@@ -236,7 +251,8 @@
 				"source": [
 					"## Delete data from the table that match the given condition\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -253,6 +269,7 @@
 					"print(deltaTable.toDF().count())\n",
 					"deltaTable.toDF().show()"
 				],
+				"attachments": null,
 				"execution_count": 72
 			},
 			{
@@ -260,7 +277,8 @@
 				"source": [
 					"## Get the operation history of the delta table\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -274,6 +292,7 @@
 					"print('lastOperationDF: ')\n",
 					"lastOperationDF.show(truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 73
 			}
 		]

@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -121,6 +120,7 @@
 					"    # Register the model to AML model registry\r\n",
 					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"test-fixed-VHD-Best\")"
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

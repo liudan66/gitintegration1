@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -66,7 +65,8 @@
 					"  2. Queries contain a join that requires heavy-shuffles (e.g., you want to join a 100 GB dataset with a 10 GB dataset)\n",
 					"\n",
 					"You may want to carefully monitor your workloads and determine whether indexing is helping you on a case-by-case basis."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -75,7 +75,8 @@
 					"To begin with, let's start a new Spark™ session. Since this notebook is a tutorial merely to illustrate what Hyperspace can offer, we will make a configuration change that allow us to highlight what Hyperspace is doing on small datasets. By default, Spark™ uses *broadcast join* to optimize join queries when the data size for one side of join is small (which is the case for the sample data we use in this tutorial). Therefore, we disable broadcast joins so that later when we run join queries, Spark™ uses *sort-merge* join. This is mainly to show how Hyperspace indexes would be used at scale for accelerating join queries.\n",
 					"\n",
 					"The output of running the cell below shows a reference to the successfully created Spark™ session and prints out '-1' as the value for the modified join config which indicates that broadcast join is successfully disabled."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -88,6 +89,7 @@
 					"// We store all indexes in the system folder within Synapse.\n",
 					"spark.Conf().Set(\"spark.hyperspace.system.path\", indexLocation);"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -101,6 +103,7 @@
 					"\n",
 					"spark.Conf().Set(\"spark.hyperspace.explain.displayMode\", \"html\")"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -113,7 +116,8 @@
 					"Our example records correspond to two datasets: *department* and *employee*. You should configure \"empLocation\" and \"deptLocation\" paths so that on the storage account they point to your desired location to save generated data files. \n",
 					"\n",
 					"The output of running below cell shows contents of our datasets as lists of triplets followed by references to dataFrames created to save the content of each dataset in our preferred location."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -169,6 +173,7 @@
 					"empData.Write().Mode(\"overwrite\").Parquet(empLocation);\n",
 					"deptData.Write().Mode(\"overwrite\").Parquet(deptLocation);"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -177,7 +182,8 @@
 					"Let's verify the contents of parquet files we created above to make sure they contain expected records in correct format. We later use these data files to create Hyperspace indexes and run sample queries.\n",
 					"\n",
 					"Running below cell, the output displays the rows in employee and department dataframes in a tabular form. There should be 14 employees and 4 departments, each matching with one of triplets we created in the previous cell."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -190,6 +196,7 @@
 					"empDF.Show();\n",
 					"deptDF.Show();"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -208,7 +215,8 @@
 					"First, we need to import the required libraries and create an instance of Hyperspace. We later use this instance to invoke different Hyperspace APIs to create indexes on our sample data and modify those indexes.\n",
 					"\n",
 					"Output of running below cell shows a reference to the created instance of Hyperspace."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -218,6 +226,7 @@
 					"\n",
 					"Hyperspace hyperspace = new Hyperspace(spark);"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -242,7 +251,8 @@
 					"WHERE Y = 2\n",
 					"```\n",
 					"X can be an *index column* and Y can be an *included column*."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -254,6 +264,7 @@
 					"var deptIndexConfig1 = new IndexConfig(\"deptIndex1\", new string[] {\"deptId\"}, new string[] {\"deptName\"});\n",
 					"var deptIndexConfig2 = new IndexConfig(\"deptIndex2\", new string[] {\"location\"}, new string[] {\"deptName\"});"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -262,7 +273,8 @@
 					"Now, we create three indexes using our index configurations. For this purpose, we invoke \"createIndex\" command on our Hyperspace instance. This command requires an index configuration and the dataFrame containing rows to be indexed.\n",
 					"Running below cell creates three indexes.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -272,6 +284,7 @@
 					"hyperspace.CreateIndex(deptDF, deptIndexConfig1);\n",
 					"hyperspace.CreateIndex(deptDF, deptIndexConfig2);"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -289,13 +302,15 @@
 					"  - `dfSignature` is automatically generated by Hyperspace and is unique for each index. Hyperspace uses this signature internally to maintain the index and exploit it at query time. \n",
 					"  \n",
 					"In the output below, all three indexes should have \"ACTIVE\" as status and their name, indexed columns, and included columns should match with what we defined in index configurations above."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"hyperspace.Indexes().Show();"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -307,7 +322,8 @@
 					"Index deletion is a **soft-delete** operation i.e., only the index's status in the Hyperspace metadata from is changed from \"ACTIVE\" to \"DELETED\". This will exclude the deleted index from any future query optimization and Hyperspace no longer picks that index for any query. However, index files for a deleted index still remain available (since it is a soft-delete), so if you accidentally deleted the index, you could still restore it.\n",
 					"\n",
 					"The cell below deletes index with name \"deptIndex2\" and lists Hyperspace metadata after that. The output should be similar to above cell for \"List Indexes\" except for \"deptIndex2\" which now should have its status changed into \"DELETED\"."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -316,6 +332,7 @@
 					"\n",
 					"hyperspace.Indexes().Show();"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -325,7 +342,8 @@
 					"A user can use the `restoreIndex` API to restore a deleted index. This will bring back the latest version of index into ACTIVE status and makes it usable again for queries. \n",
 					"\n",
 					"The cell below shows an example of `restoreIndex` API. We delete \"deptIndex1\" and restore it. The output shows \"deptIndex1\" first went into the \"DELETED\" status after invoking \"deleteIndex\" command and came back to the \"ACTIVE\" status after calling \"restoreIndex\"."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -338,6 +356,7 @@
 					"\n",
 					"hyperspace.Indexes().Show();"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -347,7 +366,8 @@
 					"The user can perform a **hard-delete** i.e., fully remove files and the metadata entry for a deleted index using the `vacuumIndex` API. Once done, this action is **irreversible** as it physically deletes all the index files associated with the index.\n",
 					"\n",
 					"The cell below vacuums the \"deptIndex2\" index and shows Hyperspace metadata after vaccuming. You should see metadata entries for two indexes \"deptIndex1\" and \"empIndex\" both with \"ACTIVE\" status and no entry for \"deptIndex2\"."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -356,6 +376,7 @@
 					"\n",
 					"hyperspace.Indexes().Show();"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -369,7 +390,8 @@
 					"  - By using `disableHyperspace` command, Hyperspace rules no longer apply during query optimization. You should note that disabling Hyperspace has no impact on created indexes as they remain intact.\n",
 					"\n",
 					"Below cell shows how you can use these commands to enable or disable hyperspace. The output simply shows a reference to the existing Spark™ session whose configuration is updated."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -380,6 +402,7 @@
 					"// Disable Hyperspace\n",
 					"spark.DisableHyperspace();"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -389,7 +412,8 @@
 					"In order to make Spark™ use Hyperspace indexes during query processing, the user needs to make sure that Hyperspace is enabled. \n",
 					"\n",
 					"The cell below enables Hyperspace and creates two DataFrames containing our sample data records which we use for running example queries. For each DataFrame, a few sample rows are printed."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -403,6 +427,7 @@
 					"empDFrame.Show(5);\n",
 					"deptDFrame.Show(5);"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -413,7 +438,8 @@
 					"Currently, Hyperspace can exploit indexes for two groups of queries: \n",
 					"* Selection queries with lookup or range selection filtering predicates.\n",
 					"* Join queries with an equality join predicate (i.e. Equi-joins)."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -434,7 +460,8 @@
 					"\n",
 					"In the query plan, the \"FileScan\" operator at the bottom of the plan shows the datasource where the records were read from. The location of this file indicates the path to the latest version of the \"deptIndex1\" index. This shows  that according to the query and using Hyperspace optimization rules, Spark™ decided to exploit the proper index at runtime.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -445,6 +472,7 @@
 					"\n",
 					"hyperspace.Explain(eqFilter, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -459,7 +487,8 @@
 					"```\n",
 					"Similar to our first example, the output of the cell below shows the query results (names of two departments) and the query plan. The location of data file in the FileScan operator shows that 'deptIndex1\" was used to run the query.   \n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -470,6 +499,7 @@
 					"\n",
 					"hyperspace.Explain(rangeFilter, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -485,7 +515,8 @@
 					"\n",
 					"The output of running the cell below shows the query results which are the names of 14 employees and the name of department each employee works in. The query plan is also included in the output. Notice how the file locations for two FileScan operators shows that Spark™ used \"empIndex\" and \"deptIndex1\" indexes to run the query.   \n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -500,6 +531,7 @@
 					"\n",
 					"hyperspace.Explain(eqJoin, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -508,7 +540,8 @@
 					"## Support for SQL Semantics\n",
 					"\n",
 					"The index usage is transparent to whether the user uses DataFrame API or Spark™ SQL. The following example shows the same join example as before but using Spark SQL, showing the use of indexes if applicable."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -521,6 +554,7 @@
 					"joinQuery.Show();\n",
 					"hyperspace.Explain(joinQuery, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -531,7 +565,8 @@
 					"So far, you might have observed we have been using the explain API provided by Hyperspace. The `explain` API from Hyperspace is very similar to Spark's `df.explain` API but allows users to compare their original plan vs the updated index-dependent plan before running their query. You have an option to choose from html/plaintext/console mode to display the command output. \n",
 					"\n",
 					"The following cell shows an example with HTML. The highlighted section represents the difference between original and updated plans along with the indexes being used."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -542,6 +577,7 @@
 					"\n",
 					"hyperspace.Explain(eqJoin, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 18
 			},
 			{
@@ -555,7 +591,8 @@
 					"The two cells below show an example for this scenario:\n",
 					"- First cell adds two more departments to the original departments data. It reads and prints list of departments to verify new departments are added correctly. The output shows 6 departments in total: four old ones and two new. Invoking \"refreshIndex\" updates \"deptIndex1\" so index captures new departments.\n",
 					"- Second cell runs our range selection query example. The results should now contain four departments: two are the ones, seen before when we ran the query above, and two are the new departments we just added."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -575,6 +612,7 @@
 					"\n",
 					"hyperspace.RefreshIndex(\"deptIndex1\");"
 				],
+				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -585,6 +623,7 @@
 					"\n",
 					"hyperspace.Explain(newRangeFilter, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -606,7 +645,8 @@
 					"You can check the transformation of the query plan in below examples.\n",
 					"\n",
 					"    Note: Hybrid scan is only supported for non-partitioned data. Support for partitioned data is currently being worked upon."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -614,7 +654,8 @@
 					"### Hybrid Scan for appended files - non-partitioned data\n",
 					"\n",
 					"Non-partitioned data is used in below example. In this example, we expect Join index can be used for the query and `BucketUnion` is introduced for appended files."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -645,6 +686,7 @@
 					"string testDataLocation = $\"{dataPath}/productTable\";\n",
 					"testData.Write().Mode(\"overwrite\").Parquet(testDataLocation);"
 				],
+				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -655,6 +697,7 @@
 					"var productIndex2Config = new IndexConfig(\"productIndex\", new string[] {\"name\"}, new string[] {\"date\", \"qty\"});\n",
 					"hyperspace.CreateIndex(testDF, productIndex2Config);"
 				],
+				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -668,6 +711,7 @@
 					"\n",
 					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -683,6 +727,7 @@
 					"DataFrame appendData = spark.CreateDataFrame(appendProducts, productsSchema);\n",
 					"appendData.Write().Mode(\"Append\").Parquet(testDataLocation);"
 				],
+				"attachments": null,
 				"execution_count": 24
 			},
 			{
@@ -691,7 +736,8 @@
 					"Hybrid scan is disabled by default. Therefore, you will see that since we appended new data, Hyperspace will decide NOT to use the index.\n",
 					"\n",
 					"In the output, you will see no plan differences (hence no highlighting)."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -709,6 +755,7 @@
 					"\n",
 					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -718,7 +765,8 @@
 					"\n",
 					"In plan with indexes, you can see\n",
 					"`Exchange hashpartitioning` required only for appended files so that we could still utilize the \"shuffled\" index data with appended files. `BucketUnion` is used to merge \"shuffled\" appended files with the index data."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -734,6 +782,7 @@
 					"\n",
 					"hyperspace.Explain(query, true, input => DisplayHTML(input));"
 				],
+				"attachments": null,
 				"execution_count": 26
 			},
 			{
@@ -741,7 +790,8 @@
 				"source": [
 					"### Cleanup\n",
 					"To make this notebook self-contained and not leave any dangling data, we have some small clean-up code below. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -751,6 +801,7 @@
 					"FS.Rm(dataPath, true);\n",
 					"FS.Rm(indexLocation, true);"
 				],
+				"attachments": null,
 				"execution_count": 27
 			}
 		]

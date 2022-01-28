@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -66,7 +65,8 @@
 					"\n",
 					"## Pre-requisites\n",
 					"Synapse leverage AAD pass-through to access any ADLS Gen2 account (or folder) to which you have a **Blob Storage Contributor** permission. No credentials or access token is required. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -74,7 +74,8 @@
 					"## Load a sample data\n",
 					"\n",
 					"Let's first load the [public holidays](https://azure.microsoft.com/en-us/services/open-datasets/catalog/public-holidays/) of last 6 months from Azure Open datasets as a sample."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -91,6 +92,7 @@
 					"hol = PublicHolidays(start_date=start_date, end_date=end_date)\n",
 					"hol_df = hol.to_spark_dataframe()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -99,6 +101,7 @@
 					"# Display 5 rows\n",
 					"hol_df.show(5, truncate = False)"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -108,7 +111,8 @@
 					"\n",
 					"We are going to write the spark dateframe to your default ADLS Gen2 storage account.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -124,6 +128,7 @@
 					"adls_path = 'abfss://%s@%s.dfs.core.windows.net/%s' % (container_name, account_name, relative_path)\n",
 					"print('Primary storage account path: ' + adls_path)"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -134,7 +139,8 @@
 					"\n",
 					"Dataframes can be saved in any format, regardless of the input format.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -146,6 +152,7 @@
 					"print('json file path： ' + json_path)\n",
 					"print('csv file path: ' + csv_path)"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -155,6 +162,7 @@
 					"hol_df.write.json(json_path, mode = 'overwrite')\n",
 					"hol_df.write.csv(csv_path, mode = 'overwrite', header = 'true')"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -163,7 +171,8 @@
 					"### Save a dataframe as text files\n",
 					"If you have a dataframe that you want ot save as text file, you must first covert it to an RDD and then save that RDD as a text file.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -172,6 +181,7 @@
 					"text_path = adls_path + 'holiday.txt'\n",
 					"print('text file path: ' + text_path)"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -181,6 +191,7 @@
 					"hol_RDD = hol_df.rdd\n",
 					"type(hol_RDD)"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -188,7 +199,8 @@
 				"source": [
 					"If you have an RDD, you can convert it to a text file like the following:\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -196,6 +208,7 @@
 					" # Save RDD as text file\n",
 					"hol_RDD.saveAsTextFile(text_path)"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -203,20 +216,23 @@
 				"source": [
 					"# Read data from the default ADLS Gen2 storage\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"### Create a dataframe from parquet files\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"df_parquet = spark.read.parquet(parquet_path)"
 				],
+				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -224,13 +240,15 @@
 				"source": [
 					"### Create a dataframe from JSON files\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"df_json = spark.read.json(json_path)"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -238,13 +256,15 @@
 				"source": [
 					"### Create a dataframe from CSV files\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"df_csv = spark.read.csv(csv_path, header = 'true')"
 				],
+				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -252,13 +272,15 @@
 				"source": [
 					"### Create an RDD from text file\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"text = sc.textFile(text_path)"
 				],
+				"attachments": null,
 				"execution_count": 17
 			}
 		]

@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -55,7 +54,8 @@
 					"\n",
 					"Synapse has common used data visualization packages pre installed, such as **matplotlib**, **bokeh**, **seaborn**, **altair**, **plotly**. This notebook provides examples to do data visualization using charts in Synapse notebook. \n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -69,7 +69,8 @@
 				"source": [
 					"## Matplotlib\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -91,6 +92,7 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -126,6 +128,7 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -152,6 +155,7 @@
 					"plt.title(\"Cumulative Histogram\")\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -177,6 +181,7 @@
 					"plt.show()\n",
 					""
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -201,6 +206,7 @@
 					"plt.legend()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -223,6 +229,7 @@
 					"plt.title('Pie Chart Example')\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -242,6 +249,7 @@
 					"plt.title(\"Fills and Alpha Example\")\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -286,6 +294,7 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -319,6 +328,7 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -349,6 +359,7 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -369,6 +380,7 @@
 					"plt.tight_layout()\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 12
 			},
 			{
@@ -376,7 +388,8 @@
 				"source": [
 					"## Seaborn\n",
 					"Seaborn is a library layered on top of Matplotlib that you can use."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -396,6 +409,7 @@
 					"sns.regplot(x, y)\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -417,6 +431,7 @@
 					"sns.heatmap(data)\n",
 					"plt.show()"
 				],
+				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -425,7 +440,8 @@
 					"## Bokeh\n",
 					"You can render HTML or interactive libraries, like **bokeh**, using the **displayHTML()**.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -452,6 +468,7 @@
 					"# display this html\n",
 					"displayHTML(html)"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -486,6 +503,7 @@
 					"# display this html\n",
 					"displayHTML(html)"
 				],
+				"attachments": null,
 				"execution_count": 16
 			}
 		]

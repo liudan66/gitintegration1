@@ -1,9 +1,6 @@
 {
-	"name": "Notebook 19",
+	"name": "Notebook 21",
 	"properties": {
-		"folder": {
-			"name": "New folder"
-		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {
@@ -27,6 +24,26 @@
 		"cells": [
 			{
 				"cell_type": "code",
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
 				"source": [
 					""
 				],

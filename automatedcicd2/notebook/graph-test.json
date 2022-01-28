@@ -20,7 +20,6 @@
 		},
 		"metadata": {
 			"saveOutput": true,
-			"noPermissionToViewOutput": true,
 			"language_info": {
 				"name": "python"
 			}
@@ -35,6 +34,7 @@
 					"df2 = spark.sql(\"SELECT * FROM abc\")\n",
 					"df2.show()"
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

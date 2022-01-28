@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -60,6 +59,7 @@
 					"df = spark.read.load('abfss://hozhao@hozhao0924gen2.dfs.core.windows.net/New folder 1105/0vg001140vg001140vg001140vg001140vg001g001.parquet', format='parquet')\r\n",
 					"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

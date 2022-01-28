@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -53,6 +52,7 @@
 				"source": [
 					""
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -69,6 +69,7 @@
 					"    .mode('append')\\\n",
 					"    .save()"
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

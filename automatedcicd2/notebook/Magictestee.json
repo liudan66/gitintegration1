@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -53,6 +52,7 @@
 				"source": [
 					"%lsmagic"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -65,6 +65,7 @@
 					"test()\n",
 					"a"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -74,6 +75,7 @@
 					"import time\n",
 					"time.sleep(.3)"
 				],
+				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -88,6 +90,7 @@
 					"print('std\\\\out')\n",
 					"eprint('std\\nerr')"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -95,6 +98,7 @@
 				"source": [
 					"out.stdout"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -106,6 +110,7 @@
 					"cool,10\n",
 					"coolest,232"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -114,6 +119,7 @@
 					"df = spark.read.csv('abc/test1.csv')\n",
 					"df.show()"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -121,6 +127,7 @@
 				"source": [
 					"df.show()"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -128,6 +135,7 @@
 				"source": [
 					"display(df)"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -135,6 +143,7 @@
 				"source": [
 					""
 				],
+				"attachments": null,
 				"execution_count": null
 			}
 		]

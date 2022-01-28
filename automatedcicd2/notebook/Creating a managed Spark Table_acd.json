@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -58,13 +57,15 @@
 					"This notebook describes how to create a managed table from Spark. \n",
 					"The table is created in the Synapse warehouse folder in your primary storage account. The table will be synchronized and available in Synapse SQL Pools. \n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"CREATE TABLE cities (name STRING, population INT) USING PARQUET\")"
 				],
+				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -72,13 +73,15 @@
 				"source": [
 					"Insert a few rows into the table using a list of values.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"INSERT INTO cities VALUES ('Seattle', 730400), ('San Francisco', 881549), ('Beijing', 21540000), ('Bangalore', 10540000)\")"
 				],
+				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -86,7 +89,8 @@
 				"source": [
 					"* Retrieve values back. Click on 'Chart' below to review the visualization.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -118,6 +122,7 @@
 				"source": [
 					"display(spark.sql(\"SELECT * FROM cities ORDER BY name\"))"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -125,13 +130,15 @@
 				"source": [
 					"Drop the table. Please note the data will get deleted from the primary storage account associated with this workspace.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"DROP TABLE cities\")"
 				],
+				"attachments": null,
 				"execution_count": 4
 			}
 		]

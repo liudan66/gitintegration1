@@ -43,9 +43,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -55,6 +54,7 @@
 					"demo_df = spark.createDataFrame(new_rows, ['state', 'age', 'salary'])\n",
 					"demo_df.show()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			}
 		]

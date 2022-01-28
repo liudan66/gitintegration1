@@ -46,9 +46,8 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
-			},
-			"sessionKeepAliveTimeout": 30
+				"extraHeader": null
+			}
 		},
 		"cells": [
 			{
@@ -68,7 +67,8 @@
 					"- Oops, enforced it on the wrong customer! - Looking at the audit log to find mistakes in operations\n",
 					"- Rollback all the way!\n",
 					"- Closing the loop - 'defrag' your data"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "markdown",
@@ -76,7 +76,8 @@
 					"# Creating sample mock data containing customer orders\n",
 					"\n",
 					"For this tutorial, we will setup a sample file containing customer orders with a simple schema: (order_id, order_date, customer_name, price)."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -98,6 +99,7 @@
 					"orders.show()\n",
 					"orders.printSchema()"
 				],
+				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -113,7 +115,8 @@
 					"\n",
 					"//Confirm that the converted data is now in the Delta format\n",
 					"DeltaTable.isDeltaTable(parquetPath)"
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -124,6 +127,7 @@
 					"path = \"/delta/delta-table-{0}\".format(session_id)\n",
 					"path"
 				],
+				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -134,6 +138,7 @@
 					"\n",
 					"orders.repartition(1).write.format(\"delta\").save(path)"
 				],
+				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -141,7 +146,8 @@
 				"source": [
 					"# Querying the Delta table using functional and SQL\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -149,6 +155,7 @@
 					"ordersDataFrame = spark.read.format(\"delta\").load(path)\n",
 					"ordersDataFrame.show()"
 				],
+				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -157,6 +164,7 @@
 					"ordersDataFrame.createOrReplaceTempView(\"ordersDeltaTable\")\n",
 					"spark.sql(\"SELECT * FROM ordersDeltaTable\").show"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -165,13 +173,15 @@
 					"# Understanding Meta-data\n",
 					"\n",
 					"In Delta Lake, meta-data is no different from data i.e., it is stored next to the data. Therefore, an interesting side-effect here is that you can peek into meta-data using regular Spark APIs. "
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"[log_line.value for log_line in spark.read.text(path + \"/_delta_log/\").collect()]"
 				],
+				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -180,7 +190,8 @@
 					"# The Curious Case of Forgotten Discount - Making corrections to data\n",
 					"\n",
 					"Now that you are able to look at the orders table, you realize that you forgot to discount the orders that came in on November 1, 2019. Worry not! You can quickly make that correction."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -195,6 +206,7 @@
 					"  condition = expr(\"order_date == '2019-11-01'\"),\n",
 					"  set = {\"price\": expr(\"price - price*0.1\") })"
 				],
+				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -202,19 +214,22 @@
 				"source": [
 					"table.toDF()"
 				],
+				"attachments": null,
 				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"When you now inspect the meta-data, what you will notice is that the original data is over-written. Well, not in a true sense but appropriate entries are added to Delta's transaction log so it can provide an \"illusion\" that the original data was deleted. We can verify this by re-inspecting the meta-data. You will see several entries indicating reference removal to the original data."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"[log_line.value for log_line in spark.read.text(path + \"/_delta_log/\").collect()]"
 				],
+				"attachments": null,
 				"execution_count": 10
 			},
 			{
@@ -225,7 +240,8 @@
 					"One of your customers wanted their data to be deleted. But wait, you are working with data stored on an immutable file system (e.g., HDFS, ADLS, WASB). How would you delete it? Using Delta Lake's Delete API.\n",
 					"\n",
 					"Delta Lake provides programmatic APIs to conditionally update, delete, and merge (upsert) data into tables. For more information on these operations, see [Table Deletes, Updates, and Merges](https://docs.delta.io/latest/delta-update.html)."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -234,6 +250,7 @@
 					"table.delete(condition = expr(\"customer_name == 'Saveen'\"))\n",
 					"table.toDF().show()"
 				],
+				"attachments": null,
 				"execution_count": 11
 			},
 			{
@@ -243,13 +260,15 @@
 					"\n",
 					"Delta's most powerful feature is the ability to allow looking into history i.e., the changes that were made to the underlying Delta Table. The cell below shows how simple it is to inspect the history.\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(20, 1000, False)"
 				],
+				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -260,13 +279,15 @@
 					"You can query previous snapshots of your Delta Lake table by using a feature called Time Travel. If you want to access the data that you overwrote, you can query a snapshot of the table before you overwrote the first set of data using the versionAsOf option.\n",
 					"\n",
 					"Once you run the cell below, you should see the first set of data, from before you overwrote it. Time Travel is an extremely powerful feature that takes advantage of the power of the Delta Lake transaction log to access data that is no longer in the table. Removing the version 0 option (or specifying version 1) would let you see the newer data again. For more information, see [Query an older snapshot of a table (time travel)](https://docs.delta.io/latest/delta-batch.html#deltatimetravel)."
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.read.format(\"delta\").option(\"versionAsOf\", \"1\").load(path).write.mode(\"overwrite\").format(\"delta\").save(path)"
 				],
+				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -276,6 +297,7 @@
 					"table.delete(condition = expr(\"customer_name == 'Rahul'\"))\n",
 					"table.toDF().show()"
 				],
+				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -283,6 +305,7 @@
 				"source": [
 					"table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(20, 1000, False)"
 				],
+				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -290,7 +313,8 @@
 				"source": [
 					"# Closing the loop - 'defrag' your data\n",
 					""
-				]
+				],
+				"attachments": null
 			},
 			{
 				"cell_type": "code",
@@ -300,6 +324,7 @@
 					"\n",
 					"# Alternate Syntax: spark.sql($\"VACUUM delta.`{path}`\").show"
 				],
+				"attachments": null,
 				"execution_count": 19
 			}
 		]
