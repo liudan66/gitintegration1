@@ -13,13 +13,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebook": {
-						"referenceName": "Notebook 1rename",
-						"type": "NotebookReference"
-					}
-				}
+				"userProperties": []
 			}
 		],
 		"annotations": [],
