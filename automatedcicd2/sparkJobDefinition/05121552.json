@@ -2,17 +2,21 @@
 	"name": "05121552",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "catest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "csharp",
 		"jobProperties": {
 			"name": "05121552",
 			"file": "local:///usr/hdp/current/spark2-client/jars/microsoft-spark.jar",
 			"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
 			"conf": {
-				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs"
+				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs",
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "856819b8-951a-4f64-aee2-4eb735ceadc6"
 			},
 			"args": [
 				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa1105ws/batchjobs/Spark_DotNet/wordcount.zip",
@@ -29,7 +33,7 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 1
+			"numExecutors": 2
 		}
 	}
 }

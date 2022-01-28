@@ -3,10 +3,10 @@
 	"properties": {
 		"description": "my scalasdf",
 		"targetBigDataPool": {
-			"referenceName": "sparkpoolnew",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "scalaimport",
@@ -14,8 +14,9 @@
 			"className": "WordCount",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "f41fa0e4-60b0-4a1c-b759-df451415ab09"
 			},
 			"args": [
 				"abfss://defaultfs@hozhaobdbj.dfs.core.windows.net/synapse/workspaces/bdbj0520yan/batchjobs/scala/shakespeare.txt",

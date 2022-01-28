@@ -2,10 +2,10 @@
 	"name": "3",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "catest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "3",
@@ -13,8 +13,9 @@
 			"className": "WordCount",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "69a52c7f-0b04-444a-96f1-7669f015d15b"
 			},
 			"args": [],
 			"jars": [],

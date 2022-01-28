@@ -2,10 +2,10 @@
 	"name": "test4",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "MLPool",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "test4",
@@ -13,8 +13,9 @@
 			"className": "WordCount",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "bcc4c3da-30de-4c49-8b56-21563f7168b3"
 			},
 			"args": [
 				"abfss://sparkjob@yifsoadlsgen2westus2.dfs.core.windows.net/synapse/workspaces/yifso1022scus/batchjobs/test4/shakespeare.txt",

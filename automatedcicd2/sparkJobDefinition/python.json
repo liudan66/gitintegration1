@@ -2,23 +2,29 @@
 	"name": "python",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "bigest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "python",
 		"jobProperties": {
 			"name": "python",
 			"file": "abfss://sparkjob@yifsoadlsgen2westus2.dfs.core.windows.net/synapse/workspaces/yifso1202ws/batchjobs/FileExists_Python/fileexists.py",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "d4937fe5-2fd6-4c78-95b8-2c4b9e7581af"
+			},
 			"args": [],
 			"jars": [],
 			"files": [
 				"abfss://sparkjob@yifsoadlsgen2westus2.dfs.core.windows.net/synapse/workspaces/yifso1202ws/batchjobs/FileExists_Python/shakespeare.txt"
 			],
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2
 		}
 	}

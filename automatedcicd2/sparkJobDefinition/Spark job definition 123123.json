@@ -2,10 +2,10 @@
 	"name": "Spark job definition 123123",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "sparkpool1",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "Spark job definition 123123",
@@ -13,8 +13,9 @@
 			"className": "abfss://synapsetest@bdbjtestgen2.dfs.core.windows.net/synapse/workspaces/catestws/batchjobs/spark/wordcount.jar",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "1dbb0f7c-c5fa-4f40-8731-d5e74b408214"
 			},
 			"args": [],
 			"jars": [],

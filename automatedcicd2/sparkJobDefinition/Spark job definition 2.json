@@ -2,25 +2,31 @@
 	"name": "Spark job definition 2",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "h",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "Spark job definition 2",
 			"file": "abfss://scala@jiamin.dfs.core.windows.net/samples/scala/wordcount/wordcount.jar",
 			"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "7659aad3-b8d6-414b-9384-db0e1473a237"
+			},
 			"args": [
 				"abfss://scala@jiamin.dfs.core.windows.net/samples/scala/wordcount/shakespeare.txt",
 				"abfss://scala@jiamin.dfs.core.windows.net/samples/scala/wordcount/result"
 			],
 			"jars": [],
 			"files": [],
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2
 		}
 	}

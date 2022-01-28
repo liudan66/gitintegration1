@@ -2,14 +2,20 @@
 	"name": "05121604_python",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "bigest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "python",
 		"jobProperties": {
 			"name": "05121604_python",
 			"file": "abfss://sparkjob@hozhaogen2.dfs.core.windows.net/synapse/workspaces/bigdataqa0512ws2/batchjobs/05121604_python/wordcount.py",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "a8a0c36e-cb36-4515-b113-ca092b3bf41c"
+			},
 			"args": [
 				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/shakespeare.txt",
 				"abfss://sparkjob@hozhaogen2.dfs.core.windows.net/python/result"
@@ -20,7 +26,7 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 1
+			"numExecutors": 2
 		}
 	}
 }

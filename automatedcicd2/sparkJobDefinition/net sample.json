@@ -2,17 +2,21 @@
 	"name": "net sample",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "catest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "csharp",
 		"jobProperties": {
 			"name": "net sample",
 			"file": "local:///usr/hdp/current/spark2-client/jars/microsoft-spark.jar",
 			"className": "org.apache.spark.deploy.dotnet.DotnetRunner",
 			"conf": {
-				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs"
+				"spark.yarn.appMasterEnv.DOTNET_ASSEMBLY_SEARCH_PATHS": "./udfs",
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2eb6e909-b171-4119-b68d-fe9eae7a7555"
 			},
 			"args": [
 				"abfss://sparkjob@jiamin.dfs.core.windows.net/dotnet/wordcount/wordcount.zip",

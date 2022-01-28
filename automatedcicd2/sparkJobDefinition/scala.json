@@ -2,25 +2,31 @@
 	"name": "scala",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "bigest",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "scala",
 			"file": "abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/wordcount.jar",
 			"className": "WordCount",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "1c999f23-560b-49ab-8ca4-fcb092c0c654"
+			},
 			"args": [
 				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/shakespeare.txt",
 				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/result"
 			],
 			"jars": [],
 			"files": [],
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2
 		}
 	}

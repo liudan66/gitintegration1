@@ -3,8 +3,10 @@
 	"properties": {
 		"description": "poi",
 		"targetBigDataPool": {
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "2",
@@ -12,12 +14,17 @@
 			"className": "WordCount",
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9f4d0dcf-2c94-465e-bcdb-28e67ed52bee"
 			},
 			"args": [],
 			"jars": [],
 			"files": [],
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2
 		}
 	}

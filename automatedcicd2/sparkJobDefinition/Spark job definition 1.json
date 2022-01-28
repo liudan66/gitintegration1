@@ -2,15 +2,21 @@
 	"name": "Spark job definition 1",
 	"properties": {
 		"targetBigDataPool": {
-			"referenceName": "h",
+			"referenceName": "small",
 			"type": "BigDataPoolReference"
 		},
-		"requiredSparkVersion": "2.4",
+		"requiredSparkVersion": "3.1",
 		"language": "scala",
 		"jobProperties": {
 			"name": "Spark job definition 1",
 			"file": "abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/wordcount.jar",
 			"className": "WordCount",
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "18dc816f-b874-4383-b6e7-3954ff3b9958"
+			},
 			"args": [
 				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/shakespeare.txt",
 				"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/result"
