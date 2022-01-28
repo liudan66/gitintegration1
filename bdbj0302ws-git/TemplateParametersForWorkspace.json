@@ -1,0 +1,549 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "bdbj0302ws-git"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage1106_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage1124_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage4_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage_TestAKV_connectionString": {
+			"value": ""
+		},
+		"AzureDataExplorer2_servicePrincipalKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage0304_servicePrincipalCredential": {
+			"value": ""
+		},
+		"AzureDataLakeStorage030402_servicePrincipalCredential": {
+			"value": ""
+		},
+		"AzureDataLakeStorage030404_servicePrincipalCredential": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1105_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1107_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1108_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1110_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1111_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1112_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1113_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1114_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1115_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage2_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage3_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage4_accountKey": {
+			"value": ""
+		},
+		"CosmosDb1_connectionString": {
+			"value": ""
+		},
+		"CosmosDbMongoDbApi_connectionString": {
+			"value": ""
+		},
+		"CosmosDbMongoDbApi0304_connectionString": {
+			"value": ""
+		},
+		"CosmosDbMongoDbApi1_connectionString": {
+			"value": ""
+		},
+		"CosmosDbSQLAPI030401_connectionString": {
+			"value": ""
+		},
+		"CosmosDbsqlapi0304_connectionString": {
+			"value": ""
+		},
+		"Kusto0304_servicePrincipalKey": {
+			"value": ""
+		},
+		"Kusto030402_servicePrincipalKey": {
+			"value": ""
+		},
+		"Kusto030403_servicePrincipalKey": {
+			"value": ""
+		},
+		"Kusto1105_servicePrincipalKey": {
+			"value": ""
+		},
+		"MongoDbApi1105_connectionString": {
+			"value": ""
+		},
+		"SQLApi1105_connectionString": {
+			"value": ""
+		},
+		"bdbj0105ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj0112ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj0119ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj0202ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj0302ws-git-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj1027ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj1103ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj1113ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj1119ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bdbj1208ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdata0925ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdata1128ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdata1128ws2-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdataqa0301ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdataqa0512ws2-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdataqa0917ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"bigdataqa0924ws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"catestws2-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"chaxuamleus_servicePrincipalKey": {
+			"value": ""
+		},
+		"cicdtestws-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"dancicdtest-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"hozhaobdbj_accountKey": {
+			"value": ""
+		},
+		"ltianscusworkspace-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"xiaochuan_connectionString": {
+			"value": ""
+		},
+		"yifso1022scus-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage3_properties_typeProperties_connectionString_secretName": {
+			"value": "Accountkeyblob01"
+		},
+		"AzureBlobStorage_0305AKYTEST_properties_typeProperties_connectionString_secretName": {
+			"value": "Accountkeyblob01"
+		},
+		"AzureBlobStorage_ci_test_properties_typeProperties_connectionString_secretName": {
+			"value": "Accountkeyblob01"
+		},
+		"AzureBlobStorage_prod_test_properties_typeProperties_connectionString_secretName": {
+			"value": "Accountkeyblob01"
+		},
+		"AzureDataExplorer1_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataExplorer1_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataExplorer1_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"AzureDataExplorer2_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataExplorer2_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataExplorer2_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"AzureDataLakeStorage0304_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage0304_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataLakeStorage0304_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataLakeStorage030401_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage030401_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataLakeStorage030401_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataLakeStorage030402_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage030402_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataLakeStorage030402_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataLakeStorage030403_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage030403_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"AzureDataLakeStorage030403_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"AzureDataLakeStorage030404_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage0305_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://hozhaotestgen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1105_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1107_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1108_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1110_properties_typeProperties_url": {
+			"value": "https://hozhaotestgen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1111_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1112_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1113_properties_typeProperties_url": {
+			"value": "https://hozhaogen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1114_properties_typeProperties_url": {
+			"value": "https://storagegen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage1115_properties_typeProperties_url": {
+			"value": "https://accessibilitytest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage2_properties_typeProperties_url": {
+			"value": "https://hozhaotestgen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage3_properties_typeProperties_url": {
+			"value": "https://hozhaotestgen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage30405_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"AzureDataLakeStorage4_properties_typeProperties_url": {
+			"value": "https://hozhaotestgen2.dfs.core.windows.net"
+		},
+		"AzureDataLakeStore1105_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://zzytest.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore1105_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1105_properties_typeProperties_subscriptionId": {
+			"value": "8b3b8a60-1dd0-4824-8770-2ed6a55d8e27"
+		},
+		"AzureDataLakeStore1105_properties_typeProperties_resourceGroupName": {
+			"value": "zzy-test-rg"
+		},
+		"AzureDataLakeStore1106_properties_typeProperties_dataLakeStoreUri": {
+			"value": "adl://storagegen1qingtest.azuredatalakestore.net"
+		},
+		"AzureDataLakeStore1106_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1106_properties_typeProperties_subscriptionId": {
+			"value": ""
+		},
+		"AzureDataLakeStore1106_properties_typeProperties_resourceGroupName": {
+			"value": "bigdataqa"
+		},
+		"AzureDataLakeStore1107_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://storagegen1qingtest.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore1107_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1107_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"AzureDataLakeStore1107_properties_typeProperties_resourceGroupName": {
+			"value": "bigdataqa"
+		},
+		"AzureDataLakeStore1108_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://storagegen1qingtest.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore1108_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1108_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"AzureDataLakeStore1108_properties_typeProperties_resourceGroupName": {
+			"value": "bigdataqa"
+		},
+		"AzureDataLakeStore1122_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://lirsungen1.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore1122_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1122_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"AzureDataLakeStore1122_properties_typeProperties_resourceGroupName": {
+			"value": "beijingtest"
+		},
+		"AzureDataLakeStore123_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://storagegen1qingtest.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore123_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore123_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"AzureDataLakeStore123_properties_typeProperties_resourceGroupName": {
+			"value": "bigdataqa"
+		},
+		"AzureDataLakeStore456_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://storagegen1qingtest.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore456_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore456_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"AzureDataLakeStore456_properties_typeProperties_resourceGroupName": {
+			"value": "bigdataqa"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://Dandatafactorykeyvault.vault.azure.net/"
+		},
+		"AzureKeyVault_bdbjqingtest_properties_typeProperties_baseUrl": {
+			"value": "https://bdbjkeyvaultqingtest.vault.azure.net/"
+		},
+		"CosmosDbMongoDbApi_properties_typeProperties_database": {
+			"value": "mongodbapidatabaseqingtest"
+		},
+		"CosmosDbMongoDbApi0304_properties_typeProperties_database": {
+			"value": "mongodbapidatabaseqingtest"
+		},
+		"CosmosDbMongoDbApi1_properties_typeProperties_database": {
+			"value": "yuwwang-mongo-db1"
+		},
+		"Gen20304_properties_typeProperties_url": {
+			"value": "https://bdbjgen2qingtest.dfs.core.windows.net"
+		},
+		"GitHublink_properties_typeProperties_username": {
+			"value": "liudan"
+		},
+		"Kusto0304_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"Kusto0304_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"Kusto0304_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"Kusto030401_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"Kusto030401_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"Kusto030401_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"Kusto030402_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"Kusto030402_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"Kusto030402_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"Kusto030403_properties_typeProperties_tenant": {
+			"value": "72bfe100-a448-4f25-af39-5b36c7bb62ef"
+		},
+		"Kusto030403_properties_typeProperties_servicePrincipalId": {
+			"value": "8f6caa4c-31d9-4562-8084-bcbf13bb0068"
+		},
+		"Kusto030403_properties_typeProperties_database": {
+			"value": "bdbjkustodatabaseqingtest"
+		},
+		"Kusto1105_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"Kusto1105_properties_typeProperties_servicePrincipalId": {
+			"value": "ac3a0e33-1db1-48ba-9b19-24ce0330ff5c"
+		},
+		"Kusto1105_properties_typeProperties_database": {
+			"value": "cdndemo"
+		},
+		"MongoDbApi1105_properties_typeProperties_database": {
+			"value": "yuwwang-mongo-db1"
+		},
+		"bdbj0105ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bdbj0112ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bdbj0119ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bdbj0202ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bdbj0302ws-git-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://honghaigen2.dfs.core.windows.net"
+		},
+		"bdbj1027ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaobdbj.dfs.core.windows.net"
+		},
+		"bdbj1103ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bdbj1113ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaobdbj.dfs.core.windows.net"
+		},
+		"bdbj1119ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaobdbj.dfs.core.windows.net"
+		},
+		"bdbj1208ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://bdbjtestgen2.dfs.core.windows.net"
+		},
+		"bigdata0925ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"bigdata1128ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"bigdata1128ws2-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao1128gen2.dfs.core.windows.net"
+		},
+		"bigdataqa0301ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaogen2.dfs.core.windows.net"
+		},
+		"bigdataqa0512ws2-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaogen2.dfs.core.windows.net"
+		},
+		"bigdataqa0917ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao0917gen2.dfs.core.windows.net"
+		},
+		"bigdataqa0924ws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"catestws2-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhaobdbj.dfs.core.windows.net"
+		},
+		"chaxuamleus_properties_typeProperties_subscriptionId": {
+			"value": "051ddeca-1ed6-4d8b-ba6f-1ff561e5f3b3"
+		},
+		"chaxuamleus_properties_typeProperties_resourceGroupName": {
+			"value": "chaxu-test"
+		},
+		"chaxuamleus_properties_typeProperties_servicePrincipalId": {
+			"value": "a82dd51d-9e81-4835-ae78-dae1b3ffae64"
+		},
+		"chaxuamleus_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"cicdtestws-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://hozhao0924gen2.dfs.core.windows.net"
+		},
+		"dancicdtest-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://srbaccicd.dfs.core.windows.net"
+		},
+		"dansynapsebugbash-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://dansynapsestroage.dfs.core.windows.net"
+		},
+		"hozhaobdbj_properties_typeProperties_url": {
+			"value": "https://hozhaobdbj.dfs.core.windows.net/"
+		},
+		"ltianscusworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://ltianscusgen2.dfs.core.windows.net"
+		},
+		"nyc_tlc_fhv_sasUri": {
+			"value": ""
+		},
+		"us-employment-hours-earnings-state_sasUri": {
+			"value": ""
+		},
+		"workspacedeploydan5-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://dansynapsestroage.dfs.core.windows.net"
+		},
+		"yifso1022scus-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://yifsoadlsgen2westus2.dfs.core.windows.net"
+		}
+	}
+}
