@@ -733,6 +733,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/small')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/CopyPipeline_14p')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -10956,7 +10965,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "medium",
+					"referenceName": "small",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -10968,33 +10977,41 @@
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "613ef238-174d-4146-9170-d13bed15b00a"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
 					"language_info": {
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/medium",
-						"name": "medium",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+						"name": "small",
 						"type": "Spark",
-						"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/medium",
+						"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "2.4",
+						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56,
-						"extraHeader": null
-					}
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"# Creating an unmanaged (external) Spark table\n",
 							"This notebook describes how to create an unmanaged (also known as external) table from Spark. \n",
@@ -11003,6 +11020,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"spark.sql(\"CREATE TABLE cities (name STRING, population INT) USING PARQUET  LOCATION \\'/datalake/cities\\' OPTIONS (\\'compression\\'=\\'snappy\\')\")"
 						],
@@ -11011,6 +11029,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Insert a few rows into the table using a list of values.\n",
 							""
@@ -11018,6 +11037,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"spark.sql(\"INSERT INTO cities VALUES (\\'Seattle\\', 730400), (\\'San Francisco\\', 881549), (\\'Beijing\\', 21540000), (\\'Bangalore\\', 10540000)\")"
 						],
@@ -11026,6 +11046,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"* Retrieve values back. Click on 'Chart' below to review the visualization.\n",
 							""
@@ -11065,6 +11086,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Drop the table. Please note the data will remain in the data lake.\n",
 							""
@@ -11072,6 +11094,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"spark.sql(\"DROP TABLE cities\")"
 						],
@@ -45980,15 +46003,6 @@
 			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/small')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
 			"dependsOn": []
 		}
 	]
