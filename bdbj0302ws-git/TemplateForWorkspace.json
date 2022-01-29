@@ -733,15 +733,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/small')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/CopyPipeline_14p')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -45714,70 +45705,6 @@
 						"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/shakespeare.txt",
 						"abfss://sparkjob@jiamin.dfs.core.windows.net/scala/wordcount/result"
 					],
-					"jars": [],
-					"files": [],
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Spark job definition 123123')]",
-			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"targetBigDataPool": {
-					"referenceName": "small",
-					"type": "BigDataPoolReference"
-				},
-				"requiredSparkVersion": "3.1",
-				"language": "scala",
-				"jobProperties": {
-					"name": "Spark job definition 123123",
-					"file": "abfss://synapsetest@bdbjtestgen2.dfs.core.windows.net/synapse/workspaces/catestws/batchjobs/spark/wordcount.jar",
-					"className": "abfss://synapsetest@bdbjtestgen2.dfs.core.windows.net/synapse/workspaces/catestws/batchjobs/spark/wordcount.jar",
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "1",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1dbb0f7c-c5fa-4f40-8731-d5e74b408214"
-					},
-					"args": [],
-					"jars": [],
-					"files": [],
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Spark job definition 123124')]",
-			"type": "Microsoft.Synapse/workspaces/sparkJobDefinitions",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"targetBigDataPool": {
-					"referenceName": "small",
-					"type": "BigDataPoolReference"
-				},
-				"requiredSparkVersion": "3.1",
-				"language": "scala",
-				"jobProperties": {
-					"name": "Spark job definition 123124",
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "1",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d1460675-c8dd-4197-86b3-2dd2481489d1"
-					},
-					"args": [],
 					"jars": [],
 					"files": [],
 					"driverMemory": "28g",
