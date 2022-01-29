@@ -24638,7 +24638,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a93eb8a2-f2fa-49f0-85f1-587908d9f2a1"
+						"spark.autotune.trackingId": "83586041-79c4-48c2-b2c2-118dcaad6d6f"
 					}
 				},
 				"metadata": {
@@ -24664,14 +24664,12 @@
 						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"extraHeader": null
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"# Access data on Azure Data Lake Storage Gen2 (ADLS Gen2) with Synapse Spark\n",
 							"\n",
@@ -24685,20 +24683,20 @@
 							"\n",
 							"## Pre-requisites\n",
 							"Synapse leverage AAD pass-through to access any ADLS Gen2 account (or folder) to which you have a **Blob Storage Contributor** permission. No credentials or access token is required. "
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Load a sample data\n",
 							"\n",
 							"Let's first load the [public holidays](https://azure.microsoft.com/en-us/services/open-datasets/catalog/public-holidays/) from Azure Open datasets as a sample."
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// set blob storage account connection for open dataset\n",
 							"\n",
@@ -24710,33 +24708,33 @@
 							"val hol_wasbs_path = f\"wasbs://$hol_blob_container_name@$hol_blob_account_name.blob.core.windows.net/$hol_blob_relative_path\"\n",
 							"spark.conf.set(f\"fs.azure.sas.$hol_blob_container_name.$hol_blob_account_name.blob.core.windows.net\",hol_blob_sas_token)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// load the sample data as a Spark DataFrame\n",
 							"val hol_df = spark.read.parquet(hol_wasbs_path) \n",
 							"hol_df.show(5, truncate = false)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Write data to the default ADLS Gen2 storage\n",
 							"\n",
 							"We are going to write the spark dateframe to your default ADLS Gen2 storage account.\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// set your storage account connection\n",
 							"\n",
@@ -24746,23 +24744,23 @@
 							"\n",
 							"val adls_path = f\"abfss://$container_name@$account_name.dfs.core.windows.net/$relative_path\""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Save a dataframe as Parquet, JSON or CSV\n",
 							"If you have a dataframe, you can save it to Parquet or JSON with the .write.parquet(), .write.json() and .write.csv() methods respectively.\n",
 							"\n",
 							"Dataframes can be saved in any format, regardless of the input format.\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// set the path for the output file\n",
 							"\n",
@@ -24770,12 +24768,12 @@
 							"val json_path = adls_path + \"holiday.json\"\n",
 							"val csv_path = adls_path + \"holiday.csv\""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import org.apache.spark.sql.SaveMode\n",
 							"\n",
@@ -24783,121 +24781,122 @@
 							"hol_df.write.mode(SaveMode.Overwrite).json(json_path)\n",
 							"hol_df.write.mode(SaveMode.Overwrite).option(\"header\", \"true\").csv(csv_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Save a dataframe as text files\n",
 							"If you have a dataframe that you want ot save as text file, you must first covert it to an RDD and then save that RDD as a text file.\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// Define the text file path and covert spark dataframe into RDD\n",
 							"val text_path = adls_path + \"holiday1111111.txt\"\n",
 							"val hol_RDD = hol_df.rdd"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"// Save RDD as text file\n",
 							"hol_RDD.saveAsTextFile(text_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"# Read data from the default ADLS Gen2 storage\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Create a dataframe from parquet files\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val df_parquet = spark.read.parquet(parquet_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Create a dataframe from JSON files\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val df_json = spark.read.json(json_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Create a dataframe from CSV files\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val df_csv = spark.read.option(\"header\", \"true\").csv(csv_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 11
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"### Create an RDD from text file\n",
 							""
-						]
+						],
+						"attachments": null
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val text = sc.textFile(text_path)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"text.take(5).foreach(println)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 13
 					}
@@ -25266,7 +25265,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "medium",
+					"referenceName": "small",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -25278,33 +25277,41 @@
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "5146ac78-76e1-46e6-a7b5-aae8c3e863c6"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
 					"language_info": {
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/medium",
-						"name": "medium",
+						"id": "/subscriptions/ee9a0083-b9db-4f2d-9cb9-05a291e9c158/resourceGroups/bdbjqa/providers/Microsoft.Synapse/workspaces/bdbj0302ws-git/bigDataPools/small",
+						"name": "small",
 						"type": "Spark",
-						"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/medium",
+						"endpoint": "https://bdbj0302ws-git.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/small",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "2.4",
+						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56,
-						"extraHeader": null
-					}
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"# Using Azure Open Datasets in Synapse - Enrich NYC Green Taxi Data with Holiday and Weather\n",
 							"\n",
@@ -25316,6 +25323,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"## Data loading \n",
 							"Let's first load the [NYC green taxi trip records](https://azure.microsoft.com/en-us/services/open-datasets/catalog/nyc-taxi-limousine-commission-green-taxi-trip-records/). The Open Datasets package contains a class representing each data source (NycTlcGreen for example) to easily filter date parameters before downloading."
@@ -25323,6 +25331,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from azureml.opendatasets import NycTlcGreen\n",
 							"\n",
@@ -25339,6 +25348,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Display 5 rows\n",
 							"\n",
@@ -25349,6 +25359,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Now that the initial data is loaded. Let's do some projection on the data to \n",
 							"- create new columns for the month number, day of month, day of week, and hour of day. These info is going to be used in the training model to factor in time-based seasonality.\n",
@@ -25357,6 +25368,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Extract month, day of month, and day of week from pickup datetime and add a static column for the country code to join holiday data. \n",
 							"\n",
@@ -25374,6 +25386,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Remove some of the columns that won't need for modeling or additional feature building.\n",
 							"\n",
@@ -25383,6 +25396,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Remove unused columns from nyc green taxi data\n",
 							"\n",
@@ -25399,6 +25413,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Display 5 rows\n",
 							"nyc_tlc_df_clean.show(5)"
@@ -25408,6 +25423,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"## Enrich with holiday data\n",
 							"Now that we have taxi data downloaded and roughly prepared, add in holiday data as additional features. Holiday-specific features will assist model accuracy, as major holidays are times where taxi demand increases dramatically and supply becomes limited. \n",
@@ -25418,6 +25434,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from azureml.opendatasets import PublicHolidays\n",
 							"\n",
@@ -25432,12 +25449,14 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Rename the countryRegionCode and date columns to match the respective field names from the taxi data, and also normalize the time so it can be used as a key. "
 						]
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"hol_df_clean = hol_df.withColumnRenamed('countryRegionCode','country_code')\\\n",
 							"            .withColumn('datetime',f.to_date('date'))\n",
@@ -25449,12 +25468,14 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Next, join the holiday data with the taxi data by performing a left-join. This will preserve all records from taxi data, but add in holiday data where it exists for the corresponding datetime and country_code, which in this case is always \"US\". Preview the data to verify that they were merged correctly."
 						]
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# enrich taxi data with holiday data\n",
 							"nyc_taxi_holiday_df = nyc_tlc_df_clean.join(hol_df_clean, on = ['datetime', 'country_code'] , how = 'left')\n",
@@ -25466,6 +25487,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Create a temp table and filter out non empty holiday rows\n",
 							"\n",
@@ -25477,6 +25499,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"## Enrich with weather data¶\n",
 							"\n",
@@ -25485,6 +25508,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from azureml.opendatasets import NoaaIsdWeather\n",
 							"\n",
@@ -25496,6 +25520,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"isd_df.show(5, truncate = False)"
 						],
@@ -25504,6 +25529,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Filter out weather info for new york city, remove the recording with null temperature \n",
 							"\n",
@@ -25520,6 +25546,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Remove unused columns\n",
 							"\n",
@@ -25534,6 +25561,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Next group the weather data so that you have daily aggregated weather values. \n",
 							""
@@ -25541,6 +25569,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Enrich weather data with aggregation statistics\n",
 							"\n",
@@ -25552,6 +25581,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"weather_df_grouped.show(5)"
 						],
@@ -25560,6 +25590,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Rename columns\n",
 							"\n",
@@ -25573,12 +25604,14 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"Merge the taxi and holiday data you prepared with the new weather data. This time you only need the datetime key, and again perform a left-join of the data. Run the describe() function on the new dataframe to see summary statistics for each field."
 						]
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# enrich taxi data with weather\n",
 							"nyc_taxi_holiday_weather_df = nyc_taxi_holiday_df.join(weather_df_grouped, on = 'datetime' , how = 'left')\n",
@@ -25589,6 +25622,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"nyc_taxi_holiday_weather_df.show(5)"
 						],
@@ -25597,6 +25631,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Run the describe() function on the new dataframe to see summary statistics for each field.\n",
 							"\n",
@@ -25607,6 +25642,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"The summary statistics shows that the totalAmount field has negative values, which don't make sense in the context.\n",
 							"\n",
@@ -25615,6 +25651,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Remove invalid rows with less than 0 taxi fare or tip\n",
 							"final_df = nyc_taxi_holiday_weather_df.filter(nyc_taxi_holiday_weather_df.tipAmount > 0)\\\n",
@@ -25625,6 +25662,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"## Cleaning up the existing Database\n",
 							"\n",
@@ -25635,6 +25673,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"spark.sql(\"DROP TABLE IF EXISTS NYCTaxi.nyc_taxi_holiday_weather\"); "
 						],
@@ -25643,6 +25682,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"spark.sql(\"DROP DATABASE IF EXISTS NYCTaxi\"); \n",
 							"spark.sql(\"CREATE DATABASE NYCTaxi\"); \n",
@@ -25653,6 +25693,7 @@
 					},
 					{
 						"cell_type": "markdown",
+						"metadata": {},
 						"source": [
 							"## Creating a new table\n",
 							"We create a nyc_taxi_holiday_weather table from the nyc_taxi_holiday_weather dataframe.\n",
@@ -25661,6 +25702,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from pyspark.sql import SparkSession\n",
 							"from pyspark.sql.types import *\n",
