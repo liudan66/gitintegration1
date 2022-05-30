@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 2",
+	"name": "SQL script2-5",
 	"properties": {
 		"content": {
 			"query": "-- type your sql script here, we now have intellisense\nCREATE TABLE users(\nLastName varchar(255),\nFirstName varchar(255),\nCity varchar(255)\n)",
@@ -7,9 +7,10 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"name": "master",
-				"type": "SqlOnDemand"
-			}
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
 		},
 		"type": "SqlQuery"
 	}
