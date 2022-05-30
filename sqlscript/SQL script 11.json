@@ -1,16 +1,15 @@
 {
-	"name": "SQL script 2",
+	"name": "SQL script 11",
 	"properties": {
 		"content": {
-			"query": "",
+			"query": "DROP TABLE [dbo].[Table4]\nGO\n\n",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
-				"poolName": "Built-in"
-			},
-			"resultLimit": 5000
+				"name": "sqlpool",
+				"type": "SqlPool"
+			}
 		},
 		"type": "SqlQuery"
 	}

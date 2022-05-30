@@ -1,0 +1,16 @@
+{
+	"name": "KQL script 2",
+	"properties": {
+		"content": {
+			"query": "accessibilitytest\n| take 1000\n",
+			"metadata": {
+				"language": "kql"
+			},
+			"currentConnection": {
+				"poolName": "testaccessibility",
+				"databaseName": "accessibilitytest"
+			}
+		},
+		"type": "KqlQuery"
+	}
+}

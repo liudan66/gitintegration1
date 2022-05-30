@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 2",
+	"name": "Notebook 4",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -12,22 +12,9 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 2,
-			"conf": {
-				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
-			}
+			"numExecutors": 2
 		},
 		"metadata": {
-			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
-			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "python"
-			},
 			"language_info": {
 				"name": "python"
 			},
@@ -50,18 +37,8 @@
 		"cells": [
 			{
 				"cell_type": "code",
-				"metadata": {
-					"microsoft": {
-						"language": "python"
-					}
-				},
 				"source": [
-					"%%pyspark\r\n",
-					"data_path = spark.read.load('abfss://data@accessibilitytest.dfs.core.windows.net/user/trusted-service-user/demo_df/part-00001-c1579c0b-b06c-46be-a4fb-dc48f7b21b1a-c000.csv', format='csv'\r\n",
-					"## If header exists uncomment line bellow\r\n",
-					"##, header=True\r\n",
-					")\r\n",
-					"data_path.show(100)"
+					""
 				],
 				"attachments": null,
 				"execution_count": null

@@ -1,0 +1,16 @@
+{
+	"name": "test1",
+	"properties": {
+		"content": {
+			"query": "-- type your sql script here, we now have intellisense",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "sqlpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

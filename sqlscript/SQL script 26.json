@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 26",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (1000) [CONSTRAINT_CATALOG]\n,[CONSTRAINT_SCHEMA]\n,[CONSTRAINT_NAME]\n,[CHECK_CLAUSE]\n FROM [INFORMATION_SCHEMA].[CHECK_CONSTRAINTS]\n SELECT TOP (1000) [CONSTRAINT_CATALOG]\n,[CONSTRAINT_SCHEMA]\n,[CONSTRAINT_NAME]\n,[CHECK_CLAUSE]\n FROM [INFORMATION_SCHEMA].[CHECK_CONSTRAINTS]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "sqlpool",
+				"poolName": "sqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

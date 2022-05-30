@@ -1,13 +1,13 @@
 {
-	"name": "SQL script 3",
+	"name": "SQL script 0_Copy1",
 	"properties": {
 		"content": {
-			"query": "SELECT 1 as a",
+			"query": "Begin\nwhile 1=1\nselect 'ZADADDAA123 -- testtesttesttesttesttesttest'\nend",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "default",
+				"databaseName": "master",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000

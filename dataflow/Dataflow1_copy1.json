@@ -1,0 +1,28 @@
+{
+	"name": "Dataflow1_copy1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "input",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\t{_c0} as string,\n\t\t{_c1} as string,\n\t\t{_c2} as string,\n\t\t{_c3} as string,\n\t\t{_c4} as string,\n\t\t{_c5} as string,\n\t\t{_c6} as string,\n\t\t{_c7} as string,\n\t\t{_c8} as string,\n\t\t{_c9} as string,\n\t\t{_c10} as string,\n\t\t{_c11} as string,\n\t\t{_c12} as string,\n\t\t{_c13} as string,\n\t\t{_c14} as string,\n\t\t{_c15} as string,\n\t\t{_c16} as string,\n\t\t{_c17} as string,\n\t\t{_c18} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'documentPerLine') ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

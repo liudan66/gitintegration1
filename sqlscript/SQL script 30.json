@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 30",
+	"properties": {
+		"content": {
+			"query": "DROP TABLE [dbo].[Table]\nGO\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\n\nCREATE TABLE [dbo].[Table]\n( \n\t[col1] [int]  NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH ( [col1] ),\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\t\t\t",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "sqlpool",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

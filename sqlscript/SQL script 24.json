@@ -1,16 +1,15 @@
 {
-	"name": "SQL script 2",
+	"name": "SQL script 24",
 	"properties": {
 		"content": {
-			"query": "",
+			"query": "CREATE SCHEMA [Schema1]\nGO\n",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
-				"poolName": "Built-in"
-			},
-			"resultLimit": 5000
+				"name": "TesterDB",
+				"type": "SqlPool"
+			}
 		},
 		"type": "SqlQuery"
 	}

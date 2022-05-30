@@ -1,0 +1,25 @@
+{
+	"name": "sentimentCognitiveService1",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"description": "sentiment",
+		"annotations": [],
+		"type": "CognitiveService",
+		"typeProperties": {
+			"subscriptionId": "8b3b8a60-1dd0-4824-8770-2ed6a55d8e27",
+			"resourceGroup": "synapsemldemo",
+			"csName": "ruxutextanalytics",
+			"csKind": "TextAnalytics",
+			"csLocation": "eastus2",
+			"endPoint": "https://ruxutextanalytics.cognitiveservices.azure.com/",
+			"csKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sentimentCognitiveService1"
+			}
+		}
+	}
+}

@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
-				"type": "SynapseNotebook",
+				"name": "Spark job definition1",
+				"type": "SparkJob",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,15 +15,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebook": {
-						"referenceName": "DebugFailCase7",
-						"type": "NotebookReference"
+					"sparkJob": {
+						"referenceName": "Spark job definition 1",
+						"type": "SparkJobDefinitionReference"
 					}
 				}
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2021-07-26T14:27:10Z"
+		"lastPublishTime": "2022-02-22T10:16:47Z"
 	},
 	"type": "Microsoft.Synapse/workspaces/pipelines"
 }

@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://a365-e2e.vault.azure.net/"
+			"baseUrl": "https://accessibilitykeyvault2.vault.azure.net/"
 		}
 	}
 }

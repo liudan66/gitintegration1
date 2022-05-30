@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 2",
+	"name": "SQL script 32",
 	"properties": {
 		"content": {
 			"query": "",
@@ -7,10 +7,9 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
-				"poolName": "Built-in"
-			},
-			"resultLimit": 5000
+				"name": "master",
+				"type": "SqlOnDemand"
+			}
 		},
 		"type": "SqlQuery"
 	}

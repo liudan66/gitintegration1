@@ -1,0 +1,16 @@
+{
+	"name": "SQL script 27",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW [dbo].[View]\n\tAS SELECT * FROM [SomeTableOrView]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "TesterDB",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}

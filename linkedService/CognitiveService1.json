@@ -1,0 +1,24 @@
+{
+	"name": "CognitiveService1",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "CognitiveService",
+		"typeProperties": {
+			"subscriptionId": "8b3b8a60-1dd0-4824-8770-2ed6a55d8e27",
+			"resourceGroup": "ruoyu-resource",
+			"csName": "ruoyu-AnomalyDetector1",
+			"csKind": "AnomalyDetector",
+			"csLocation": "eastasia",
+			"endPoint": "https://ruoyu-anomalydetector1.cognitiveservices.azure.com/",
+			"csKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "accessbility"
+			}
+		}
+	}
+}
